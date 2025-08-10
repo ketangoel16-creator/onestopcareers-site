@@ -56,6 +56,13 @@
         font-weight: 600;
         border-bottom: 2px solid #ea580c;
     }
+    /* Fixed height for problem cards to ensure consistent alignment */
+    .problem-card {
+      height: 350px; 
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
   </style>
 </head>
 <body class="bg-gray-50 text-gray-900 font-sans">
@@ -68,7 +75,6 @@
         <a href="index.html" class="text-2xl font-bold">OneStopCareers</a>
       </div>
       <nav class="hidden md:flex items-center space-x-6">
-        <a href="index.html" class="text-gray-600 hover:text-orange-600 font-medium">Home</a>
         <a href="jobs.html" class="text-gray-600 hover:text-orange-600 font-medium">Find Jobs/referrals</a>
         <a href="resources.html" class="text-gray-600 hover:text-orange-600 font-medium resources-link relative">
           Resources
@@ -79,14 +85,13 @@
       </nav>
       <!-- Mobile menu button -->
       <button id="mobile-menu-btn" class="md:hidden text-gray-600">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <svg xmlns="http://www.w3.org/2d00/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
         </svg>
       </button>
     </div>
     <!-- Mobile menu -->
     <nav id="mobile-menu" class="hidden md:hidden bg-white shadow-lg py-2">
-      <a href="index.html" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Home</a>
       <a href="jobs.html" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Find Jobs/referrals</a>
       <a href="resources.html" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Resources</a>
       <a href="mentors.html" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Mentors</a>
@@ -115,51 +120,51 @@
       </p>
       <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mt-12">
         <!-- Problem Card 1: Initial Confusion -->
-        <a href="mentors.html" class="block p-8 bg-white rounded-2xl shadow-lg border-b-4 border-orange-500 transition-transform transform hover:scale-105 hover:shadow-xl">
+        <a href="mentors.html" class="block p-8 bg-white rounded-2xl shadow-lg border-b-4 border-orange-500 transition-transform transform hover:scale-105 hover:shadow-xl problem-card">
           <div class="text-center">
             <img src="https://cdn-icons-png.flaticon.com/512/3356/3356885.png" class="h-16 w-16 mx-auto mb-4" alt="Domains Icon" />
             <h4 class="text-2xl font-semibold text-gray-800 mb-2">"I don't know which career path is right for me."</h4>
             <p class="text-gray-600">
               You're a fresher, or considering a transition, and feel lost among all the options.
             </p>
-            <span class="inline-block mt-4 text-orange-600 font-medium">Explore Career Roles →</span>
           </div>
+          <span class="inline-block mt-4 text-orange-600 font-medium self-center">Explore Career Roles →</span>
         </a>
 
         <!-- Problem Card 2: Knowledge Gaps -->
-        <a href="resources.html" class="block p-8 bg-white rounded-2xl shadow-lg border-b-4 border-orange-500 transition-transform transform hover:scale-105 hover:shadow-xl">
+        <a href="resources.html" class="block p-8 bg-white rounded-2xl shadow-lg border-b-4 border-orange-500 transition-transform transform hover:scale-105 hover:shadow-xl problem-card">
           <div class="text-center">
             <img src="https://cdn-icons-png.flaticon.com/512/2951/2951216.png" class="h-16 w-16 mx-auto mb-4" alt="Interview Icon" />
             <h4 class="text-2xl font-semibold text-gray-800 mb-2">"I need help with projects, templates and recruiter details."</h4>
             <p class="text-gray-600">
               You know your role but need help building a resume, portfolio, or preparing for interviews.
             </p>
-            <span class="inline-block mt-4 text-orange-600 font-medium">Find Resources & Guidance →</span>
           </div>
+          <span class="inline-block mt-4 text-orange-600 font-medium self-center">Find Resources & Guidance →</span>
         </a>
 
         <!-- Problem Card 3: Job/Referral Search -->
-        <a href="jobs.html" class="block p-8 bg-white rounded-2xl shadow-lg border-b-4 border-orange-500 transition-transform transform hover:scale-105 hover:shadow-xl">
+        <a href="jobs.html" class="block p-8 bg-white rounded-2xl shadow-lg border-b-4 border-orange-500 transition-transform transform hover:scale-105 hover:shadow-xl problem-card">
           <div class="text-center">
             <img src="https://cdn-icons-png.flaticon.com/512/3176/3176295.png" class="h-16 w-16 mx-auto mb-4" alt="Career Path Icon" />
             <h4 class="text-2xl font-semibold text-gray-800 mb-2">"I'm applying but not getting interview calls."</h4>
             <p class="text-gray-600">
               You're confident in your skills but are struggling with job searching and referrals.
             </p>
-            <span class="inline-block mt-4 text-orange-600 font-medium">Explore Job Board & Referrals →</span>
           </div>
+          <span class="inline-block mt-4 text-orange-600 font-medium self-center">Explore Job Board & Referrals →</span>
         </a>
 
         <!-- Problem Card 4: Cracking the Interview -->
-        <a href="mentors.html" class="block p-8 bg-white rounded-2xl shadow-lg border-b-4 border-orange-500 transition-transform transform hover:scale-105 hover:shadow-xl">
+        <a href="mentors.html" class="block p-8 bg-white rounded-2xl shadow-lg border-b-4 border-orange-500 transition-transform transform hover:scale-105 hover:shadow-xl problem-card">
           <div class="text-center">
             <img src="https://cdn-icons-png.flaticon.com/512/1000/1000965.png" class="h-16 w-16 mx-auto mb-4" alt="Handshake Icon" />
             <h4 class="text-2xl font-semibold text-gray-800 mb-2">"I'm getting interviews but can't crack them."</h4>
             <p class="text-gray-600">
               You're making it to the interview stage but struggling with performance and closing the deal.
             </p>
-            <span class="inline-block mt-4 text-orange-600 font-medium">Get Mentorship & Interview Prep →</span>
           </div>
+          <span class="inline-block mt-4 text-orange-600 font-medium self-center">Get Mentorship & Interview Prep →</span>
         </a>
       </div>
     </div>
@@ -211,11 +216,11 @@
 
     // Function to add 'active' class to the current page's nav link
     function highlightActivePage() {
-      const path = window.location.pathname.split('/').pop();
+      const path = window.location.pathname.split('/').pop() || 'index.html';
       const navLinks = document.querySelectorAll('header nav a');
       navLinks.forEach(link => {
         const linkPath = link.href.split('/').pop();
-        if (linkPath === path || (path === '' && linkPath === 'index.html')) {
+        if (linkPath === path) {
           link.classList.add('nav-active');
         }
       });
