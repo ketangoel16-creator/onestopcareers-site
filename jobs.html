@@ -145,6 +145,12 @@
     <div class="max-w-6xl mx-auto px-4">
         <h3 class="text-4xl font-bold text-gray-800 mb-6 border-b-4 border-orange-500 inline-block pb-1">Referral Network</h3>
         <p class="text-gray-600 mb-8">Connect with professionals willing to give referrals at top companies.</p>
+        
+        <!-- Search for Referrals -->
+        <div class="mb-8">
+            <input type="text" id="referral-search" placeholder="Search by name, company, or title..." class="w-full md:w-1/3 p-3 rounded-lg border-2 border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-500" />
+        </div>
+
         <!-- Loading State for Referrals -->
         <div id="referral-loading" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-200 animate-pulse">
@@ -180,6 +186,12 @@
         </div>
         <!-- Grid to display referral cards -->
         <div id="referral-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6" style="display: none;"></div>
+        <!-- Pagination for Referrals -->
+        <div id="referral-pagination-controls" class="flex justify-center items-center space-x-4 mt-8" style="display: none;">
+            <button id="referral-prev-btn" class="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300 disabled:opacity-50" disabled>Previous</button>
+            <span id="referral-page-info" class="text-gray-600">Page 1 of 1</span>
+            <button id="referral-next-btn" class="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300 disabled:opacity-50" disabled>Next</button>
+        </div>
     </div>
   </section>
 
@@ -253,14 +265,27 @@
     const modalCompanyLocation = document.getElementById('modal-company-location');
     const modalDescription = document.getElementById('modal-description');
     const modalApplyBtn = document.getElementById('modal-apply-btn');
+    
+    // Referral Elements
     const referralGrid = document.getElementById('referral-grid');
     const referralLoading = document.getElementById('referral-loading');
+    const referralSearch = document.getElementById('referral-search');
+    const referralPaginationControls = document.getElementById('referral-pagination-controls');
+    const referralPrevBtn = document.getElementById('referral-prev-btn');
+    const referralNextBtn = document.getElementById('referral-next-btn');
+    const referralPageInfo = document.getElementById('referral-page-info');
+
 
     // --- State Variables ---
     const jobsPerPage = 6;
     let currentPage = 1;
     let allJobs = [];
     let displayedJobs = [];
+
+    const referralsPerPage = 10;
+    let currentReferralPage = 1;
+    let allReferrals = [];
+    let displayedReferrals = [];
 
     // --- Google Sheet URLs ---
     const JOBS_API_URL = 'https://script.google.com/macros/s/AKfycbzxRN194Nx7sio2lGw7yiWBjL63h1eRstGJMCVrrrxzn1pKq2NThKz_GUKtrdQA2Q/exec';
@@ -303,7 +328,6 @@
         paginatedJobs.forEach(job => {
           const jobCard = document.createElement('div');
           jobCard.className = 'job-card cursor-pointer bg-white p-5 rounded-xl shadow-lg border border-gray-200 hover:shadow-xl transition-shadow';
-          // Use textContent to prevent XSS vulnerabilities
           jobCard.innerHTML = `
             <h4 class="text-xl font-bold text-orange-700"></h4>
             <p class="text-gray-600 font-medium"></p>
@@ -367,28 +391,15 @@
       renderJobs(displayedJobs, currentPage);
     };
 
-    // --- Data Fetching ---
-    const fetchData = async (url, loadingElement, gridElement, renderFunction) => {
-        loadingElement.style.display = 'grid';
-        gridElement.style.display = 'none';
-        try {
-            const response = await fetch(url);
-            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-            const data = await response.json();
-            renderFunction(data);
-        } catch (error) {
-            console.error(`Failed to fetch data from ${url}:`, error);
-            gridElement.innerHTML = `<p class="text-red-500 text-center col-span-3">Failed to load data. Please try again later.</p>`;
-        } finally {
-            loadingElement.style.display = 'none';
-            gridElement.style.display = 'grid';
-        }
-    };
-
-    const renderReferrals = (data) => {
+    // --- Referral Rendering and Filtering ---
+    const renderReferrals = (referrals, page = 1) => {
         referralGrid.innerHTML = '';
-        if (data.length > 0) {
-            data.forEach(prof => {
+        const start = (page - 1) * referralsPerPage;
+        const end = start + referralsPerPage;
+        const paginatedReferrals = referrals.slice(start, end);
+
+        if (paginatedReferrals.length > 0) {
+            paginatedReferrals.forEach(prof => {
                 const card = document.createElement('a');
                 card.href = prof['LinkedIn ID url'] || '#';
                 card.target = '_blank';
@@ -409,7 +420,42 @@
                 referralGrid.appendChild(card);
             });
         } else {
-            referralGrid.innerHTML = '<p class="text-gray-500 text-center col-span-3">No professionals available for referrals at the moment.</p>';
+            referralGrid.innerHTML = '<p class="text-gray-500 text-center col-span-3">No professionals found matching your criteria.</p>';
+        }
+
+        const totalPages = Math.ceil(referrals.length / referralsPerPage);
+        referralPageInfo.textContent = `Page ${page} of ${totalPages || 1}`;
+        referralPrevBtn.disabled = page === 1;
+        referralNextBtn.disabled = page === totalPages || totalPages === 0;
+        referralPaginationControls.style.display = referrals.length > referralsPerPage ? 'flex' : 'none';
+    };
+    
+    const filterAndRenderReferrals = () => {
+        const searchTerm = referralSearch.value.toLowerCase();
+        displayedReferrals = allReferrals.filter(prof => 
+            (prof['Name'] || '').toLowerCase().includes(searchTerm) ||
+            (prof['Designation'] || '').toLowerCase().includes(searchTerm) ||
+            (prof['Company name'] || '').toLowerCase().includes(searchTerm)
+        );
+        currentReferralPage = 1;
+        renderReferrals(displayedReferrals, currentReferralPage);
+    };
+
+    // --- Data Fetching ---
+    const fetchData = async (url, loadingElement, gridElement, setupFunction) => {
+        loadingElement.style.display = 'grid';
+        gridElement.style.display = 'none';
+        try {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+            const data = await response.json();
+            setupFunction(data);
+        } catch (error) {
+            console.error(`Failed to fetch data from ${url}:`, error);
+            gridElement.innerHTML = `<p class="text-red-500 text-center col-span-3">Failed to load data. Please try again later.</p>`;
+        } finally {
+            loadingElement.style.display = 'none';
+            gridElement.style.display = 'grid';
         }
     };
 
@@ -420,12 +466,18 @@
         renderJobs(displayedJobs, currentPage);
     };
 
-    // --- Initial Load ---
+    const setupReferrals = (data) => {
+        allReferrals = data;
+        displayedReferrals = allReferrals;
+        renderReferrals(displayedReferrals, currentReferralPage);
+    };
+
+    // --- Initial Load & Event Listeners ---
     document.addEventListener('DOMContentLoaded', () => {
         fetchData(JOBS_API_URL, jobBoardLoading, jobBoard, setupJobs);
-        fetchData(REFERRALS_API_URL, referralLoading, referralGrid, renderReferrals);
+        fetchData(REFERRALS_API_URL, referralLoading, referralGrid, setupReferrals);
 
-        // Add event listeners
+        // Job listeners
         jobSearch.addEventListener('input', filterAndRenderJobs);
         companyFilter.addEventListener('change', filterAndRenderJobs);
         locationFilter.addEventListener('change', filterAndRenderJobs);
@@ -443,6 +495,23 @@
             currentPage++;  
             renderJobs(displayedJobs, currentPage);  
           }  
+        });
+
+        // Referral listeners
+        referralSearch.addEventListener('input', filterAndRenderReferrals);
+
+        referralPrevBtn.addEventListener('click', () => {
+            if (currentReferralPage > 1) {
+                currentReferralPage--;
+                renderReferrals(displayedReferrals, currentReferralPage);
+            }
+        });
+        referralNextBtn.addEventListener('click', () => {
+            const totalPages = Math.ceil(displayedReferrals.length / referralsPerPage);
+            if (currentReferralPage < totalPages) {
+                currentReferralPage++;
+                renderReferrals(displayedReferrals, currentReferralPage);
+            }
         });
     });
   </script>
