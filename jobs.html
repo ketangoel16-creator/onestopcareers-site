@@ -78,6 +78,12 @@
         background-size: 1.5em 1.5em;
         padding-right: 2.5rem;
     }
+    .job-board-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(288px, 1fr));
+        gap: 2rem;
+        justify-items: center;
+    }
   </style>
 </head>
 <body class="bg-gray-50 text-gray-900 font-sans">
@@ -142,18 +148,10 @@
         </select>
     </div>
 
-    <div id="job-board-loading" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" style="display: none;">
+    <div id="job-board-loading" class="job-board-grid" style="display: none;">
       <!-- Skeleton loader for jobs -->
-      <div class="bg-white p-6 rounded-xl shadow-lg border animate-pulse flex items-center gap-6">
-        <div class="h-20 w-20 bg-gray-200 rounded-full flex-shrink-0"></div>
-        <div class="flex-1 space-y-3">
-            <div class="h-5 bg-gray-200 rounded w-3/4"></div>
-            <div class="h-4 bg-gray-200 rounded w-1/2"></div>
-            <div class="h-10 bg-orange-200 rounded-lg w-24 mt-2"></div>
-        </div>
-      </div>
     </div>
-    <div id="job-board" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
+    <div id="job-board" class="job-board-grid"></div>
     <div id="pagination-controls" class="flex justify-center items-center space-x-4 mt-12" style="display: none;">
       <button id="prev-btn" class="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300 disabled:opacity-50" disabled>Previous</button>
       <span id="page-info" class="text-gray-600">Page 1 of 1</span>
@@ -392,20 +390,25 @@
       } else {
         paginatedJobs.forEach(job => {
           const companyInitial = (job.Company || 'C').charAt(0).toUpperCase();
-          const placeholderLogo = `https://placehold.co/100x100/f97316/FFFFFF?text=${companyInitial}`;
+          const placeholderLogo = `https://placehold.co/128x128/f97316/FFFFFF?text=${companyInitial}`;
           const logoUrl = job['Company Logo URL'] || placeholderLogo;
 
           const jobCard = document.createElement('div');
-          jobCard.className = 'job-card bg-white p-6 rounded-xl shadow-lg border hover:shadow-2xl transition-shadow duration-300 flex items-center gap-5 cursor-pointer';
+          jobCard.className = 'job-card bg-white p-6 rounded-xl shadow-lg border hover:shadow-2xl transition-shadow duration-300 flex flex-col items-center text-center w-72';
           jobCard.dataset.jobId = job.id;
           
           jobCard.innerHTML = `
-            <img src="${logoUrl}" alt="${job.Company} Logo" class="w-20 h-20 rounded-full flex-shrink-0 border-4 border-orange-100 object-cover" onerror="this.onerror=null;this.src='${placeholderLogo}';">
-            <div class="text-left">
+            <img src="${logoUrl}" alt="${job.Company} Logo" class="w-28 h-28 rounded-full mb-4 border-4 border-gray-100 object-cover" onerror="this.onerror=null;this.src='${placeholderLogo}';">
+            <div class="flex-grow flex flex-col justify-center">
                 <h4 class="text-lg font-bold text-gray-800"></h4>
-                <p class="text-sm text-gray-500 font-medium mb-3"></p>
-                <a href="#" target="_blank" class="inline-block bg-orange-500 text-white py-2 px-5 rounded-full hover:bg-orange-600 transition-colors text-sm font-semibold">Apply Now</a>
+                <p class="text-sm text-gray-500 font-medium mb-4"></p>
             </div>
+            <a href="#" target="_blank" class="group mt-auto inline-flex items-center justify-center bg-orange-500 text-white py-2 px-6 rounded-full hover:bg-orange-600 transition-colors text-sm font-semibold">
+                Apply Now
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-2 transform transition-transform duration-200 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                </svg>
+            </a>
           `;
           jobCard.querySelector('h4').textContent = job['Job Title'] || 'N/A';
           jobCard.querySelector('p').textContent = `${job['Company'] || 'N/A'} - ${job['Location'] || 'N/A'}`;
@@ -473,8 +476,8 @@
                 card.className = 'block p-6 bg-white rounded-xl shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300';
                 card.innerHTML = `
                   <div class="flex items-center space-x-4">
-                    <div class="flex-shrink-0 h-12 w-12 flex items-center justify-center bg-blue-100 rounded-full">
-                        <svg class="w-7 h-7 text-blue-600" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <div class="flex-shrink-0 h-12 w-12 flex items-center justify-center bg-orange-100 rounded-full">
+                        <svg class="w-7 h-7 text-orange-600" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                             <path d="M21.75 9.142c0-2.28-1.995-4.142-4.436-4.142H6.686C4.245 5 2.25 6.862 2.25 9.142v4.714c0 2.28 1.995 4.142 4.436 4.142h1.65v2.7l3.28-2.7h4.45c2.441 0 4.436-1.862 4.436-4.142V9.142zM7.5 12.428h9M7.5 10.286h9"></path>
                             <path fill-rule="evenodd" clip-rule="evenodd" d="M6.686 4c-2.99 0-5.436 2.31-5.436 5.142v4.714c0 2.833 2.446 5.142 5.436 5.142h1.65v3.3l4.03-3.3h3.7c2.99 0 5.436-2.31 5.436-5.142V9.142C22.5 6.31 20.054 4 17.186 4H6.686zM21.75 9.142c0-2.28-1.995-4.142-4.436-4.142H6.686C4.245 5 2.25 6.862 2.25 9.142v4.714c0 2.28 1.995 4.142 4.436 4.142h1.65v2.7l3.28-2.7h4.45c2.441 0 4.436-1.862 4.436-4.142V9.142zM7.5 12.428h9M7.5 10.286h9"></path>
                         </svg>
@@ -482,7 +485,7 @@
                     <div>
                       <h4 class="text-lg font-semibold text-gray-800"></h4>
                       <p class="text-gray-600"></p>
-                      <p class="text-sm text-blue-600 font-semibold">Message for Referral</p>
+                      <p class="text-sm text-orange-600 font-semibold">Message for Referral</p>
                     </div>
                   </div>
                 `;
