@@ -73,6 +73,14 @@
         <a href="resources.html" class="text-gray-600 hover:text-orange-600 font-medium">Resources</a>
         <a href="mentors.html" class="text-gray-600 hover:text-orange-600 font-medium">Mentors</a>
       </nav>
+       <!-- Auto-refresh Toggle (Desktop) -->
+      <div class="hidden md:flex items-center space-x-2">
+          <span class="text-sm font-medium text-gray-600" title="Automatically refresh data every minute">Auto-Refresh</span>
+          <label for="auto-refresh-toggle" class="inline-flex relative items-center cursor-pointer">
+              <input type="checkbox" id="auto-refresh-toggle" class="sr-only peer">
+              <div class="w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-2 peer-focus:ring-orange-300 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-orange-500"></div>
+          </label>
+      </div>
       <button id="mobile-menu-btn" class="md:hidden text-gray-600">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
@@ -84,6 +92,14 @@
       <a href="jobs.html" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Find Jobs/referrals</a>
       <a href="resources.html" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Resources</a>
       <a href="mentors.html" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Mentors</a>
+       <!-- Auto-refresh Toggle (Mobile) -->
+      <div class="px-4 py-3 flex items-center justify-between border-t border-gray-200">
+           <span class="text-sm font-medium text-gray-800">Auto-Refresh</span>
+           <label for="auto-refresh-toggle-mobile" class="inline-flex relative items-center cursor-pointer">
+              <input type="checkbox" id="auto-refresh-toggle-mobile" class="sr-only peer">
+              <div class="w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-2 peer-focus:ring-orange-300 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-orange-500"></div>
+          </label>
+      </div>
     </nav>
   </header>
 
@@ -274,7 +290,11 @@
     const referralPrevBtn = document.getElementById('referral-prev-btn');
     const referralNextBtn = document.getElementById('referral-next-btn');
     const referralPageInfo = document.getElementById('referral-page-info');
-
+    
+    // Auto-Refresh Toggle Elements
+    const autoRefreshToggle = document.getElementById('auto-refresh-toggle');
+    const autoRefreshToggleMobile = document.getElementById('auto-refresh-toggle-mobile');
+    let autoRefreshIntervalId = null;
 
     // --- State Variables ---
     const jobsPerPage = 6;
@@ -287,7 +307,9 @@
     let allReferrals = [];
     let displayedReferrals = [];
 
-    // --- Google Sheet URLs ---
+    // --- Config ---
+    const CACHE_DURATION = 6 * 60 * 60 * 1000; // 6 hours
+    const REFRESH_INTERVAL = 60 * 1000; // 1 minute
     const JOBS_API_URL = 'https://script.google.com/macros/s/AKfycbzxRN194Nx7sio2lGw7yiWBjL63h1eRstGJMCVrrrxzn1pKq2NThKz_GUKtrdQA2Q/exec';
     const REFERRALS_API_URL = 'https://script.google.com/macros/s/AKfycbxkrDnF3ABiwsf2M8dD7hKtCGwQ4XSRdQebmJOqL8jsSpdQtCwrb6xH7KeHxKUoK0IB/exec';
 
@@ -441,14 +463,29 @@
         renderReferrals(displayedReferrals, currentReferralPage);
     };
 
-    // --- Data Fetching ---
-    const fetchData = async (url, loadingElement, gridElement, setupFunction) => {
+    // --- Data Fetching with Caching ---
+    const fetchAndCacheData = async (url, cacheKey, loadingElement, gridElement, setupFunction, forceRefresh = false) => {
+        if (!forceRefresh) {
+            const cachedItem = localStorage.getItem(cacheKey);
+            if (cachedItem) {
+                const { timestamp, data } = JSON.parse(cachedItem);
+                if (new Date().getTime() - timestamp < CACHE_DURATION) {
+                    console.log(`Loading ${cacheKey} from cache.`);
+                    setupFunction(data);
+                    return;
+                }
+            }
+        }
+
         loadingElement.style.display = 'grid';
         gridElement.style.display = 'none';
+        
         try {
             const response = await fetch(url);
             if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
             const data = await response.json();
+            
+            localStorage.setItem(cacheKey, JSON.stringify({ timestamp: new Date().getTime(), data: data }));
             setupFunction(data);
         } catch (error) {
             console.error(`Failed to fetch data from ${url}:`, error);
@@ -463,19 +500,44 @@
         allJobs = data;
         displayedJobs = allJobs;
         populateFilters(allJobs);
-        renderJobs(displayedJobs, currentPage);
+        filterAndRenderJobs();
     };
 
     const setupReferrals = (data) => {
         allReferrals = data;
         displayedReferrals = allReferrals;
-        renderReferrals(displayedReferrals, currentReferralPage);
+        filterAndRenderReferrals();
     };
+    
+    // --- Auto-Refresh Logic ---
+    const handleToggleChange = (isChecked) => {
+        autoRefreshToggle.checked = isChecked;
+        autoRefreshToggleMobile.checked = isChecked;
+
+        if (isChecked) {
+            console.log('Auto-refresh enabled.');
+            fetchAndCacheData(JOBS_API_URL, 'jobs_cache', jobBoardLoading, jobBoard, setupJobs, true);
+            fetchAndCacheData(REFERRALS_API_URL, 'referrals_cache', referralLoading, referralGrid, setupReferrals, true);
+
+            autoRefreshIntervalId = setInterval(() => {
+                console.log('Auto-refreshing data...');
+                fetchAndCacheData(JOBS_API_URL, 'jobs_cache', jobBoardLoading, jobBoard, setupJobs, true);
+                fetchAndCacheData(REFERRALS_API_URL, 'referrals_cache', referralLoading, referralGrid, setupReferrals, true);
+            }, REFRESH_INTERVAL);
+        } else {
+            console.log('Auto-refresh disabled.');
+            if (autoRefreshIntervalId) {
+                clearInterval(autoRefreshIntervalId);
+                autoRefreshIntervalId = null;
+            }
+        }
+    };
+
 
     // --- Initial Load & Event Listeners ---
     document.addEventListener('DOMContentLoaded', () => {
-        fetchData(JOBS_API_URL, jobBoardLoading, jobBoard, setupJobs);
-        fetchData(REFERRALS_API_URL, referralLoading, referralGrid, setupReferrals);
+        fetchAndCacheData(JOBS_API_URL, 'jobs_cache', jobBoardLoading, jobBoard, setupJobs);
+        fetchAndCacheData(REFERRALS_API_URL, 'referrals_cache', referralLoading, referralGrid, setupReferrals);
 
         // Job listeners
         jobSearch.addEventListener('input', filterAndRenderJobs);
@@ -513,6 +575,10 @@
                 renderReferrals(displayedReferrals, currentReferralPage);
             }
         });
+
+        // Toggle listeners
+        autoRefreshToggle.addEventListener('change', (e) => handleToggleChange(e.target.checked));
+        autoRefreshToggleMobile.addEventListener('change', (e) => handleToggleChange(e.target.checked));
     });
   </script>
 
