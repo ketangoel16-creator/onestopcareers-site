@@ -43,6 +43,12 @@
       text-decoration: none;
       cursor: pointer;
     }
+    /* Active navigation link style */
+    .nav-active {
+        color: #ea580c; /* Orange-600 */
+        font-weight: 600;
+        border-bottom: 2px solid #ea580c;
+    }
   </style>
 </head>
 <body class="bg-gray-50 text-gray-900 font-sans">
@@ -52,14 +58,14 @@
     <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
       <div class="flex items-center">
         <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="OneStopCareers Logo" class="rounded-full mr-2 h-10 w-10 object-cover" />
-        <h1 class="text-2xl font-bold">OneStopCareers</h1>
+        <a href="index.html" class="text-2xl font-bold">OneStopCareers</a>
       </div>
       <nav class="hidden md:flex items-center space-x-6">
         <a href="index.html" class="text-gray-600 hover:text-orange-600 font-medium">Home</a>
-        <a href="resources.html" class="text-gray-600 hover:text-orange-600 font-medium">Job Hunt Resources</a>
+        <a href="jobs.html" class="text-gray-600 hover:text-orange-600 font-medium">Find Jobs/referrals</a>
+        <a href="resources.html" class="text-gray-600 hover:text-orange-600 font-medium">Resources</a>
         <a href="mentors.html" class="text-gray-600 hover:text-orange-600 font-medium">Mentors</a>
-        <a href="testimonials.html" class="text-gray-600 hover:text-orange-600 font-medium">Testimonials</a>
-        <a href="session.html" class="bg-orange-500 text-white px-5 py-2 rounded-lg shadow-md hover:bg-orange-600 transition-colors">Book Your Session</a>
+        
       </nav>
       <button id="mobile-menu-btn" class="md:hidden text-gray-600">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -69,10 +75,10 @@
     </div>
     <nav id="mobile-menu" class="hidden md:hidden bg-white shadow-lg py-2">
       <a href="index.html" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Home</a>
-      <a href="resources.html" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Job Hunt Resources</a>
+      <a href="jobs.html" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Find Jobs/referrals</a>
+      <a href="resources.html" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Resources</a>
       <a href="mentors.html" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Mentors</a>
-      <a href="testimonials.html" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Testimonials</a>
-      <a href="session.html" class="block px-4 py-2 text-orange-500 font-semibold hover:bg-gray-100">Book Your Session</a>
+      
     </nav>
   </header>
 
@@ -125,33 +131,6 @@
       <button id="prev-btn" class="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300">Previous</button>
       <span id="page-info" class="text-gray-600">Page 1 of 1</span>
       <button id="next-btn" class="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300">Next</button>
-    </div>
-  </section>
-
-  <!-- Referral Network Section -->
-  <section id="referrals" class="max-w-6xl mx-auto px-4 py-16">
-    <h3 class="text-4xl font-bold text-gray-800 mb-6 border-b-4 border-orange-500 inline-block pb-1">Referral Network</h3>
-    <p class="text-gray-600 mt-4 max-w-3xl mx-auto">
-      Leverage our network of professionals who are willing to refer candidates. Connect with the right people at your target companies.
-    </p>
-    <div id="referral-loading" class="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mt-12">
-      <div class="p-6 bg-white rounded-2xl shadow-lg border border-gray-200 animate-pulse">
-        <div class="h-6 bg-gray-200 rounded w-3/4 mb-2"></div>
-        <div class="h-4 bg-gray-200 rounded w-1/2 mb-4"></div>
-        <div class="h-3 bg-gray-200 rounded w-full mb-2"></div>
-        <div class="h-3 bg-gray-200 rounded w-5/6 mb-2"></div>
-        <div class="h-3 bg-gray-200 rounded w-4/6 mb-4"></div>
-      </div>
-      <div class="p-6 bg-white rounded-2xl shadow-lg border border-gray-200 animate-pulse hidden md:block">
-        <div class="h-6 bg-gray-200 rounded w-3/4 mb-2"></div>
-        <div class="h-4 bg-gray-200 rounded w-1/2 mb-4"></div>
-        <div class="h-3 bg-gray-200 rounded w-full mb-2"></div>
-        <div class="h-3 bg-gray-200 rounded w-5/6 mb-2"></div>
-        <div class="h-3 bg-gray-200 rounded w-4/6 mb-4"></div>
-      </div>
-    </div>
-    <div id="referral-grid" class="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mt-12">
-      <!-- Referral cards will be loaded here via JavaScript -->
     </div>
   </section>
 
@@ -223,10 +202,6 @@
     const modalCompanyLocation = document.getElementById('modal-company-location');
     const modalDescription = document.getElementById('modal-description');
     const modalApplyBtn = document.getElementById('modal-apply-btn');
-
-    // Moved these variable declarations to the global scope
-    const referralGrid = document.getElementById('referral-grid');
-    const referralLoading = document.getElementById('referral-loading');
 
     mobileMenuBtn.addEventListener('click', () => {
       mobileMenu.classList.toggle('hidden');
@@ -371,6 +346,8 @@
     fetchJobs();
 
     // Script for Referral Network Section
+    const referralGrid = document.getElementById('referral-grid');
+    const referralLoading = document.getElementById('referral-loading');
     const fetchReferralLinks = () => {
       referralLoading.style.display = 'grid';
       referralGrid.style.display = 'none';
