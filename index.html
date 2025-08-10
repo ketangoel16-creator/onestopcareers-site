@@ -40,18 +40,25 @@
         <h1 class="text-2xl font-bold">Ketan Goel</h1>
       </div>
       <nav class="hidden md:flex items-center space-x-6">
-        <a href="#jobs" class="text-gray-600 hover:text-blue-600 font-medium">Job Board</a>
-        <a href="#resources" class="text-gray-600 hover:text-blue-600 font-medium">Job Hunt Resources</a>
-        <a href="#mentor" class="text-gray-600 hover:text-blue-600 font-medium">Meet Your Mentor</a>
-        <a href="#testimonials" class="text-gray-600 hover:text-blue-600 font-medium">Testimonials</a>
+        <a href="#jobs" class="text-gray-600 hover:text-orange-600 font-medium">Job Board</a>
+        <a href="#resources" class="text-gray-600 hover:text-orange-600 font-medium">Job Hunt Resources</a>
+        <a href="#mentor" class="text-gray-600 hover:text-orange-600 font-medium">Meet Your Mentor</a>
+        <a href="#testimonials" class="text-gray-600 hover:text-orange-600 font-medium">Testimonials</a>
         <a href="#book-session" class="bg-orange-500 text-white px-5 py-2 rounded-lg shadow-md hover:bg-orange-600 transition-colors">Book Your Session</a>
       </nav>
-      <button class="md:hidden text-gray-600">
+      <button id="mobile-menu-btn" class="md:hidden text-gray-600">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
         </svg>
       </button>
     </div>
+    <nav id="mobile-menu" class="hidden md:hidden bg-white shadow-lg py-2">
+      <a href="#jobs" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Job Board</a>
+      <a href="#resources" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Job Hunt Resources</a>
+      <a href="#mentor" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Meet Your Mentor</a>
+      <a href="#testimonials" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Testimonials</a>
+      <a href="#book-session" class="block px-4 py-2 text-orange-500 font-semibold hover:bg-gray-100">Book Your Session</a>
+    </nav>
   </header>
 
   <section class="hero-bg py-24 md:py-32 text-center text-white relative">
@@ -134,11 +141,21 @@
   </section>
 
   <section id="jobs" class="max-w-6xl mx-auto px-4 py-16">
-    <h3 class="text-4xl font-bold text-gray-800 mb-6">Job Board</h3>
+    <h3 class="text-4xl font-bold text-gray-800 mb-6 border-b-4 border-orange-500 inline-block pb-1">Job Board</h3>
     <p class="text-gray-600 mb-6">Check out recent openings</p>
     <div class="flex flex-col md:flex-row items-center justify-between mb-8 space-y-4 md:space-y-0">
-      <input type="text" id="job-search" placeholder="Search for jobs..." class="w-full md:w-1/3 p-3 rounded-lg border-2 border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500" />
-      <div></div>
+      <input type="text" id="job-search" placeholder="Search for jobs..." class="w-full md:w-1/3 p-3 rounded-lg border-2 border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-500" />
+      <div class="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-4">
+        <select id="company-filter" class="p-3 rounded-lg border-2 border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-500">
+          <option value="">All Companies</option>
+        </select>
+        <select id="location-filter" class="p-3 rounded-lg border-2 border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-500">
+          <option value="">All Locations</option>
+        </select>
+        <select id="title-filter" class="p-3 rounded-lg border-2 border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-500">
+          <option value="">All Job Titles</option>
+        </select>
+      </div>
     </div>
     <div id="job-board" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
     <div id="pagination-controls" class="flex justify-center items-center space-x-4 mt-8" style="display: none;">
@@ -171,29 +188,29 @@
         </p>
         <ul class="mt-6 space-y-3">
           <li class="flex items-start text-gray-700">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-600 mr-2 flex-shrink-0 mt-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-orange-600 mr-2 flex-shrink-0 mt-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15.75c-2.457 0-4.783-.623-6.75-1.795M11 16L9 22 2 11 12 5 21 17l-5 5" />
             </svg>
             Analytics Lead @ Meesho with 6+ years of experience in product and service-based industries.
           </li>
           <li class="flex items-start text-gray-700">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-600 mr-2 flex-shrink-0 mt-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-orange-600 mr-2 flex-shrink-0 mt-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h-1a2 2 0 01-2-2v-4a2 2 0 012-2h1a2 2 0 012 2v4a2 2 0 01-2 2zM7 20h-1a2 2 0 01-2-2v-4a2 2 0 012-2h1a2 2 0 012 2v4a2 2 0 01-2 2zM7 4h10a2 2 0 012 2v2a2 2 0 01-2 2H7a2 2 0 01-2-2V6a2 2 0 012-2z" />
             </svg>
             Mentored 3000+ professionals to successfully transition into their desired roles.
           </li>
           <li class="flex items-start text-gray-700">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-600 mr-2 flex-shrink-0 mt-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-orange-600 mr-2 flex-shrink-0 mt-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
             </svg>
             Interviewed 500+ candidates for analytics roles, so I know exactly what hiring managers look for.
           </li>
         </ul>
         <div class="mt-6 flex space-x-4 justify-center md:justify-start">
-          <a href="#" class="text-gray-600 hover:text-blue-600">
+          <a href="#" class="text-gray-600 hover:text-orange-600">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.763s.784-1.763 1.75-1.763 1.75.79 1.75 1.763-.783 1.763-1.75 1.763zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
           </a>
-          <a href="#" class="text-gray-600 hover:text-blue-600">
+          <a href="#" class="text-gray-600 hover:text-orange-600">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm6.213 2.113c2.71 1.056 4.887 3.233 5.944 5.944-.823-1.028-1.921-1.926-3.08-2.673-.91-1.127-1.986-2.183-3.111-3.271z"/></svg>
           </a>
         </div>
@@ -215,15 +232,27 @@
   </footer>
 
   <script>
-    const jobsPerPage = 10;
+    const jobsPerPage = 6;
     let currentPage = 1;
     let allJobs = [];
+    let displayedJobs = [];
+
     const jobBoard = document.getElementById('job-board');
     const jobSearch = document.getElementById('job-search');
     const prevBtn = document.getElementById('prev-btn');
     const nextBtn = document.getElementById('next-btn');
     const pageInfo = document.getElementById('page-info');
     const paginationControls = document.getElementById('pagination-controls');
+    const companyFilter = document.getElementById('company-filter');
+    const locationFilter = document.getElementById('location-filter');
+    const titleFilter = document.getElementById('title-filter');
+    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+
+    // Toggle mobile menu
+    mobileMenuBtn.addEventListener('click', () => {
+      mobileMenu.classList.toggle('hidden');
+    });
 
     const renderJobs = (jobs, page = 1) => {
       const start = (page - 1) * jobsPerPage;
@@ -231,10 +260,10 @@
       const paginatedJobs = jobs.slice(start, end);
       let html = '';
       if (paginatedJobs.length === 0) {
-        html = '<p class="text-gray-500 text-center col-span-3">No jobs found matching your search.</p>';
+        html = '<p class="text-gray-500 text-center col-span-3">No jobs found matching your criteria.</p>';
       } else {
         paginatedJobs.forEach(job => {
-          html += `<div class="bg-white p-5 rounded-xl shadow-lg border border-gray-200 hover:shadow-xl transition-shadow"><h4 class="text-xl font-bold text-blue-700">${job['Job Title']}</h4><p class="text-gray-600 font-medium">${job['Company']} - ${job['Location']}</p><p class="text-gray-500 text-sm mt-2">${job['Description'] || ''}</p><a href="${job['Link']}" target="_blank" class="block mt-4 text-center bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors">Apply Now</a></div>`;
+          html += `<div class="bg-white p-5 rounded-xl shadow-lg border border-gray-200 hover:shadow-xl transition-shadow"><h4 class="text-xl font-bold text-orange-700">${job['Job Title']}</h4><p class="text-gray-600 font-medium">${job['Company']} - ${job['Location']}</p><p class="text-gray-500 text-sm mt-2">${job['Description'] || ''}</p><a href="${job['Link']}" target="_blank" class="block mt-4 text-center bg-orange-500 text-white py-2 rounded-lg hover:bg-orange-600 transition-colors">Apply Now</a></div>`;
         });
       }
       jobBoard.innerHTML = html;
@@ -242,6 +271,35 @@
       pageInfo.textContent = `Page ${page} of ${totalPages}`;
       prevBtn.disabled = page === 1;
       nextBtn.disabled = page === totalPages;
+      window.scrollTo({ top: document.getElementById('jobs').offsetTop, behavior: 'smooth' });
+    };
+
+    const populateFilters = (jobs) => {
+      const companies = [...new Set(jobs.map(job => job['Company']))].sort();
+      const locations = [...new Set(jobs.map(job => job['Location']))].sort();
+      const titles = [...new Set(jobs.map(job => job['Job Title']))].sort();
+      
+      companyFilter.innerHTML = '<option value="">All Companies</option>' + companies.map(c => `<option value="${c}">${c}</option>`).join('');
+      locationFilter.innerHTML = '<option value="">All Locations</option>' + locations.map(l => `<option value="${l}">${l}</option>`).join('');
+      titleFilter.innerHTML = '<option value="">All Job Titles</option>' + titles.map(t => `<option value="${t}">${t}</option>`).join('');
+    };
+
+    const filterAndRenderJobs = () => {
+      const searchTerm = jobSearch.value.toLowerCase();
+      const company = companyFilter.value;
+      const location = locationFilter.value;
+      const title = titleFilter.value;
+
+      displayedJobs = allJobs.filter(job => 
+        (job['Job Title'].toLowerCase().includes(searchTerm) ||
+         job['Company'].toLowerCase().includes(searchTerm) ||
+         job['Location'].toLowerCase().includes(searchTerm)) &&
+        (company === '' || job['Company'] === company) &&
+        (location === '' || job['Location'] === location) &&
+        (title === '' || job['Job Title'] === title)
+      );
+      currentPage = 1;
+      renderJobs(displayedJobs, currentPage);
     };
 
     const fetchJobs = () => {
@@ -249,7 +307,9 @@
         .then(res => res.json())
         .then(data => {
           allJobs = data;
-          renderJobs(allJobs);
+          displayedJobs = allJobs;
+          populateFilters(allJobs);
+          renderJobs(displayedJobs);
           if (allJobs.length > jobsPerPage) {
             paginationControls.style.display = 'flex';
           }
@@ -260,20 +320,24 @@
         });
     };
 
-    const filterJobs = () => {
-      const searchTerm = jobSearch.value.toLowerCase();
-      const filteredJobs = allJobs.filter(job => 
-        job['Job Title'].toLowerCase().includes(searchTerm) ||
-        job['Company'].toLowerCase().includes(searchTerm) ||
-        job['Location'].toLowerCase().includes(searchTerm)
-      );
-      currentPage = 1;
-      renderJobs(filteredJobs, currentPage);
-    };
-
-    jobSearch.addEventListener('input', filterJobs);
-    prevBtn.addEventListener('click', () => { if (currentPage > 1) { currentPage--; renderJobs(allJobs, currentPage); } });
-    nextBtn.addEventListener('click', () => { const totalPages = Math.ceil(allJobs.length / jobsPerPage); if (currentPage < totalPages) { currentPage++; renderJobs(allJobs, currentPage); } });
+    jobSearch.addEventListener('input', filterAndRenderJobs);
+    companyFilter.addEventListener('change', filterAndRenderJobs);
+    locationFilter.addEventListener('change', filterAndRenderJobs);
+    titleFilter.addEventListener('change', filterAndRenderJobs);
+    
+    prevBtn.addEventListener('click', () => { 
+      if (currentPage > 1) { 
+        currentPage--; 
+        renderJobs(displayedJobs, currentPage); 
+      } 
+    });
+    nextBtn.addEventListener('click', () => { 
+      const totalPages = Math.ceil(displayedJobs.length / jobsPerPage); 
+      if (currentPage < totalPages) { 
+        currentPage++; 
+        renderJobs(displayedJobs, currentPage); 
+      } 
+    });
     fetchJobs();
 
     // Script for Dynamic Resources
