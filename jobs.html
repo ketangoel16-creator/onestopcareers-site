@@ -49,10 +49,18 @@
         font-weight: 600;
         border-bottom: 2px solid #ea580c;
     }
+    /* Simple line-clamp utility */
+    .line-clamp-2 {
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+    }
   </style>
 </head>
 <body class="bg-gray-50 text-gray-900 font-sans">
 
+  <!-- Header -->
   <header class="bg-white shadow-md sticky top-0 z-50">
     <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
       <div class="flex items-center">
@@ -64,7 +72,6 @@
         <a href="jobs.html" class="text-gray-600 hover:text-orange-600 font-medium nav-active">Find Jobs/referrals</a>
         <a href="resources.html" class="text-gray-600 hover:text-orange-600 font-medium">Resources</a>
         <a href="mentors.html" class="text-gray-600 hover:text-orange-600 font-medium">Mentors</a>
-        
       </nav>
       <button id="mobile-menu-btn" class="md:hidden text-gray-600">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -77,13 +84,13 @@
       <a href="jobs.html" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Find Jobs/referrals</a>
       <a href="resources.html" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Resources</a>
       <a href="mentors.html" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Mentors</a>
-      
     </nav>
   </header>
 
+  <!-- Job Board -->
   <section id="jobs" class="max-w-6xl mx-auto px-4 py-16">
     <h3 class="text-4xl font-bold text-gray-800 mb-6 border-b-4 border-orange-500 inline-block pb-1">Job Board</h3>
-    <p class="text-gray-600 mb-6">Check out recent openings</p>
+    <p class="text-gray-600 mb-6">Check out recent openings from top companies.</p>
     <div class="flex flex-col md:flex-row items-center justify-between mb-8 space-y-4 md:space-y-0">
       <input type="text" id="job-search" placeholder="Search for jobs..." class="w-full md:w-1/3 p-3 rounded-lg border-2 border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-500" />
       <div class="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-4">
@@ -99,6 +106,7 @@
       </div>
     </div>
     <div id="job-board-loading" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <!-- Skeleton loader for jobs -->
       <div class="bg-white p-5 rounded-xl shadow-lg border border-gray-200 animate-pulse">
         <div class="h-6 bg-gray-200 rounded w-3/4 mb-2"></div>
         <div class="h-4 bg-gray-200 rounded w-1/2 mb-4"></div>
@@ -126,53 +134,51 @@
     </div>
     <div id="job-board" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
     <div id="pagination-controls" class="flex justify-center items-center space-x-4 mt-8" style="display: none;">
-      <button id="prev-btn" class="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300">Previous</button>
+      <button id="prev-btn" class="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300 disabled:opacity-50" disabled>Previous</button>
       <span id="page-info" class="text-gray-600">Page 1 of 1</span>
-      <button id="next-btn" class="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300">Next</button>
+      <button id="next-btn" class="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300 disabled:opacity-50" disabled>Next</button>
     </div>
   </section>
 
+  <!-- Referral Network Section -->
   <section id="referrals" class="bg-orange-50 py-16">
     <div class="max-w-6xl mx-auto px-4">
         <h3 class="text-4xl font-bold text-gray-800 mb-6 border-b-4 border-orange-500 inline-block pb-1">Referral Network</h3>
         <p class="text-gray-600 mb-8">Connect with professionals willing to give referrals at top companies.</p>
-
+        <!-- Loading State for Referrals -->
         <div id="referral-loading" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-200 animate-pulse">
                 <div class="flex items-center space-x-4">
-                    <div class="h-10 w-10 bg-gray-200 rounded-full"></div>
+                    <div class="h-12 w-12 bg-gray-200 rounded-full"></div>
                     <div class="flex-1 space-y-2">
                         <div class="h-5 bg-gray-200 rounded w-3/4"></div>
                         <div class="h-4 bg-gray-200 rounded w-1/2"></div>
+                        <div class="h-4 bg-gray-200 rounded w-1/3"></div>
                     </div>
                 </div>
-                <div class="h-3 bg-gray-200 rounded w-full mt-4"></div>
-                <div class="h-3 bg-gray-200 rounded w-5/6 mt-2"></div>
             </div>
              <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-200 animate-pulse hidden md:block">
                 <div class="flex items-center space-x-4">
-                    <div class="h-10 w-10 bg-gray-200 rounded-full"></div>
+                    <div class="h-12 w-12 bg-gray-200 rounded-full"></div>
                     <div class="flex-1 space-y-2">
                         <div class="h-5 bg-gray-200 rounded w-3/4"></div>
                         <div class="h-4 bg-gray-200 rounded w-1/2"></div>
+                        <div class="h-4 bg-gray-200 rounded w-1/3"></div>
                     </div>
                 </div>
-                <div class="h-3 bg-gray-200 rounded w-full mt-4"></div>
-                <div class="h-3 bg-gray-200 rounded w-5/6 mt-2"></div>
             </div>
              <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-200 animate-pulse hidden lg:block">
                 <div class="flex items-center space-x-4">
-                    <div class="h-10 w-10 bg-gray-200 rounded-full"></div>
+                    <div class="h-12 w-12 bg-gray-200 rounded-full"></div>
                     <div class="flex-1 space-y-2">
                         <div class="h-5 bg-gray-200 rounded w-3/4"></div>
                         <div class="h-4 bg-gray-200 rounded w-1/2"></div>
+                        <div class="h-4 bg-gray-200 rounded w-1/3"></div>
                     </div>
                 </div>
-                <div class="h-3 bg-gray-200 rounded w-full mt-4"></div>
-                <div class="h-3 bg-gray-200 rounded w-5/6 mt-2"></div>
             </div>
         </div>
-
+        <!-- Grid to display referral cards -->
         <div id="referral-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6" style="display: none;"></div>
     </div>
   </section>
@@ -181,7 +187,7 @@
     <div class="max-w-6xl mx-auto px-4 text-center">
       <h3 class="text-4xl font-bold">Success Stories from Our Job Seekers</h3>
       <p class="text-gray-300 mt-4 max-w-3xl mx-auto">
-        Read how our job board helped people find and land their dream jobs.
+        Read how our platform helped people find and land their dream jobs.
       </p>
       <div class="grid md:grid-cols-2 gap-8 mt-12">
         <div class="p-8 bg-gray-700 rounded-2xl text-left">
@@ -199,6 +205,7 @@
       </div>
     </div>
   </section>
+
   <section class="bg-gray-200 py-16 text-center">
     <div class="max-w-4xl mx-auto px-4">
       <h3 class="text-4xl font-bold text-gray-800">Not Getting Interview Calls?</h3>
@@ -210,9 +217,12 @@
       </a>
     </div>
   </section>
+
   <footer class="bg-gray-900 text-white py-6 text-center">
     <p>© 2025 OneStopCareers. All rights reserved.</p>
   </footer>
+
+  <!-- Job Details Modal -->
   <div id="job-modal" class="modal">
     <div class="modal-content">
       <span class="close-btn">&times;</span>
@@ -222,22 +232,19 @@
       <a id="modal-apply-btn" href="#" target="_blank" class="block mt-6 text-center bg-orange-500 text-white py-3 rounded-lg hover:bg-orange-600 transition-colors">Apply Now</a>
     </div>
   </div>
+
   <script>
-    // --- Existing variables for Job Board ---
-    const jobsPerPage = 6;
-    let currentPage = 1;
-    let allJobs = [];
-    let displayedJobs = [];
+    // --- DOM Elements ---
     const jobBoard = document.getElementById('job-board');
     const jobBoardLoading = document.getElementById('job-board-loading');
     const jobSearch = document.getElementById('job-search');
-    const prevBtn = document.getElementById('prev-btn');
-    const nextBtn = document.getElementById('next-btn');
-    const pageInfo = document.getElementById('page-info');
-    const paginationControls = document.getElementById('pagination-controls');
     const companyFilter = document.getElementById('company-filter');
     const locationFilter = document.getElementById('location-filter');
     const titleFilter = document.getElementById('title-filter');
+    const paginationControls = document.getElementById('pagination-controls');
+    const prevBtn = document.getElementById('prev-btn');
+    const nextBtn = document.getElementById('next-btn');
+    const pageInfo = document.getElementById('page-info');
     const mobileMenuBtn = document.getElementById('mobile-menu-btn');
     const mobileMenu = document.getElementById('mobile-menu');
     const jobModal = document.getElementById('job-modal');
@@ -246,22 +253,25 @@
     const modalCompanyLocation = document.getElementById('modal-company-location');
     const modalDescription = document.getElementById('modal-description');
     const modalApplyBtn = document.getElementById('modal-apply-btn');
-
-    // --- New variables for Referral Network ---
     const referralGrid = document.getElementById('referral-grid');
     const referralLoading = document.getElementById('referral-loading');
 
+    // --- State Variables ---
+    const jobsPerPage = 6;
+    let currentPage = 1;
+    let allJobs = [];
+    let displayedJobs = [];
 
+    // --- Google Sheet URLs ---
+    const JOBS_API_URL = 'https://script.google.com/macros/s/AKfycbzxRN194Nx7sio2lGw7yiWBjL63h1eRstGJMCVrrrxzn1pKq2NThKz_GUKtrdQA2Q/exec';
+    const REFERRALS_API_URL = 'https://script.google.com/macros/s/AKfycbxkrDnF3ABiwsf2M8dD7hKtCGwQ4XSRdQebmJOqL8jsSpdQtCwrb6xH7KeHxKUoK0IB/exec';
+
+    // --- Mobile Menu Toggle ---
     mobileMenuBtn.addEventListener('click', () => {
       mobileMenu.classList.toggle('hidden');
     });
 
-    document.querySelectorAll('#mobile-menu a').forEach(link => {
-      link.addEventListener('click', () => {
-        mobileMenu.classList.add('hidden');
-      });
-    });
-
+    // --- Modal Logic ---
     const openJobModal = (job) => {
       modalTitle.textContent = job['Job Title'];
       modalCompanyLocation.textContent = `${job['Company']} - ${job['Location']}`;
@@ -280,56 +290,63 @@
       }
     });
 
+    // --- Job Rendering and Filtering ---
     const renderJobs = (jobs, page = 1) => {
+      jobBoard.innerHTML = ''; // Clear previous results
       const start = (page - 1) * jobsPerPage;
       const end = start + jobsPerPage;
       const paginatedJobs = jobs.slice(start, end);
-      let html = '';
+
       if (paginatedJobs.length === 0) {
-        html = '<p class="text-gray-500 text-center col-span-3">No jobs found matching your criteria.</p>';
+        jobBoard.innerHTML = '<p class="text-gray-500 text-center col-span-3">No jobs found matching your criteria.</p>';
       } else {
         paginatedJobs.forEach(job => {
-          html += `
-            <div class="job-card cursor-pointer bg-white p-5 rounded-xl shadow-lg border border-gray-200 hover:shadow-xl transition-shadow" data-job-title="${job['Job Title']}" data-company="${job['Company']}" data-location="${job['Location']}" data-description="${job['Description']}" data-link="${job['Link']}">
-              <h4 class="text-xl font-bold text-orange-700">${job['Job Title']}</h4>
-              <p class="text-gray-600 font-medium">${job['Company']} - ${job['Location']}</p>
-              <p class="text-gray-500 text-sm mt-2 line-clamp-2">${job['Description'] || ''}</p>
-              <a href="${job['Link']}" target="_blank" class="block mt-4 text-center bg-orange-500 text-white py-2 rounded-lg hover:bg-orange-600 transition-colors">Apply Now</a>
-            </div>
+          const jobCard = document.createElement('div');
+          jobCard.className = 'job-card cursor-pointer bg-white p-5 rounded-xl shadow-lg border border-gray-200 hover:shadow-xl transition-shadow';
+          // Use textContent to prevent XSS vulnerabilities
+          jobCard.innerHTML = `
+            <h4 class="text-xl font-bold text-orange-700"></h4>
+            <p class="text-gray-600 font-medium"></p>
+            <p class="text-gray-500 text-sm mt-2 line-clamp-2"></p>
+            <a href="#" target="_blank" class="block mt-4 text-center bg-orange-500 text-white py-2 rounded-lg hover:bg-orange-600 transition-colors">Apply Now</a>
           `;
+          jobCard.querySelector('h4').textContent = job['Job Title'] || 'N/A';
+          jobCard.querySelector('.text-gray-600').textContent = `${job['Company'] || 'N/A'} - ${job['Location'] || 'N/A'}`;
+          jobCard.querySelector('.line-clamp-2').textContent = job['Description'] || '';
+          jobCard.querySelector('a').href = job['Link'] || '#';
+          
+          jobCard.addEventListener('click', (e) => {
+            if (e.target.tagName.toLowerCase() !== 'a') {
+              openJobModal(job);
+            }
+          });
+          jobBoard.appendChild(jobCard);
         });
       }
-      jobBoard.innerHTML = html;
-      const totalPages = Math.ceil(jobs.length / jobsPerPage);
-      pageInfo.textContent = `Page ${page} of ${totalPages}`;
-      prevBtn.disabled = page === 1;
-      nextBtn.disabled = page === totalPages;
 
-      document.querySelectorAll('.job-card').forEach(card => {
-        card.addEventListener('click', (e) => {
-          if (e.target.tagName.toLowerCase() !== 'a') {
-            const job = {
-              'Job Title': card.dataset.jobTitle,
-              'Company': card.dataset.company,
-              'Location': card.dataset.location,
-              'Description': card.dataset.description,
-              'Link': card.dataset.link,
-            };
-            openJobModal(job);
-          }
-        });
-      });
-      // window.scrollTo({ top: 0, behavior: 'smooth' });
+      const totalPages = Math.ceil(jobs.length / jobsPerPage);
+      pageInfo.textContent = `Page ${page} of ${totalPages || 1}`;
+      prevBtn.disabled = page === 1;
+      nextBtn.disabled = page === totalPages || totalPages === 0;
+      paginationControls.style.display = jobs.length > jobsPerPage ? 'flex' : 'none';
     };
 
     const populateFilters = (jobs) => {
-      const companies = [...new Set(jobs.map(job => job['Company']))].sort();
-      const locations = [...new Set(jobs.map(job => job['Location']))].sort();
-      const titles = [...new Set(jobs.map(job => job['Job Title']))].sort();
+      const getUniqueSortedValues = (key) => [...new Set(jobs.map(job => job[key]).filter(Boolean))].sort();
+      const companies = getUniqueSortedValues('Company');
+      const locations = getUniqueSortedValues('Location');
+      const titles = getUniqueSortedValues('Job Title');
       
-      companyFilter.innerHTML = '<option value="">All Companies</option>' + companies.map(c => `<option value="${c}">${c}</option>`).join('');
-      locationFilter.innerHTML = '<option value="">All Locations</option>' + locations.map(l => `<option value="${l}">${l}</option>`).join('');
-      titleFilter.innerHTML = '<option value="">All Job Titles</option>' + titles.map(t => `<option value="${t}">${t}</option>`).join('');
+      const populateSelect = (selectElement, options) => {
+          selectElement.innerHTML = `<option value="">All ${selectElement.id.split('-')[0].charAt(0).toUpperCase() + selectElement.id.split('-')[0].slice(1)}</option>`;
+          options.forEach(option => {
+              selectElement.innerHTML += `<option value="${option}">${option}</option>`;
+          });
+      };
+
+      populateSelect(companyFilter, companies);
+      populateSelect(locationFilter, locations);
+      populateSelect(titleFilter, titles);
     };
 
     const filterAndRenderJobs = () => {
@@ -339,9 +356,9 @@
       const title = titleFilter.value;
 
       displayedJobs = allJobs.filter(job => 
-        (job['Job Title'].toLowerCase().includes(searchTerm) ||
-         job['Company'].toLowerCase().includes(searchTerm) ||
-         job['Location'].toLowerCase().includes(searchTerm)) &&
+        ( (job['Job Title'] || '').toLowerCase().includes(searchTerm) ||
+          (job['Company'] || '').toLowerCase().includes(searchTerm) ||
+          (job['Location'] || '').toLowerCase().includes(searchTerm) ) &&
         (company === '' || job['Company'] === company) &&
         (location === '' || job['Location'] === location) &&
         (title === '' || job['Job Title'] === title)
@@ -350,96 +367,84 @@
       renderJobs(displayedJobs, currentPage);
     };
 
-    const fetchJobs = () => {
-      jobBoardLoading.style.display = 'grid';
-      jobBoard.style.display = 'none';
-      // Main Job sheet URL
-      fetch('https://script.google.com/macros/s/AKfycbzxRN194Nx7sio2lGw7yiWBjL63h1eRstGJMCVrrrxzn1pKq2NThKz_GUKtrdQA2Q/exec')
-        .then(res => res.json())
-        .then(data => {
-          allJobs = data;
-          displayedJobs = allJobs;
-          populateFilters(allJobs);
-          renderJobs(displayedJobs);
-          if (allJobs.length > jobsPerPage) {
-            paginationControls.style.display = 'flex';
-          }
-          jobBoardLoading.style.display = 'none';
-          jobBoard.style.display = 'grid';
-        })
-        .catch(err => {
-          jobBoardLoading.style.display = 'none';
-          jobBoard.style.display = 'grid';
-          jobBoard.innerHTML = `<p class="text-red-500 text-center col-span-3">Failed to load job listings. Please try again later.</p>`;
-          console.error(err);
-        });
+    // --- Data Fetching ---
+    const fetchData = async (url, loadingElement, gridElement, renderFunction) => {
+        loadingElement.style.display = 'grid';
+        gridElement.style.display = 'none';
+        try {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+            const data = await response.json();
+            renderFunction(data);
+        } catch (error) {
+            console.error(`Failed to fetch data from ${url}:`, error);
+            gridElement.innerHTML = `<p class="text-red-500 text-center col-span-3">Failed to load data. Please try again later.</p>`;
+        } finally {
+            loadingElement.style.display = 'none';
+            gridElement.style.display = 'grid';
+        }
     };
 
-    // --- New function to fetch and render referrals ---
-    const fetchReferrals = () => {
-      referralLoading.style.display = 'grid';
-      referralGrid.style.display = 'none';
-      // **IMPORTANT**: Replace with your Google Apps Script URL for the referrals sheet.
-      // This is a sample URL. Make sure your sheet has columns: Name, Designation, Company name, LinkedIn ID url
-      fetch('https://script.google.com/macros/s/AKfycby5Ew_VvC6yO9yGjK-TCp22mJbF07iT1ltLgqIeYgG5d4Gz1y_yL6Lw_i0aJd7yQ-Xp/exec')
-        .then(res => res.json())
-        .then(data => {
-          let html = '';
-          if (data.length > 0) {
-            data.forEach(professional => {
-              html += `
-                <a href="${professional['LinkedIn ID url']}" target="_blank" class="block p-6 bg-white rounded-xl shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300">
+    const renderReferrals = (data) => {
+        referralGrid.innerHTML = '';
+        if (data.length > 0) {
+            data.forEach(prof => {
+                const card = document.createElement('a');
+                card.href = prof['LinkedIn ID url'] || '#';
+                card.target = '_blank';
+                card.className = 'block p-6 bg-white rounded-xl shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300';
+                card.innerHTML = `
                   <div class="flex items-start space-x-4">
                     <img src="https://cdn-icons-png.flaticon.com/512/174/174857.png" class="h-10 w-10 flex-shrink-0" alt="LinkedIn Icon" />
                     <div>
-                      <h4 class="text-lg font-semibold text-gray-800">${professional['Name']}</h4>
-                      <p class="text-gray-600">${professional['Designation']}</p>
-                      <p class="text-sm text-gray-500 font-medium">${professional['Company name']}</p>
+                      <h4 class="text-lg font-semibold text-gray-800"></h4>
+                      <p class="text-gray-600"></p>
+                      <p class="text-sm text-gray-500 font-medium"></p>
                     </div>
                   </div>
-                </a>
-              `;
+                `;
+                card.querySelector('h4').textContent = prof['Name'] || 'N/A';
+                card.querySelector('.text-gray-600').textContent = prof['Designation'] || 'N/A';
+                card.querySelector('.text-sm').textContent = prof['Company name'] || 'N/A';
+                referralGrid.appendChild(card);
             });
-          } else {
-            html = '<p class="text-gray-500 text-center col-span-3">No professionals available for referrals at the moment. Please check back later.</p>';
-          }
-          referralGrid.innerHTML = html;
-          referralLoading.style.display = 'none';
-          referralGrid.style.display = 'grid';
-        })
-        .catch(err => {
-          referralLoading.style.display = 'none';
-          referralGrid.style.display = 'grid';
-          referralGrid.innerHTML = `<p class="text-red-500 text-center col-span-3">Failed to load referral network. Please try again later.</p>`;
-          console.error(err);
-        });
+        } else {
+            referralGrid.innerHTML = '<p class="text-gray-500 text-center col-span-3">No professionals available for referrals at the moment.</p>';
+        }
     };
 
+    const setupJobs = (data) => {
+        allJobs = data;
+        displayedJobs = allJobs;
+        populateFilters(allJobs);
+        renderJobs(displayedJobs, currentPage);
+    };
 
-    // --- Event Listeners and Initial Function Calls ---
-    jobSearch.addEventListener('input', filterAndRenderJobs);
-    companyFilter.addEventListener('change', filterAndRenderJobs);
-    locationFilter.addEventListener('change', filterAndRenderJobs);
-    titleFilter.addEventListener('change', filterAndRenderJobs);
-    
-    prevBtn.addEventListener('click', () => {  
-      if (currentPage > 1) {  
-        currentPage--;  
-        renderJobs(displayedJobs, currentPage);  
-      }  
-    });
-    nextBtn.addEventListener('click', () => {  
-      const totalPages = Math.ceil(displayedJobs.length / jobsPerPage);  
-      if (currentPage < totalPages) {  
-        currentPage++;  
-        renderJobs(displayedJobs, currentPage);  
-      }  
-    });
-    
-    // Initial data fetch on page load
-    fetchJobs();
-    fetchReferrals();
+    // --- Initial Load ---
+    document.addEventListener('DOMContentLoaded', () => {
+        fetchData(JOBS_API_URL, jobBoardLoading, jobBoard, setupJobs);
+        fetchData(REFERRALS_API_URL, referralLoading, referralGrid, renderReferrals);
 
+        // Add event listeners
+        jobSearch.addEventListener('input', filterAndRenderJobs);
+        companyFilter.addEventListener('change', filterAndRenderJobs);
+        locationFilter.addEventListener('change', filterAndRenderJobs);
+        titleFilter.addEventListener('change', filterAndRenderJobs);
+        
+        prevBtn.addEventListener('click', () => {  
+          if (currentPage > 1) {  
+            currentPage--;  
+            renderJobs(displayedJobs, currentPage);  
+          }  
+        });
+        nextBtn.addEventListener('click', () => {  
+          const totalPages = Math.ceil(displayedJobs.length / jobsPerPage);  
+          if (currentPage < totalPages) {  
+            currentPage++;  
+            renderJobs(displayedJobs, currentPage);  
+          }  
+        });
+    });
   </script>
 
 </body>
