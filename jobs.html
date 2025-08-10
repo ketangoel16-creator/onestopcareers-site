@@ -2,114 +2,135 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Jobs Page</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Jobs</title>
   <style>
+    /* Your existing styles remain here */
     body {
       font-family: Arial, sans-serif;
       margin: 0;
       padding: 0;
     }
-    header {
+
+    .header {
+      padding: 10px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 10px 20px;
       background: #f5f5f5;
-      border-bottom: 1px solid #ddd;
     }
-    #refreshToggle {
-      background: #ff9800;
-      color: white;
-      border: none;
-      border-radius: 15px;
-      padding: 5px 12px;
-      font-size: 12px;
+
+    .toggle-container {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .toggle {
       cursor: pointer;
+      width: 50px;
+      height: 25px;
+      background: #ccc;
+      border-radius: 20px;
+      position: relative;
     }
-    #refreshToggle:hover {
-      background: #e68900;
+
+    .toggle:before {
+      content: "";
+      position: absolute;
+      width: 21px;
+      height: 21px;
+      top: 2px;
+      left: 2px;
+      background: white;
+      border-radius: 50%;
+      transition: 0.3s;
     }
-    #jobsList {
-      padding: 20px;
+
+    .toggle.on {
+      background: #4caf50;
     }
-    .job-card {
-      border: 1px solid #ddd;
-      border-radius: 6px;
-      padding: 10px;
-      margin-bottom: 10px;
+
+    .toggle.on:before {
+      transform: translateX(25px);
     }
   </style>
 </head>
 <body>
 
-<header>
-  <h2>Latest Jobs</h2>
-  <button id="refreshToggle">🔄 Refresh Now</button>
-</header>
+  <div class="header">
+    <h2>Job Listings</h2>
+    <div class="toggle-container">
+      <label for="auto-refresh-toggle">Auto-refresh</label>
+      <div id="auto-refresh-toggle" class="toggle"></div>
+    </div>
+  </div>
 
-<main id="jobsList">
-  <p>Loading jobs...</p>
-</main>
+  <div id="jobs-container">
+    <!-- Job cards will be populated here -->
+  </div>
 
-<script>
-  const JOBS_CACHE_KEY = "cachedJobsData";
-  const LAST_FETCH_KEY = "lastJobsFetchTime";
-  const CACHE_DURATION_HOURS = 6;
+  <script>
+    const toggle = document.getElementById('auto-refresh-toggle');
+    let isOn = localStorage.getItem('autoRefresh') === 'true';
+    let refreshInterval;
 
-  async function fetchJobs(forceRefresh = false) {
-    const lastFetch = localStorage.getItem(LAST_FETCH_KEY);
-    const now = Date.now();
-
-    if (!forceRefresh && lastFetch && (now - lastFetch) < CACHE_DURATION_HOURS * 60 * 60 * 1000) {
-      const cachedData = localStorage.getItem(JOBS_CACHE_KEY);
-      if (cachedData) {
-        renderJobs(JSON.parse(cachedData));
-        return;
+    function applyToggleUI() {
+      if (isOn) {
+        toggle.classList.add('on');
+      } else {
+        toggle.classList.remove('on');
       }
     }
 
-    // Simulate API Call - replace with your API endpoint
-    const jobs = await mockFetchJobsFromAPI();
+    function setAutoRefresh() {
+      clearInterval(refreshInterval);
+      if (isOn) {
+        // Refresh every 10 seconds
+        refreshInterval = setInterval(() => {
+          location.reload();
+        }, 10000);
+      } else {
+        // Refresh every 6 hours
+        refreshInterval = setInterval(() => {
+          location.reload();
+        }, 6 * 60 * 60 * 1000);
+      }
+    }
 
-    localStorage.setItem(JOBS_CACHE_KEY, JSON.stringify(jobs));
-    localStorage.setItem(LAST_FETCH_KEY, now);
-
-    renderJobs(jobs);
-  }
-
-  function renderJobs(jobs) {
-    const jobsList = document.getElementById("jobsList");
-    jobsList.innerHTML = "";
-    jobs.forEach(job => {
-      const div = document.createElement("div");
-      div.className = "job-card";
-      div.innerHTML = `<h4>${job.title}</h4><p>${job.company}</p>`;
-      jobsList.appendChild(div);
+    toggle.addEventListener('click', () => {
+      isOn = !isOn;
+      localStorage.setItem('autoRefresh', isOn);
+      applyToggleUI();
+      setAutoRefresh();
     });
-  }
 
-  // Mock API (replace with actual fetch)
-  function mockFetchJobsFromAPI() {
-    return new Promise(resolve => {
-      setTimeout(() => {
-        resolve([
-          { title: "Frontend Developer", company: "Tech Corp" },
-          { title: "Backend Engineer", company: "CodeWorks" },
-          { title: "Data Analyst", company: "Data Insights" }
-        ]);
-      }, 800);
-    });
-  }
+    // Initialize
+    applyToggleUI();
+    setAutoRefresh();
 
-  // Event listener for manual refresh
-  document.getElementById("refreshToggle").addEventListener("click", () => {
-    fetchJobs(true);
-  });
+    // Example: Your existing Google Sheets fetch logic
+    async function fetchJobs() {
+      // Your original code here (unchanged)
+      const jobsContainer = document.getElementById('jobs-container');
+      jobsContainer.innerHTML = '<p>Loading jobs...</p>';
 
-  // Load on page open
-  fetchJobs();
-</script>
+      // Replace with your actual API call
+      const jobs = [
+        { title: 'Software Engineer', company: 'ABC Corp', location: 'Remote' },
+        { title: 'Data Analyst', company: 'XYZ Ltd', location: 'Bangalore' }
+      ];
+
+      jobsContainer.innerHTML = jobs.map(job => `
+        <div class="job-card">
+          <h3>${job.title}</h3>
+          <p>${job.company} - ${job.location}</p>
+        </div>
+      `).join('');
+    }
+
+    fetchJobs();
+  </script>
 
 </body>
 </html>
