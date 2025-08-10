@@ -7,7 +7,6 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" />
   <style>
-    /* Custom font for a more modern look, similar to the reference */
     @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
     body {
       font-family: 'Poppins', sans-serif;
@@ -15,9 +14,8 @@
     .strikethrough {
       text-decoration: line-through;
     }
-    /* You can use this for the background image if you have one */
     .hero-bg {
-      background-image: url('https://placehold.co/1920x1080/2f3e46/e9e9e9?text=Ketan+Goel+Background');
+      background-image: url('https://images.unsplash.com/photo-1517048676732-d65bc937f952?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
       background-size: cover;
       background-position: center;
       position: relative;
@@ -29,7 +27,7 @@
       left: 0;
       right: 0;
       bottom: 0;
-      background: rgba(0, 0, 0, 0.4); /* Dark overlay */
+      background: rgba(0, 0, 0, 0.6);
     }
   </style>
 </head>
@@ -38,7 +36,7 @@
   <header class="bg-white shadow-md sticky top-0 z-50">
     <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
       <div class="flex items-center">
-        <img src="https://placehold.co/40x40" alt="Ketan Goel" class="rounded-full mr-2" />
+        <img src="https://images.unsplash.com/photo-1520333785727-b79e73523588?q=80&w=2835&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Ketan Goel" class="rounded-full mr-2 h-10 w-10 object-cover" />
         <h1 class="text-2xl font-bold">Ketan Goel</h1>
       </div>
       <nav class="hidden md:flex items-center space-x-6">
@@ -56,25 +54,18 @@
     </div>
   </header>
 
-  <section class="bg-white py-20 text-center">
-    <div class="max-w-4xl mx-auto px-4">
-      <h2 class="text-5xl md:text-6xl font-extrabold text-gray-800 leading-tight">
-        From Confusion to Clarity — Your Career Breakthrough Starts Now with a personalised roadmap
+  <section class="hero-bg py-24 md:py-32 text-center text-white relative">
+    <div class="relative z-10 max-w-4xl mx-auto px-4">
+      <h2 class="text-5xl md:text-6xl font-extrabold leading-tight">
+        Your Career Struggle Ends Here
       </h2>
-      <p class="text-gray-600 mt-6 max-w-3xl mx-auto text-lg">
-        In a personalized 90-minute session, we'll cut through the confusion, optimize your resume, and build a step-by-step plan to help you land your dream role.
+      <p class="mt-6 max-w-3xl mx-auto text-xl font-light">
+        Transform your career journey with personalized mentorship, a curated job board, and essential resources to land your dream role.
       </p>
-      <div class="mt-8 flex justify-center items-center space-x-4">
+      <div class="mt-10 flex justify-center items-center space-x-4">
         <a href="#book-session" class="bg-orange-500 text-white text-lg font-semibold px-8 py-4 rounded-xl shadow-lg hover:bg-orange-600 transition-colors">
           Book Your 90-Min Strategy Session →
         </a>
-        <a href="#testimonials" class="bg-gray-200 text-gray-800 text-lg font-semibold px-8 py-4 rounded-xl shadow-lg hover:bg-gray-300 transition-colors">
-          See Testimonials
-        </a>
-      </div>
-      <div class="mt-4 text-gray-800 text-2xl font-bold">
-        <span class="text-red-500">₹2999</span>
-        <span class="strikethrough text-gray-400 ml-2">₹9999</span>
       </div>
     </div>
   </section>
@@ -87,22 +78,22 @@
       </p>
       <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mt-12">
         <div class="p-6 bg-gray-700 rounded-2xl">
-          <img src="https://cdn-icons-png.flaticon.com/512/3238/3238069.png" class="h-12 w-12 mx-auto mb-4" alt="Icon" />
+          <img src="https://cdn-icons-png.flaticon.com/512/3238/3238069.png" class="h-12 w-12 mx-auto mb-4" alt="Resume Icon" />
           <h4 class="text-xl font-semibold mb-2">Resume Not Getting Noticed</h4>
           <p class="text-gray-400">Your resume isn't passing the 6-second test with recruiters or getting through automated ATS scanners.</p>
         </div>
         <div class="p-6 bg-gray-700 rounded-2xl">
-          <img src="https://cdn-icons-png.flaticon.com/512/3176/3176295.png" class="h-12 w-12 mx-auto mb-4" alt="Icon" />
+          <img src="https://cdn-icons-png.flaticon.com/512/3176/3176295.png" class="h-12 w-12 mx-auto mb-4" alt="Career Path Icon" />
           <h4 class="text-xl font-semibold mb-2">Unclear Career Path</h4>
           <p class="text-gray-400">You don't know which skills to prioritize or what courses are actually worth your time and money.</p>
         </div>
         <div class="p-6 bg-gray-700 rounded-2xl">
-          <img src="https://cdn-icons-png.flaticon.com/512/2951/2951216.png" class="h-12 w-12 mx-auto mb-4" alt="Icon" />
+          <img src="https://cdn-icons-png.flaticon.com/512/2951/2951216.png" class="h-12 w-12 mx-auto mb-4" alt="Interview Icon" />
           <h4 class="text-xl font-semibold mb-2">Low Interview Confidence</h4>
           <p class="text-gray-400">Even if you get an interview, you're not sure how to articulate your experience and prove you're the right fit.</p>
         </div>
         <div class="p-6 bg-gray-700 rounded-2xl">
-          <img src="https://cdn-icons-png.flaticon.com/512/3356/3356885.png" class="h-12 w-12 mx-auto mb-4" alt="Icon" />
+          <img src="https://cdn-icons-png.flaticon.com/512/3356/3356885.png" class="h-12 w-12 mx-auto mb-4" alt="Domains Icon" />
           <h4 class="text-xl font-semibold mb-2">Confused About Career Domains</h4>
           <p class="text-gray-400">You're unsure which career domains align with your skills and interests, or how to make a successful switch.</p>
         </div>
@@ -111,7 +102,7 @@
     </div>
   </section>
 
-  <section class="bg-gray-100 py-16">
+  <section id="book-session" class="bg-gray-100 py-16">
     <div class="max-w-6xl mx-auto px-4 text-center">
       <h3 class="text-4xl font-bold text-gray-800">Your Path to Career Clarity in 3 Simple Steps</h3>
       <p class="text-gray-600 mt-4 max-w-3xl mx-auto">Go from stuck to strategic with a plan that works.</p>
@@ -132,31 +123,47 @@
           <p class="text-gray-600 mt-4">Leave the call with a tailored roadmap, resume feedback, resource recommendations, and renewed confidence.</p>
         </div>
       </div>
+      <a href="#" class="inline-block mt-8 bg-orange-500 text-white text-lg font-semibold px-8 py-4 rounded-xl shadow-lg hover:bg-orange-600 transition-colors">
+          Book Your 90-Min Strategy Session →
+      </a>
+      <div class="mt-4 text-gray-800 text-2xl font-bold">
+        <span class="text-red-500">₹2999</span>
+        <span class="strikethrough text-gray-400 ml-2">₹9999</span>
+      </div>
     </div>
   </section>
 
   <section id="jobs" class="max-w-6xl mx-auto px-4 py-16">
     <h3 class="text-4xl font-bold text-gray-800 mb-6">Job Board</h3>
     <p class="text-gray-600 mb-6">Check out recent openings</p>
-
     <div class="flex flex-col md:flex-row items-center justify-between mb-8 space-y-4 md:space-y-0">
       <input type="text" id="job-search" placeholder="Search for jobs..." class="w-full md:w-1/3 p-3 rounded-lg border-2 border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500" />
-      <div class="flex space-x-4">
-        </div>
+      <div></div>
     </div>
-
-    <div id="job-board" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-      </div>
-
+    <div id="job-board" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
     <div id="pagination-controls" class="flex justify-center items-center space-x-4 mt-8" style="display: none;">
       <button id="prev-btn" class="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300">Previous</button>
       <span id="page-info" class="text-gray-600">Page 1 of 1</span>
       <button id="next-btn" class="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300">Next</button>
     </div>
   </section>
+  
+  <section id="resources" class="py-16">
+    <div class="max-w-6xl mx-auto px-4 text-center">
+      <h3 class="text-4xl font-bold text-gray-800">Essential Job Hunt Resources</h3>
+      <p class="text-gray-600 mt-4 max-w-3xl mx-auto">
+        Equip yourself with the tools and knowledge to navigate your job search successfully.
+      </p>
+      <div id="resources-grid" class="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mt-12">
+        </div>
+    </div>
+  </section>
 
   <section id="mentor" class="bg-gray-100 py-16">
     <div class="max-w-6xl mx-auto px-4 grid md:grid-cols-2 items-center gap-12">
+      <div class="flex justify-center">
+        <img src="https://images.unsplash.com/photo-1540306352342-a1b7a2d4b9a5?q=80&w=2835&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Ketan Goel" class="rounded-full shadow-lg h-80 w-80 object-cover" />
+      </div>
       <div class="text-center md:text-left">
         <h3 class="text-4xl font-bold text-gray-800">Meet Your Mentor, Ketan Goel</h3>
         <p class="text-gray-600 mt-4 leading-relaxed">
@@ -182,7 +189,7 @@
             Interviewed 500+ candidates for analytics roles, so I know exactly what hiring managers look for.
           </li>
         </ul>
-        <div class="mt-6 flex space-x-4">
+        <div class="mt-6 flex space-x-4 justify-center md:justify-start">
           <a href="#" class="text-gray-600 hover:text-blue-600">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.763s.784-1.763 1.75-1.763 1.75.79 1.75 1.763-.783 1.763-1.75 1.763zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
           </a>
@@ -191,65 +198,19 @@
           </a>
         </div>
       </div>
-      <div class="flex justify-center">
-        <img src="https://placehold.co/400x400" alt="Ketan Goel" class="rounded-full shadow-lg" />
-      </div>
     </div>
   </section>
 
-  <section id="resources" class="py-16">
+  <section id="testimonials" class="bg-gray-800 py-16 text-white">
     <div class="max-w-6xl mx-auto px-4 text-center">
-      <h3 class="text-4xl font-bold text-gray-800">Essential Job Hunt Resources</h3>
-      <p class="text-gray-600 mt-4 max-w-3xl mx-auto">
-        Equip yourself with the tools and knowledge to navigate your job search successfully.
-      </p>
-      <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mt-12">
-        <div class="p-6 bg-white rounded-2xl shadow-lg border-l-4 border-orange-500">
-          <div class="flex items-center space-x-4 mb-4">
-            <img src="https://cdn-icons-png.flaticon.com/512/3238/3238069.png" class="h-10 w-10 text-orange-500" alt="Icon" />
-            <h4 class="text-xl font-semibold">Get Referrals in Your Target Company</h4>
-          </div>
-          <p class="text-gray-600">Learn strategies to leverage your network and secure valuable referrals that can significantly boost your application's visibility.</p>
-          <a href="#" class="inline-block mt-4 text-blue-600 font-medium hover:text-blue-800">Learn More →</a>
-        </div>
-        <div class="p-6 bg-white rounded-2xl shadow-lg border-l-4 border-orange-500">
-          <div class="flex items-center space-x-4 mb-4">
-            <img src="https://cdn-icons-png.flaticon.com/512/3238/3238069.png" class="h-10 w-10 text-orange-500" alt="Icon" />
-            <h4 class="text-xl font-semibold">Download Resume That Lands Interviews</h4>
-          </div>
-          <p class="text-gray-600">Access a proven resume template designed to pass ATS scans and impress recruiters, increasing your chances of getting that interview.</p>
-          <a href="#" class="inline-block mt-4 text-blue-600 font-medium hover:text-blue-800">Download Now →</a>
-        </div>
-        <div class="p-6 bg-white rounded-2xl shadow-lg border-l-4 border-orange-500">
-          <div class="flex items-center space-x-4 mb-4">
-            <img src="https://cdn-icons-png.flaticon.com/512/3238/3238069.png" class="h-10 w-10 text-orange-500" alt="Icon" />
-            <h4 class="text-xl font-semibold">Interview Questions</h4>
-          </div>
-          <p class="text-gray-600">Prepare effectively with a curated list of common interview questions, including behavioral and technical ones, tailored for analytics and related roles.</p>
-          <a href="#" class="inline-block mt-4 text-blue-600 font-medium hover:text-blue-800">Explore Questions →</a>
-        </div>
-        <div class="p-6 bg-white rounded-2xl shadow-lg border-l-4 border-orange-500">
-          <div class="flex items-center space-x-4 mb-4">
-            <img src="https://cdn-icons-png.flaticon.com/512/3238/3238069.png" class="h-10 w-10 text-orange-500" alt="Icon" />
-            <h4 class="text-xl font-semibold">Download Recruiter Details</h4>
-          </div>
-          <p class="text-gray-600">Get access to a database of recruiters and hiring managers in your target industries, helping you network more efficiently.</p>
-          <a href="#" class="inline-block mt-4 text-blue-600 font-medium hover:text-blue-800">Get Access →</a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section id="testimonials" class="bg-gray-100 py-16">
-    <div class="max-w-6xl mx-auto px-4 text-center">
-      <h3 class="text-4xl font-bold text-gray-800">What Our Mentees Say</h3>
-      <p class="text-gray-600 mt-4 max-w-3xl mx-auto">
+      <h3 class="text-4xl font-bold">What Our Mentees Say</h3>
+      <p class="text-gray-300 mt-4 max-w-3xl mx-auto">
         Don't just take our word for it. Read success stories from professionals who have found clarity and success through our mentorship.
       </p>
       </div>
   </section>
 
-  <footer class="bg-gray-800 text-white py-6 text-center">
+  <footer class="bg-gray-900 text-white py-6 text-center">
     <p>© 2025 OneStopCareers. All rights reserved.</p>
   </footer>
 
@@ -257,7 +218,6 @@
     const jobsPerPage = 10;
     let currentPage = 1;
     let allJobs = [];
-
     const jobBoard = document.getElementById('job-board');
     const jobSearch = document.getElementById('job-search');
     const prevBtn = document.getElementById('prev-btn');
@@ -269,28 +229,15 @@
       const start = (page - 1) * jobsPerPage;
       const end = start + jobsPerPage;
       const paginatedJobs = jobs.slice(start, end);
-
       let html = '';
       if (paginatedJobs.length === 0) {
         html = '<p class="text-gray-500 text-center col-span-3">No jobs found matching your search.</p>';
       } else {
         paginatedJobs.forEach(job => {
-          html += `
-            <div class="bg-white p-5 rounded-xl shadow-lg border border-gray-200 hover:shadow-xl transition-shadow">
-              <h4 class="text-xl font-bold text-blue-700">${job['Job Title']}</h4>
-              <p class="text-gray-600 font-medium">${job['Company']} - ${job['Location']}</p>
-              <p class="text-gray-500 text-sm mt-2">${job['Description'] || ''}</p>
-              <a href="${job['Link']}" target="_blank" 
-                 class="block mt-4 text-center bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors">
-                Apply Now
-              </a>
-            </div>
-          `;
+          html += `<div class="bg-white p-5 rounded-xl shadow-lg border border-gray-200 hover:shadow-xl transition-shadow"><h4 class="text-xl font-bold text-blue-700">${job['Job Title']}</h4><p class="text-gray-600 font-medium">${job['Company']} - ${job['Location']}</p><p class="text-gray-500 text-sm mt-2">${job['Description'] || ''}</p><a href="${job['Link']}" target="_blank" class="block mt-4 text-center bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors">Apply Now</a></div>`;
         });
       }
       jobBoard.innerHTML = html;
-
-      // Update pagination controls
       const totalPages = Math.ceil(jobs.length / jobsPerPage);
       pageInfo.textContent = `Page ${page} of ${totalPages}`;
       prevBtn.disabled = page === 1;
@@ -325,23 +272,36 @@
     };
 
     jobSearch.addEventListener('input', filterJobs);
-
-    prevBtn.addEventListener('click', () => {
-      if (currentPage > 1) {
-        currentPage--;
-        renderJobs(allJobs, currentPage);
-      }
-    });
-
-    nextBtn.addEventListener('click', () => {
-      const totalPages = Math.ceil(allJobs.length / jobsPerPage);
-      if (currentPage < totalPages) {
-        currentPage++;
-        renderJobs(allJobs, currentPage);
-      }
-    });
-
+    prevBtn.addEventListener('click', () => { if (currentPage > 1) { currentPage--; renderJobs(allJobs, currentPage); } });
+    nextBtn.addEventListener('click', () => { const totalPages = Math.ceil(allJobs.length / jobsPerPage); if (currentPage < totalPages) { currentPage++; renderJobs(allJobs, currentPage); } });
     fetchJobs();
+
+    // Script for Dynamic Resources
+    const resourcesGrid = document.getElementById('resources-grid');
+    fetch('https://sheetdb.io/api/v1/d8e04clhrp9rr')
+      .then(res => res.json())
+      .then(data => {
+        let html = '';
+        data.forEach(resource => {
+          html += `
+            <a href="${resource['URL']}" target="_blank" class="p-6 bg-white rounded-2xl shadow-lg border-l-4 border-orange-500 hover:scale-105 transition-transform duration-200">
+              <div class="flex items-start space-x-4 mb-4">
+                <img src="${resource['Icon']}" class="h-10 w-10 text-orange-500" alt="Icon" />
+                <div>
+                  <h4 class="text-xl font-semibold text-gray-800">${resource['Link Name']}</h4>
+                  <p class="text-gray-500 text-sm">${resource['Link Type']}</p>
+                </div>
+              </div>
+              <p class="text-gray-600">${resource['Description']}</p>
+            </a>
+          `;
+        });
+        resourcesGrid.innerHTML = html;
+      })
+      .catch(err => {
+        resourcesGrid.innerHTML = `<p class="text-red-500 text-center col-span-4">Failed to load resources.</p>`;
+        console.error(err);
+      });
   </script>
 
 </body>
