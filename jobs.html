@@ -223,6 +223,8 @@
     const modalCompanyLocation = document.getElementById('modal-company-location');
     const modalDescription = document.getElementById('modal-description');
     const modalApplyBtn = document.getElementById('modal-apply-btn');
+
+    // Moved these variable declarations to the global scope
     const referralGrid = document.getElementById('referral-grid');
     const referralLoading = document.getElementById('referral-loading');
 
@@ -369,12 +371,9 @@
     fetchJobs();
 
     // Script for Referral Network Section
-    const referralGrid = document.getElementById('referral-grid');
-    const referralLoading = document.getElementById('referral-loading');
     const fetchReferralLinks = () => {
       referralLoading.style.display = 'grid';
       referralGrid.style.display = 'none';
-      // Fetch from the new referral API
       fetch('YOUR_GOOGLE_APPS_SCRIPT_URL_FOR_REFERRALS')
         .then(res => res.json())
         .then(data => {
