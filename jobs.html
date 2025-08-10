@@ -140,6 +140,7 @@
     
     <!-- Job Filters -->
     <div class="flex flex-col md:flex-row items-center justify-center gap-4 mb-12">
+        <input type="text" id="job-search" placeholder="Search by title, company..." class="w-full md:w-auto p-3 rounded-lg border-2 border-gray-200 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500" />
         <select id="company-filter" class="custom-select w-full md:w-auto p-3 rounded-lg border-2 border-gray-200 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500">
             <option value="All">All Companies</option>
         </select>
@@ -257,7 +258,13 @@
     [
       { "id": 1, "Job Title": "Senior Frontend Developer", "Company": "Innovate Inc.", "Location": "San Francisco, CA", "Description": "Join our team to build next-gen web applications using React and TypeScript. 5+ years of experience required.", "Link": "#" },
       { "id": 2, "Job Title": "Product Manager", "Company": "Solutions Co.", "Location": "New York, NY", "Description": "Define product vision, strategy, and roadmap. Work closely with engineering, design, and marketing teams.", "Link": "#" },
-      { "id": 3, "Job Title": "Data Scientist", "Company": "Future Analytics", "Location": "Remote", "Description": "Analyze large datasets to extract meaningful insights. Proficiency in Python, SQL, and machine learning frameworks.", "Link": "#" }
+      { "id": 3, "Job Title": "Data Scientist", "Company": "Future Analytics", "Location": "Remote", "Description": "Analyze large datasets to extract meaningful insights. Proficiency in Python, SQL, and machine learning frameworks.", "Link": "#" },
+      { "id": 4, "Job Title": "Backend Engineer", "Company": "Innovate Inc.", "Location": "Remote", "Description": "Develop and maintain server-side logic, databases, and APIs for our web applications. Experience with Node.js and PostgreSQL is a plus.", "Link": "#" },
+      { "id": 5, "Job Title": "UX/UI Designer", "Company": "Creative Minds", "Location": "Austin, TX", "Description": "Create intuitive and visually appealing user interfaces. A strong portfolio showcasing your design process is required.", "Link": "#" },
+      { "id": 6, "Job Title": "DevOps Engineer", "Company": "CloudUp", "Location": "Seattle, WA", "Description": "Manage and improve our CI/CD pipelines, cloud infrastructure, and deployment processes. Experience with AWS and Kubernetes is essential.", "Link": "#" },
+      { "id": 7, "Job Title": "Marketing Specialist", "Company": "Solutions Co.", "Location": "Chicago, IL", "Description": "Develop and execute marketing campaigns across various channels, including social media, email, and content marketing.", "Link": "#" },
+      { "id": 8, "Job Title": "QA Engineer", "Company": "Innovate Inc.", "Location": "San Francisco, CA", "Description": "Ensure the quality of our software through manual and automated testing. Strong attention to detail is a must.", "Link": "#" },
+      { "id": 9, "Job Title": "Project Manager", "Company": "Future Analytics", "Location": "New York, NY", "Description": "Lead project planning, execution, and delivery, ensuring projects are completed on time and within budget.", "Link": "#" }
     ]
   </script>
   <script id="preloaded-referrals" type="application/json">
@@ -282,6 +289,7 @@
     // --- DOM Elements ---
     const jobBoard = document.getElementById('job-board');
     const jobBoardLoading = document.getElementById('job-board-loading');
+    const jobSearch = document.getElementById('job-search');
     const companyFilter = document.getElementById('company-filter');
     const locationFilter = document.getElementById('location-filter');
     const paginationControls = document.getElementById('pagination-controls');
@@ -315,7 +323,7 @@
     let autoRefreshIntervalId = null;
 
     // --- State Variables ---
-    const jobsPerPage = 6;
+    let jobsPerPage = 8; // Default for desktop
     let currentPage = 1;
     let allJobs = [];
     let displayedJobs = [];
@@ -450,13 +458,19 @@
     };
 
     const filterAndRenderJobs = () => {
+      const searchTerm = jobSearch.value.toLowerCase();
       const selectedCompany = companyFilter.value;
       const selectedLocation = locationFilter.value;
 
-      displayedJobs = allJobs.filter(job => 
-        (selectedCompany === 'All' || job.Company === selectedCompany) &&
-        (selectedLocation === 'All' || job.Location === selectedLocation)
-      );
+      displayedJobs = allJobs.filter(job => {
+        const matchesSearch = (job['Job Title'] || '').toLowerCase().includes(searchTerm) ||
+                              (job['Company'] || '').toLowerCase().includes(searchTerm) ||
+                              (job['Location'] || '').toLowerCase().includes(searchTerm);
+        const matchesCompany = selectedCompany === 'All' || job.Company === selectedCompany;
+        const matchesLocation = selectedLocation === 'All' || job.Location === selectedLocation;
+        
+        return matchesSearch && matchesCompany && matchesLocation;
+      });
       currentPage = 1;
       renderJobs(displayedJobs, currentPage);
     };
@@ -617,9 +631,18 @@
         }
     };
 
+    const updateJobsPerPage = () => {
+        if (window.innerWidth < 768) { // md breakpoint in Tailwind
+            jobsPerPage = 4;
+        } else {
+            jobsPerPage = 8;
+        }
+    };
+
 
     // --- Initial Load & Event Listeners ---
     document.addEventListener('DOMContentLoaded', () => {
+        updateJobsPerPage();
         // 1. Render pre-loaded data immediately for instant UI
         try {
             const preloadedJobs = JSON.parse(document.getElementById('preloaded-jobs').textContent);
@@ -645,6 +668,7 @@
 
 
         // Job listeners
+        jobSearch.addEventListener('input', filterAndRenderJobs);
         companyFilter.addEventListener('change', filterAndRenderJobs);
         locationFilter.addEventListener('change', filterAndRenderJobs);
 
@@ -683,6 +707,12 @@
         // Toggle listeners
         autoRefreshToggle.addEventListener('change', (e) => handleToggleChange(e.target.checked));
         autoRefreshToggleMobile.addEventListener('change', (e) => handleToggleChange(e.target.checked));
+        
+        // Responsive pagination listener
+        window.addEventListener('resize', () => {
+            updateJobsPerPage();
+            filterAndRenderJobs();
+        });
     });
   </script>
 
