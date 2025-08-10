@@ -1,81 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>OneStopCareers - Job Board</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" />
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
-    body {
-      font-family: 'Poppins', sans-serif;
-    }
-    .modal {
-      display: none;
-      position: fixed;
-      z-index: 100;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      overflow: auto;
-      background-color: rgba(0,0,0,0.4);
-    }
-    .modal-content {
-      background-color: #fefefe;
-      margin: 10% auto;
-      padding: 20px;
-      border-radius: 12px;
-      width: 90%;
-      max-width: 600px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    }
-    .close-btn {
-      color: #aaa;
-      float: right;
-      font-size: 28px;
-      font-weight: bold;
-    }
-    .close-btn:hover,
-    .close-btn:focus {
-      color: #000;
-      text-decoration: none;
-      cursor: pointer;
-    }
-    /* Active navigation link style */
-    .nav-active {
-        color: #ea580c; /* Orange-600 */
-        font-weight: 600;
-        border-bottom: 2px solid #ea580c;
-    }
-    /* Simple line-clamp utility */
-    .line-clamp-2 {
-        overflow: hidden;
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
-    }
-  </style>
-</head>
-<body class="bg-gray-50 text-gray-900 font-sans">
-
-  <!-- Header -->
-  <header class="bg-white shadow-md sticky top-0 z-50">
-    <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
-      <div class="flex items-center">
-        <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="OneStopCareers Logo" class="rounded-full mr-2 h-10 w-10 object-cover" />
-        <a href="index.html" class="text-2xl font-bold">OneStopCareers</a>
-      </div>
-      <nav class="hidden md:flex items-center space-x-6">
-        <a href="index.html" class="text-gray-600 hover:text-orange-600 font-medium">Home</a>
-        <a href="jobs.html" class="text-gray-600 hover:text-orange-600 font-medium nav-active">Find Jobs/referrals</a>
-        <a href="resources.html" class="text-gray-600 hover:text-orange-600 font-medium">Resources</a>
-        <a href="mentors.html" class="text-gray-600 hover:text-orange-600 font-medium">Mentors</a>
-      </nav>
-       <!-- Auto-refresh Toggle (Desktop) -->
-      <div class="hidden md:flex items-center space-x-2">
-          <span class="text-sm font-medium text-gray-600" title="Automatically refresh data every minute">Auto-Refresh</span>
+Auto-Refresh</span>
           <label for="auto-refresh-toggle" class="inline-flex relative items-center cursor-pointer">
               <input type="checkbox" id="auto-refresh-toggle" class="sr-only peer">
               <div class="w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-2 peer-focus:ring-orange-300 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-orange-500"></div>
@@ -121,7 +44,7 @@
         </select>
       </div>
     </div>
-    <div id="job-board-loading" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div id="job-board-loading" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6" style="display: none;">
       <!-- Skeleton loader for jobs -->
       <div class="bg-white p-5 rounded-xl shadow-lg border border-gray-200 animate-pulse">
         <div class="h-6 bg-gray-200 rounded w-3/4 mb-2"></div>
@@ -168,7 +91,7 @@
         </div>
 
         <!-- Loading State for Referrals -->
-        <div id="referral-loading" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div id="referral-loading" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6" style="display: none;">
             <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-200 animate-pulse">
                 <div class="flex items-center space-x-4">
                     <div class="h-12 w-12 bg-gray-200 rounded-full"></div>
@@ -201,7 +124,7 @@
             </div>
         </div>
         <!-- Grid to display referral cards -->
-        <div id="referral-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6" style="display: none;"></div>
+        <div id="referral-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
         <!-- Pagination for Referrals -->
         <div id="referral-pagination-controls" class="flex justify-center items-center space-x-4 mt-8" style="display: none;">
             <button id="referral-prev-btn" class="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300 disabled:opacity-50" disabled>Previous</button>
@@ -260,6 +183,56 @@
       <a id="modal-apply-btn" href="#" target="_blank" class="block mt-6 text-center bg-orange-500 text-white py-3 rounded-lg hover:bg-orange-600 transition-colors">Apply Now</a>
     </div>
   </div>
+
+  <!-- Pre-loaded data for instant page load -->
+  <script id="preloaded-jobs" type="application/json">
+    [
+      {
+        "Job Title": "Senior Frontend Developer",
+        "Company": "Innovate Inc.",
+        "Location": "San Francisco, CA",
+        "Description": "Join our team to build next-gen web applications using React and TypeScript. 5+ years of experience required.",
+        "Link": "#"
+      },
+      {
+        "Job Title": "Product Manager",
+        "Company": "Solutions Co.",
+        "Location": "New York, NY",
+        "Description": "Define product vision, strategy, and roadmap. Work closely with engineering, design, and marketing teams.",
+        "Link": "#"
+      },
+      {
+        "Job Title": "Data Scientist",
+        "Company": "Future Analytics",
+        "Location": "Remote",
+        "Description": "Analyze large datasets to extract meaningful insights. Proficiency in Python, SQL, and machine learning frameworks.",
+        "Link": "#"
+      }
+    ]
+  </script>
+  <script id="preloaded-referrals" type="application/json">
+    [
+      {
+        "Name": "Alex Johnson",
+        "Designation": "Engineering Manager",
+        "Company name": "Innovate Inc.",
+        "LinkedIn ID url": "#"
+      },
+      {
+        "Name": "Brenda Smith",
+        "Designation": "Senior Recruiter",
+        "Company name": "Solutions Co.",
+        "LinkedIn ID url": "#"
+      },
+      {
+        "Name": "Charles Brown",
+        "Designation": "Lead Data Scientist",
+        "Company name": "Future Analytics",
+        "LinkedIn ID url": "#"
+      }
+    ]
+  </script>
+
 
   <script>
     // --- DOM Elements ---
@@ -384,10 +357,12 @@
       const titles = getUniqueSortedValues('Job Title');
       
       const populateSelect = (selectElement, options) => {
+          const currentVal = selectElement.value;
           selectElement.innerHTML = `<option value="">All ${selectElement.id.split('-')[0].charAt(0).toUpperCase() + selectElement.id.split('-')[0].slice(1)}</option>`;
           options.forEach(option => {
               selectElement.innerHTML += `<option value="${option}">${option}</option>`;
           });
+          selectElement.value = currentVal;
       };
 
       populateSelect(companyFilter, companies);
@@ -464,7 +439,9 @@
     };
 
     // --- Data Fetching with Caching ---
-    const fetchAndCacheData = async (url, cacheKey, loadingElement, gridElement, setupFunction, forceRefresh = false) => {
+    const fetchAndCacheData = async (options) => {
+        const { url, cacheKey, loadingElement, gridElement, setupFunction, forceRefresh = false, showLoading = false } = options;
+
         if (!forceRefresh) {
             const cachedItem = localStorage.getItem(cacheKey);
             if (cachedItem) {
@@ -477,8 +454,10 @@
             }
         }
 
-        loadingElement.style.display = 'grid';
-        gridElement.style.display = 'none';
+        if (showLoading) {
+            loadingElement.style.display = 'grid';
+            gridElement.style.display = 'none';
+        }
         
         try {
             const response = await fetch(url);
@@ -491,21 +470,21 @@
             console.error(`Failed to fetch data from ${url}:`, error);
             gridElement.innerHTML = `<p class="text-red-500 text-center col-span-3">Failed to load data. Please try again later.</p>`;
         } finally {
-            loadingElement.style.display = 'none';
-            gridElement.style.display = 'grid';
+            if (showLoading) {
+                loadingElement.style.display = 'none';
+                gridElement.style.display = 'grid';
+            }
         }
     };
 
     const setupJobs = (data) => {
         allJobs = data;
-        displayedJobs = allJobs;
         populateFilters(allJobs);
         filterAndRenderJobs();
     };
 
     const setupReferrals = (data) => {
         allReferrals = data;
-        displayedReferrals = allReferrals;
         filterAndRenderReferrals();
     };
     
@@ -516,13 +495,14 @@
 
         if (isChecked) {
             console.log('Auto-refresh enabled.');
-            fetchAndCacheData(JOBS_API_URL, 'jobs_cache', jobBoardLoading, jobBoard, setupJobs, true);
-            fetchAndCacheData(REFERRALS_API_URL, 'referrals_cache', referralLoading, referralGrid, setupReferrals, true);
+            const options = { forceRefresh: true, showLoading: true };
+            fetchAndCacheData({ ...options, url: JOBS_API_URL, cacheKey: 'jobs_cache', loadingElement: jobBoardLoading, gridElement: jobBoard, setupFunction: setupJobs });
+            fetchAndCacheData({ ...options, url: REFERRALS_API_URL, cacheKey: 'referrals_cache', loadingElement: referralLoading, gridElement: referralGrid, setupFunction: setupReferrals });
 
             autoRefreshIntervalId = setInterval(() => {
                 console.log('Auto-refreshing data...');
-                fetchAndCacheData(JOBS_API_URL, 'jobs_cache', jobBoardLoading, jobBoard, setupJobs, true);
-                fetchAndCacheData(REFERRALS_API_URL, 'referrals_cache', referralLoading, referralGrid, setupReferrals, true);
+                fetchAndCacheData({ ...options, url: JOBS_API_URL, cacheKey: 'jobs_cache', loadingElement: jobBoardLoading, gridElement: jobBoard, setupFunction: setupJobs });
+                fetchAndCacheData({ ...options, url: REFERRALS_API_URL, cacheKey: 'referrals_cache', loadingElement: referralLoading, gridElement: referralGrid, setupFunction: setupReferrals });
             }, REFRESH_INTERVAL);
         } else {
             console.log('Auto-refresh disabled.');
@@ -536,8 +516,29 @@
 
     // --- Initial Load & Event Listeners ---
     document.addEventListener('DOMContentLoaded', () => {
-        fetchAndCacheData(JOBS_API_URL, 'jobs_cache', jobBoardLoading, jobBoard, setupJobs);
-        fetchAndCacheData(REFERRALS_API_URL, 'referrals_cache', referralLoading, referralGrid, setupReferrals);
+        // 1. Render pre-loaded data immediately for instant UI
+        try {
+            const preloadedJobs = JSON.parse(document.getElementById('preloaded-jobs').textContent);
+            setupJobs(preloadedJobs);
+        } catch (e) {
+            console.error("Could not parse preloaded jobs data.", e);
+            jobBoard.innerHTML = `<p class="text-red-500 text-center col-span-3">Could not load initial job data.</p>`;
+        }
+
+        try {
+            const preloadedReferrals = JSON.parse(document.getElementById('preloaded-referrals').textContent);
+            setupReferrals(preloadedReferrals);
+        } catch (e) {
+            console.error("Could not parse preloaded referrals data.", e);
+            referralGrid.innerHTML = `<p class="text-red-500 text-center col-span-3">Could not load initial referral data.</p>`;
+        }
+
+        // 2. Fetch fresh data in the background
+        setTimeout(() => {
+            fetchAndCacheData({ url: JOBS_API_URL, cacheKey: 'jobs_cache', setupFunction: setupJobs });
+            fetchAndCacheData({ url: REFERRALS_API_URL, cacheKey: 'referrals_cache', setupFunction: setupReferrals });
+        }, 500);
+
 
         // Job listeners
         jobSearch.addEventListener('input', filterAndRenderJobs);
@@ -584,3 +585,4 @@
 
 </body>
 </html>
+```
