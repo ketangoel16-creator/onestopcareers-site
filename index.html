@@ -46,19 +46,15 @@
       opacity: 0;
       transition: opacity 0.3s;
     }
-    .resource-tooltip::after {
-      content: " ";
-      position: absolute;
-      bottom: 100%; /* At the top of the tooltip */
-      left: 50%;
-      margin-left: -5px;
-      border-width: 5px;
-      border-style: solid;
-      border-color: transparent transparent #333 transparent;
-    }
     .resources-link:hover .resource-tooltip {
       visibility: visible;
       opacity: 1;
+    }
+    /* Active navigation link style */
+    .nav-active {
+        color: #ea580c; /* Orange-600 */
+        font-weight: 600;
+        border-bottom: 2px solid #ea580c;
     }
   </style>
 </head>
@@ -69,9 +65,10 @@
     <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
       <div class="flex items-center">
         <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="OneStopCareers Logo" class="rounded-full mr-2 h-10 w-10 object-cover" />
-        <h1 class="text-2xl font-bold">OneStopCareers</h1>
+        <a href="index.html" class="text-2xl font-bold">OneStopCareers</a>
       </div>
       <nav class="hidden md:flex items-center space-x-6">
+        <a href="index.html" class="text-gray-600 hover:text-orange-600 font-medium">Home</a>
         <a href="jobs.html" class="text-gray-600 hover:text-orange-600 font-medium">Find Jobs/referrals</a>
         <a href="resources.html" class="text-gray-600 hover:text-orange-600 font-medium resources-link relative">
           Resources
@@ -89,6 +86,7 @@
     </div>
     <!-- Mobile menu -->
     <nav id="mobile-menu" class="hidden md:hidden bg-white shadow-lg py-2">
+      <a href="index.html" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Home</a>
       <a href="jobs.html" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Find Jobs/referrals</a>
       <a href="resources.html" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Resources</a>
       <a href="mentors.html" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Mentors</a>
@@ -210,6 +208,21 @@
         mobileMenu.classList.add('hidden');
       });
     });
+
+    // Function to add 'active' class to the current page's nav link
+    function highlightActivePage() {
+      const path = window.location.pathname.split('/').pop();
+      const navLinks = document.querySelectorAll('header nav a');
+      navLinks.forEach(link => {
+        const linkPath = link.href.split('/').pop();
+        if (linkPath === path || (path === '' && linkPath === 'index.html')) {
+          link.classList.add('nav-active');
+        }
+      });
+    }
+
+    // Run on page load
+    window.addEventListener('load', highlightActivePage);
   </script>
 
 </body>
