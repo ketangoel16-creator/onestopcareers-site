@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OneStopCareers - Job Board</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" />
+</head>
+<body class="bg-gray-50 text-gray-900 font-sans">
+
+  <!-- Header -->
+  <header class="bg-gradient-to-r from-blue-600 to-indigo-600 shadow-md">
+    <div class="max-w-6xl mx-auto px-4 py-6 flex flex-col sm:flex-row items-center justify-between">
+      <h1 class="text-3xl font-extrabold text-white tracking-wide">OneStopCareers</h1>
+      <nav class="mt-3 sm:mt-0">
+        <a href="#jobs" class="text-white hover:text-yellow-300 mx-2">Job Board</a>
+        <a href="#about" class="text-white hover:text-yellow-300 mx-2">About</a>
+        <a href="#contact" class="text-white hover:text-yellow-300 mx-2">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="bg-white py-12 text-center shadow-sm">
+    <h2 class="text-4xl font-bold text-gray-800">Your Gateway to Career Opportunities</h2>
+    <p class="text-gray-600 mt-3 max-w-2xl mx-auto">
+      Browse live job openings updated in real-time from top companies. One place, all opportunities.
+    </p>
+  </section>
+
+  <!-- Job Board -->
+  <section id="jobs" class="max-w-6xl mx-auto px-4 py-10">
+    <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-4 border-blue-500 inline-block pb-1">Job Board</h3>
+    <div id="job-board" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+  </section>
+
+  <!-- About -->
+  <section id="about" class="bg-gray-100 py-12">
+    <div class="max-w-5xl mx-auto px-4 text-center">
+      <h3 class="text-2xl font-bold mb-4">About OneStopCareers</h3>
+      <p class="text-gray-700 leading-relaxed">
+        OneStopCareers is your one-stop destination for exploring the latest job openings from various industries. We automatically update listings from our partners, so you never miss an opportunity.
+      </p>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section id="contact" class="bg-white py-12">
+    <div class="max-w-5xl mx-auto px-4 text-center">
+      <h3 class="text-2xl font-bold mb-4">Contact Us</h3>
+      <p class="text-gray-700 mb-6">Have questions or want to partner with us? Drop us an email.</p>
+      <a href="mailto:onestopcareers@example.com" 
+         class="bg-blue-600 text-white px-6 py-3 rounded-lg shadow hover:bg-blue-700">
+        Email Us
+      </a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-gray-800 text-white py-6 text-center">
+    <p>© 2025 OneStopCareers. All rights reserved.</p>
+  </footer>
+
+  <!-- Script to Fetch Jobs -->
+  <script>
+    fetch('https://sheetdb.io/api/v1/9tjp7sn6v4p8k')
+      .then(res => res.json())
+      .then(data => {
+        let html = '';
+        data.forEach(job => {
+          html += `
+            <div class="bg-white p-5 rounded-xl shadow hover:shadow-lg transition">
+              <h4 class="text-xl font-bold text-blue-700">${job['Job Title']}</h4>
+              <p class="text-gray-600 font-medium">${job['Company']} - ${job['Location']}</p>
+              <p class="text-gray-500 text-sm mt-2">${job['Description'] || ''}</p>
+              <a href="${job['Link']}" target="_blank" 
+                 class="block mt-4 text-center bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700">
+                Apply Now
+              </a>
+            </div>
+          `;
+        });
+        document.getElementById('job-board').innerHTML = html;
+      })
+      .catch(err => {
+        document.getElementById('job-board').innerHTML = 
+          `<p class="text-red-500">Failed to load job listings.</p>`;
+        console.error(err);
+      });
+  </script>
+
+</body>
+</html>
