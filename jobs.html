@@ -49,12 +49,34 @@
         font-weight: 600;
         border-bottom: 2px solid #ea580c;
     }
-    /* Simple line-clamp utility */
-    .line-clamp-2 {
-        overflow: hidden;
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
+    .toast {
+        visibility: hidden;
+        min-width: 250px;
+        margin-left: -125px;
+        background-color: #333;
+        color: #fff;
+        text-align: center;
+        border-radius: 8px;
+        padding: 16px;
+        position: fixed;
+        z-index: 101;
+        left: 50%;
+        bottom: 30px;
+        opacity: 0;
+        transition: visibility 0s, opacity 0.5s linear;
+    }
+    .toast.show {
+        visibility: visible;
+        opacity: 1;
+    }
+    /* Custom select style */
+    .custom-select {
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+        background-position: right 0.5rem center;
+        background-repeat: no-repeat;
+        background-size: 1.5em 1.5em;
+        padding-right: 2.5rem;
     }
   </style>
 </head>
@@ -104,52 +126,35 @@
   </header>
 
   <!-- Job Board -->
-  <section id="jobs" class="max-w-6xl mx-auto px-4 py-16">
-    <h3 class="text-4xl font-bold text-gray-800 mb-6 border-b-4 border-orange-500 inline-block pb-1">Job Board</h3>
-    <p class="text-gray-600 mb-6">Check out recent openings from top companies.</p>
-    <div class="flex flex-col md:flex-row items-center justify-between mb-8 space-y-4 md:space-y-0">
-      <input type="text" id="job-search" placeholder="Search for jobs..." class="w-full md:w-1/3 p-3 rounded-lg border-2 border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-500" />
-      <div class="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-4">
-        <select id="company-filter" class="p-3 rounded-lg border-2 border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-500">
-          <option value="">All Companies</option>
-        </select>
-        <select id="location-filter" class="p-3 rounded-lg border-2 border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-500">
-          <option value="">All Locations</option>
-        </select>
-        <select id="title-filter" class="p-3 rounded-lg border-2 border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-500">
-          <option value="">All Job Titles</option>
-        </select>
-      </div>
+  <section id="jobs" class="max-w-7xl mx-auto px-4 py-16">
+    <div class="text-center">
+        <h3 class="text-4xl font-bold text-gray-800 mb-2 border-b-4 border-orange-500 inline-block pb-2">Job Board</h3>
+        <p class="text-gray-600 mb-8">Check out recent openings from top companies.</p>
     </div>
-    <div id="job-board-loading" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6" style="display: none;">
+    
+    <!-- Job Filters -->
+    <div class="flex flex-col md:flex-row items-center justify-center gap-4 mb-12">
+        <select id="company-filter" class="custom-select w-full md:w-auto p-3 rounded-lg border-2 border-gray-200 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500">
+            <option value="All">All Companies</option>
+        </select>
+        <select id="location-filter" class="custom-select w-full md:w-auto p-3 rounded-lg border-2 border-gray-200 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500">
+            <option value="All">All Locations</option>
+        </select>
+    </div>
+
+    <div id="job-board-loading" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" style="display: none;">
       <!-- Skeleton loader for jobs -->
-      <div class="bg-white p-5 rounded-xl shadow-lg border border-gray-200 animate-pulse">
-        <div class="h-6 bg-gray-200 rounded w-3/4 mb-2"></div>
-        <div class="h-4 bg-gray-200 rounded w-1/2 mb-4"></div>
-        <div class="h-3 bg-gray-200 rounded w-full mb-2"></div>
-        <div class="h-3 bg-gray-200 rounded w-5/6 mb-2"></div>
-        <div class="h-3 bg-gray-200 rounded w-4/6 mb-4"></div>
-        <div class="h-10 bg-orange-200 rounded-lg"></div>
-      </div>
-      <div class="bg-white p-5 rounded-xl shadow-lg border border-gray-200 animate-pulse hidden md:block">
-        <div class="h-6 bg-gray-200 rounded w-3/4 mb-2"></div>
-        <div class="h-4 bg-gray-200 rounded w-1/2 mb-4"></div>
-        <div class="h-3 bg-gray-200 rounded w-full mb-2"></div>
-        <div class="h-3 bg-gray-200 rounded w-5/6 mb-2"></div>
-        <div class="h-3 bg-gray-200 rounded w-4/6 mb-4"></div>
-        <div class="h-10 bg-orange-200 rounded-lg"></div>
-      </div>
-      <div class="bg-white p-5 rounded-xl shadow-lg border border-gray-200 animate-pulse hidden lg:block">
-        <div class="h-6 bg-gray-200 rounded w-3/4 mb-2"></div>
-        <div class="h-4 bg-gray-200 rounded w-1/2 mb-4"></div>
-        <div class="h-3 bg-gray-200 rounded w-full mb-2"></div>
-        <div class="h-3 bg-gray-200 rounded w-5/6 mb-2"></div>
-        <div class="h-3 bg-gray-200 rounded w-4/6 mb-4"></div>
-        <div class="h-10 bg-orange-200 rounded-lg"></div>
+      <div class="bg-white p-6 rounded-xl shadow-lg border animate-pulse flex items-center gap-6">
+        <div class="h-20 w-20 bg-gray-200 rounded-full flex-shrink-0"></div>
+        <div class="flex-1 space-y-3">
+            <div class="h-5 bg-gray-200 rounded w-3/4"></div>
+            <div class="h-4 bg-gray-200 rounded w-1/2"></div>
+            <div class="h-10 bg-orange-200 rounded-lg w-24 mt-2"></div>
+        </div>
       </div>
     </div>
-    <div id="job-board" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
-    <div id="pagination-controls" class="flex justify-center items-center space-x-4 mt-8" style="display: none;">
+    <div id="job-board" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
+    <div id="pagination-controls" class="flex justify-center items-center space-x-4 mt-12" style="display: none;">
       <button id="prev-btn" class="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300 disabled:opacity-50" disabled>Previous</button>
       <span id="page-info" class="text-gray-600">Page 1 of 1</span>
       <button id="next-btn" class="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300 disabled:opacity-50" disabled>Next</button>
@@ -158,52 +163,29 @@
 
   <!-- Referral Network Section -->
   <section id="referrals" class="bg-orange-50 py-16">
-    <div class="max-w-6xl mx-auto px-4">
-        <h3 class="text-4xl font-bold text-gray-800 mb-6 border-b-4 border-orange-500 inline-block pb-1">Referral Network</h3>
-        <p class="text-gray-600 mb-8">Connect with professionals willing to give referrals at top companies.</p>
+    <div class="max-w-7xl mx-auto px-4">
+        <div class="text-center">
+            <h3 class="text-4xl font-bold text-gray-800 mb-2 border-b-4 border-orange-500 inline-block pb-2">Referral Network</h3>
+            <p class="text-gray-600 mb-8">Connect with professionals willing to give referrals at top companies.</p>
+        </div>
         
-        <!-- Search for Referrals -->
-        <div class="mb-8">
-            <input type="text" id="referral-search" placeholder="Search by name, company, or title..." class="w-full md:w-1/3 p-3 rounded-lg border-2 border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-500" />
+        <!-- Referral Filters -->
+        <div class="flex flex-col md:flex-row items-center justify-center gap-4 mb-12">
+            <input type="text" id="referral-search" placeholder="Search by name or title..." class="w-full md:w-auto p-3 rounded-lg border-2 border-gray-200 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500" />
+            <select id="referral-company-filter" class="custom-select w-full md:w-auto p-3 rounded-lg border-2 border-gray-200 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500">
+                <option value="">All Companies</option>
+            </select>
         </div>
 
+
         <!-- Loading State for Referrals -->
-        <div id="referral-loading" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6" style="display: none;">
-            <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-200 animate-pulse">
-                <div class="flex items-center space-x-4">
-                    <div class="h-12 w-12 bg-gray-200 rounded-full"></div>
-                    <div class="flex-1 space-y-2">
-                        <div class="h-5 bg-gray-200 rounded w-3/4"></div>
-                        <div class="h-4 bg-gray-200 rounded w-1/2"></div>
-                        <div class="h-4 bg-gray-200 rounded w-1/3"></div>
-                    </div>
-                </div>
-            </div>
-             <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-200 animate-pulse hidden md:block">
-                <div class="flex items-center space-x-4">
-                    <div class="h-12 w-12 bg-gray-200 rounded-full"></div>
-                    <div class="flex-1 space-y-2">
-                        <div class="h-5 bg-gray-200 rounded w-3/4"></div>
-                        <div class="h-4 bg-gray-200 rounded w-1/2"></div>
-                        <div class="h-4 bg-gray-200 rounded w-1/3"></div>
-                    </div>
-                </div>
-            </div>
-             <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-200 animate-pulse hidden lg:block">
-                <div class="flex items-center space-x-4">
-                    <div class="h-12 w-12 bg-gray-200 rounded-full"></div>
-                    <div class="flex-1 space-y-2">
-                        <div class="h-5 bg-gray-200 rounded w-3/4"></div>
-                        <div class="h-4 bg-gray-200 rounded w-1/2"></div>
-                        <div class="h-4 bg-gray-200 rounded w-1/3"></div>
-                    </div>
-                </div>
-            </div>
+        <div id="referral-loading" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" style="display: none;">
+            <!-- Skeleton for referral card -->
         </div>
         <!-- Grid to display referral cards -->
-        <div id="referral-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+        <div id="referral-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
         <!-- Pagination for Referrals -->
-        <div id="referral-pagination-controls" class="flex justify-center items-center space-x-4 mt-8" style="display: none;">
+        <div id="referral-pagination-controls" class="flex justify-center items-center space-x-4 mt-12" style="display: none;">
             <button id="referral-prev-btn" class="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300 disabled:opacity-50" disabled>Previous</button>
             <span id="referral-page-info" class="text-gray-600">Page 1 of 1</span>
             <button id="referral-next-btn" class="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300 disabled:opacity-50" disabled>Next</button>
@@ -212,7 +194,7 @@
   </section>
 
   <section id="jobs-testimonials" class="bg-gray-800 py-16 text-white">
-    <div class="max-w-6xl mx-auto px-4 text-center">
+    <div class="max-w-7xl mx-auto px-4 text-center">
       <h3 class="text-4xl font-bold">Success Stories from Our Job Seekers</h3>
       <p class="text-gray-300 mt-4 max-w-3xl mx-auto">
         Read how our platform helped people find and land their dream jobs.
@@ -235,7 +217,7 @@
   </section>
 
   <section class="bg-gray-200 py-16 text-center">
-    <div class="max-w-4xl mx-auto px-4">
+    <div class="max-w-7xl mx-auto px-4">
       <h3 class="text-4xl font-bold text-gray-800">Not Getting Interview Calls?</h3>
       <p class="mt-4 text-gray-600">
         If you're not getting traction on your applications, the problem might not be with the jobs themselves. Get a personalized roadmap from a mentor.
@@ -256,57 +238,44 @@
       <span class="close-btn">&times;</span>
       <h4 id="modal-title" class="text-2xl font-bold text-orange-700 mb-2"></h4>
       <p id="modal-company-location" class="text-gray-600 font-medium mb-4"></p>
-      <p id="modal-description" class="text-gray-700"></p>
-      <a id="modal-apply-btn" href="#" target="_blank" class="block mt-6 text-center bg-orange-500 text-white py-3 rounded-lg hover:bg-orange-600 transition-colors">Apply Now</a>
+      <p id="modal-description" class="text-gray-700 whitespace-pre-wrap"></p>
+      <div class="mt-6 flex justify-between items-center">
+        <a id="modal-apply-btn" href="#" target="_blank" class="bg-orange-500 text-white py-3 px-6 rounded-lg hover:bg-orange-600 transition-colors font-semibold">Apply Now</a>
+        <button id="modal-share-btn" class="bg-gray-200 text-gray-700 py-3 px-4 rounded-lg hover:bg-gray-300 transition-colors" title="Copy job link">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12s-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z" />
+            </svg>
+        </button>
+      </div>
     </div>
   </div>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="toast">Link copied to clipboard!</div>
+
 
   <!-- Pre-loaded data for instant page load -->
   <script id="preloaded-jobs" type="application/json">
     [
-      {
-        "Job Title": "Senior Frontend Developer",
-        "Company": "Innovate Inc.",
-        "Location": "San Francisco, CA",
-        "Description": "Join our team to build next-gen web applications using React and TypeScript. 5+ years of experience required.",
-        "Link": "#"
-      },
-      {
-        "Job Title": "Product Manager",
-        "Company": "Solutions Co.",
-        "Location": "New York, NY",
-        "Description": "Define product vision, strategy, and roadmap. Work closely with engineering, design, and marketing teams.",
-        "Link": "#"
-      },
-      {
-        "Job Title": "Data Scientist",
-        "Company": "Future Analytics",
-        "Location": "Remote",
-        "Description": "Analyze large datasets to extract meaningful insights. Proficiency in Python, SQL, and machine learning frameworks.",
-        "Link": "#"
-      }
+      { "id": 1, "Job Title": "Senior Frontend Developer", "Company": "Innovate Inc.", "Location": "San Francisco, CA", "Description": "Join our team to build next-gen web applications using React and TypeScript. 5+ years of experience required.", "Link": "#" },
+      { "id": 2, "Job Title": "Product Manager", "Company": "Solutions Co.", "Location": "New York, NY", "Description": "Define product vision, strategy, and roadmap. Work closely with engineering, design, and marketing teams.", "Link": "#" },
+      { "id": 3, "Job Title": "Data Scientist", "Company": "Future Analytics", "Location": "Remote", "Description": "Analyze large datasets to extract meaningful insights. Proficiency in Python, SQL, and machine learning frameworks.", "Link": "#" }
     ]
   </script>
   <script id="preloaded-referrals" type="application/json">
     [
-      {
-        "Name": "Alex Johnson",
-        "Designation": "Engineering Manager",
-        "Company name": "Innovate Inc.",
-        "LinkedIn ID url": "#"
-      },
-      {
-        "Name": "Brenda Smith",
-        "Designation": "Senior Recruiter",
-        "Company name": "Solutions Co.",
-        "LinkedIn ID url": "#"
-      },
-      {
-        "Name": "Charles Brown",
-        "Designation": "Lead Data Scientist",
-        "Company name": "Future Analytics",
-        "LinkedIn ID url": "#"
-      }
+      {"Name": "Alex Johnson", "Designation": "Engineering Manager", "Company name": "Innovate Inc.", "LinkedIn ID url": "#"},
+      {"Name": "Brenda Smith", "Designation": "Senior Recruiter", "Company name": "Solutions Co.", "LinkedIn ID url": "#"},
+      {"Name": "Charles Brown", "Designation": "Lead Data Scientist", "Company name": "Future Analytics", "LinkedIn ID url": "#"},
+      {"Name": "Diana Prince", "Designation": "Software Engineer", "Company name": "Innovate Inc.", "LinkedIn ID url": "#"},
+      {"Name": "Edward Nygma", "Designation": "UX Designer", "Company name": "Creative Minds", "LinkedIn ID url": "#"},
+      {"Name": "Fiona Glenanne", "Designation": "DevOps Engineer", "Company name": "CloudUp", "LinkedIn ID url": "#"},
+      {"Name": "George Costanza", "Designation": "Architect", "Company name": "Vandelay Industries", "LinkedIn ID url": "#"},
+      {"Name": "Harleen Quinzel", "Designation": "HR Business Partner", "Company name": "Solutions Co.", "LinkedIn ID url": "#"},
+      {"Name": "Indiana Jones", "Designation": "Archaeologist", "Company name": "Barnett College", "LinkedIn ID url": "#"},
+      {"Name": "Jack Sparrow", "Designation": "Captain", "Company name": "The Black Pearl", "LinkedIn ID url": "#"},
+      {"Name": "Kara Danvers", "Designation": "Journalist", "Company name": "CatCo Worldwide Media", "LinkedIn ID url": "#"},
+      {"Name": "Luke Skywalker", "Designation": "Jedi Master", "Company name": "Rebel Alliance", "LinkedIn ID url": "#"}
     ]
   </script>
 
@@ -315,10 +284,8 @@
     // --- DOM Elements ---
     const jobBoard = document.getElementById('job-board');
     const jobBoardLoading = document.getElementById('job-board-loading');
-    const jobSearch = document.getElementById('job-search');
     const companyFilter = document.getElementById('company-filter');
     const locationFilter = document.getElementById('location-filter');
-    const titleFilter = document.getElementById('title-filter');
     const paginationControls = document.getElementById('pagination-controls');
     const prevBtn = document.getElementById('prev-btn');
     const nextBtn = document.getElementById('next-btn');
@@ -331,11 +298,14 @@
     const modalCompanyLocation = document.getElementById('modal-company-location');
     const modalDescription = document.getElementById('modal-description');
     const modalApplyBtn = document.getElementById('modal-apply-btn');
+    const modalShareBtn = document.getElementById('modal-share-btn');
+    const toast = document.getElementById('toast');
     
     // Referral Elements
     const referralGrid = document.getElementById('referral-grid');
     const referralLoading = document.getElementById('referral-loading');
     const referralSearch = document.getElementById('referral-search');
+    const referralCompanyFilter = document.getElementById('referral-company-filter');
     const referralPaginationControls = document.getElementById('referral-pagination-controls');
     const referralPrevBtn = document.getElementById('referral-prev-btn');
     const referralNextBtn = document.getElementById('referral-next-btn');
@@ -352,7 +322,7 @@
     let allJobs = [];
     let displayedJobs = [];
 
-    const referralsPerPage = 10;
+    const referralsPerPage = 12;
     let currentReferralPage = 1;
     let allReferrals = [];
     let displayedReferrals = [];
@@ -368,24 +338,49 @@
       mobileMenu.classList.toggle('hidden');
     });
 
-    // --- Modal Logic ---
+    // --- Modal & Toast Logic ---
     const openJobModal = (job) => {
       modalTitle.textContent = job['Job Title'];
       modalCompanyLocation.textContent = `${job['Company']} - ${job['Location']}`;
       modalDescription.textContent = job['Description'];
       modalApplyBtn.href = job['Link'];
+      modalShareBtn.dataset.jobId = job.id;
       jobModal.style.display = 'block';
+      // history.pushState({jobId: job.id}, '', `?jobId=${job.id}`); // Removed to prevent security error in sandbox
     };
 
-    modalCloseBtn.addEventListener('click', () => {
-      jobModal.style.display = 'none';
-    });
+    const closeModal = () => {
+        jobModal.style.display = 'none';
+        // history.pushState({}, '', window.location.pathname); // Removed to prevent security error in sandbox
+    };
 
+    modalCloseBtn.addEventListener('click', closeModal);
     window.addEventListener('click', (event) => {
       if (event.target === jobModal) {
-        jobModal.style.display = 'none';
+        closeModal();
       }
     });
+
+    const showToast = (message) => {
+        toast.textContent = message;
+        toast.classList.add('show');
+        setTimeout(() => { toast.classList.remove('show'); }, 3000);
+    };
+
+    modalShareBtn.addEventListener('click', (e) => {
+        const jobId = e.currentTarget.dataset.jobId;
+        const url = `${window.location.origin}${window.location.pathname}?jobId=${jobId}`;
+        
+        const tempTextArea = document.createElement('textarea');
+        tempTextArea.value = url;
+        document.body.appendChild(tempTextArea);
+        tempTextArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(tempTextArea);
+        
+        showToast('Job link copied to clipboard!');
+    });
+
 
     // --- Job Rendering and Filtering ---
     const renderJobs = (jobs, page = 1) => {
@@ -395,20 +390,25 @@
       const paginatedJobs = jobs.slice(start, end);
 
       if (paginatedJobs.length === 0) {
-        jobBoard.innerHTML = '<p class="text-gray-500 text-center col-span-3">No jobs found matching your criteria.</p>';
+        jobBoard.innerHTML = '<p class="text-gray-500 text-center col-span-full">No jobs found matching your criteria.</p>';
       } else {
         paginatedJobs.forEach(job => {
+          const companyInitial = (job.Company || 'C').charAt(0).toUpperCase();
+          const logoUrl = `https://placehold.co/100x100/f97316/FFFFFF?text=${companyInitial}`;
+
           const jobCard = document.createElement('div');
-          jobCard.className = 'job-card cursor-pointer bg-white p-5 rounded-xl shadow-lg border border-gray-200 hover:shadow-xl transition-shadow';
+          jobCard.className = 'job-card bg-white p-6 rounded-xl shadow-lg border hover:shadow-2xl transition-shadow duration-300 flex items-center gap-5 cursor-pointer';
+          
           jobCard.innerHTML = `
-            <h4 class="text-xl font-bold text-orange-700"></h4>
-            <p class="text-gray-600 font-medium"></p>
-            <p class="text-gray-500 text-sm mt-2 line-clamp-2"></p>
-            <a href="#" target="_blank" class="block mt-4 text-center bg-orange-500 text-white py-2 rounded-lg hover:bg-orange-600 transition-colors">Apply Now</a>
+            <img src="${logoUrl}" alt="${job.Company} Logo" class="w-20 h-20 rounded-full flex-shrink-0 border-4 border-orange-100" onerror="this.onerror=null;this.src='https://placehold.co/100x100/EFEFEF/4A4A4A?text=...';">
+            <div class="text-left">
+                <h4 class="text-lg font-bold text-gray-800"></h4>
+                <p class="text-sm text-gray-500 font-medium mb-3"></p>
+                <a href="#" target="_blank" class="inline-block bg-orange-500 text-white py-2 px-5 rounded-full hover:bg-orange-600 transition-colors text-sm font-semibold">Apply Now</a>
+            </div>
           `;
           jobCard.querySelector('h4').textContent = job['Job Title'] || 'N/A';
-          jobCard.querySelector('.text-gray-600').textContent = `${job['Company'] || 'N/A'} - ${job['Location'] || 'N/A'}`;
-          jobCard.querySelector('.line-clamp-2').textContent = job['Description'] || '';
+          jobCard.querySelector('p').textContent = `${job['Company'] || 'N/A'} - ${job['Location'] || 'N/A'}`;
           jobCard.querySelector('a').href = job['Link'] || '#';
           
           jobCard.addEventListener('click', (e) => {
@@ -426,40 +426,29 @@
       nextBtn.disabled = page === totalPages || totalPages === 0;
       paginationControls.style.display = jobs.length > jobsPerPage ? 'flex' : 'none';
     };
+    
+    const populateSelectFilter = (selectElement, options, currentFilter) => {
+        selectElement.innerHTML = `<option value="All">${selectElement.id.includes('company') ? 'All Companies' : 'All Locations'}</option>`;
+        options.forEach(option => {
+            selectElement.innerHTML += `<option value="${option}">${option}</option>`;
+        });
+        selectElement.value = currentFilter;
+    };
 
-    const populateFilters = (jobs) => {
-      const getUniqueSortedValues = (key) => [...new Set(jobs.map(job => job[key]).filter(Boolean))].sort();
-      const companies = getUniqueSortedValues('Company');
-      const locations = getUniqueSortedValues('Location');
-      const titles = getUniqueSortedValues('Job Title');
-      
-      const populateSelect = (selectElement, options) => {
-          const currentVal = selectElement.value;
-          selectElement.innerHTML = `<option value="">All ${selectElement.id.split('-')[0].charAt(0).toUpperCase() + selectElement.id.split('-')[0].slice(1)}</option>`;
-          options.forEach(option => {
-              selectElement.innerHTML += `<option value="${option}">${option}</option>`;
-          });
-          selectElement.value = currentVal;
-      };
-
-      populateSelect(companyFilter, companies);
-      populateSelect(locationFilter, locations);
-      populateSelect(titleFilter, titles);
+    const populateJobFilters = (jobs) => {
+        const companies = [...new Set(jobs.map(job => job.Company).filter(Boolean))].sort();
+        const locations = [...new Set(jobs.map(job => job.Location).filter(Boolean))].sort();
+        populateSelectFilter(companyFilter, companies, companyFilter.value);
+        populateSelectFilter(locationFilter, locations, locationFilter.value);
     };
 
     const filterAndRenderJobs = () => {
-      const searchTerm = jobSearch.value.toLowerCase();
-      const company = companyFilter.value;
-      const location = locationFilter.value;
-      const title = titleFilter.value;
+      const selectedCompany = companyFilter.value;
+      const selectedLocation = locationFilter.value;
 
       displayedJobs = allJobs.filter(job => 
-        ( (job['Job Title'] || '').toLowerCase().includes(searchTerm) ||
-          (job['Company'] || '').toLowerCase().includes(searchTerm) ||
-          (job['Location'] || '').toLowerCase().includes(searchTerm) ) &&
-        (company === '' || job['Company'] === company) &&
-        (location === '' || job['Location'] === location) &&
-        (title === '' || job['Job Title'] === title)
+        (selectedCompany === 'All' || job.Company === selectedCompany) &&
+        (selectedLocation === 'All' || job.Location === selectedLocation)
       );
       currentPage = 1;
       renderJobs(displayedJobs, currentPage);
@@ -479,18 +468,22 @@
                 card.target = '_blank';
                 card.className = 'block p-6 bg-white rounded-xl shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300';
                 card.innerHTML = `
-                  <div class="flex items-start space-x-4">
-                    <img src="https://cdn-icons-png.flaticon.com/512/174/174857.png" class="h-10 w-10 flex-shrink-0" alt="LinkedIn Icon" />
+                  <div class="flex items-center space-x-4">
+                    <div class="flex-shrink-0 h-12 w-12 flex items-center justify-center bg-blue-100 rounded-full">
+                        <svg class="w-7 h-7 text-blue-600" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M21.75 9.142c0-2.28-1.995-4.142-4.436-4.142H6.686C4.245 5 2.25 6.862 2.25 9.142v4.714c0 2.28 1.995 4.142 4.436 4.142h1.65v2.7l3.28-2.7h4.45c2.441 0 4.436-1.862 4.436-4.142V9.142zM7.5 12.428h9M7.5 10.286h9"></path>
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M6.686 4c-2.99 0-5.436 2.31-5.436 5.142v4.714c0 2.833 2.446 5.142 5.436 5.142h1.65v3.3l4.03-3.3h3.7c2.99 0 5.436-2.31 5.436-5.142V9.142C22.5 6.31 20.054 4 17.186 4H6.686zM21.75 9.142c0-2.28-1.995-4.142-4.436-4.142H6.686C4.245 5 2.25 6.862 2.25 9.142v4.714c0 2.28 1.995 4.142 4.436 4.142h1.65v2.7l3.28-2.7h4.45c2.441 0 4.436-1.862 4.436-4.142V9.142zM7.5 12.428h9M7.5 10.286h9"></path>
+                        </svg>
+                    </div>
                     <div>
                       <h4 class="text-lg font-semibold text-gray-800"></h4>
                       <p class="text-gray-600"></p>
-                      <p class="text-sm text-gray-500 font-medium"></p>
+                      <p class="text-sm text-blue-600 font-semibold">Message for Referral</p>
                     </div>
                   </div>
                 `;
                 card.querySelector('h4').textContent = prof['Name'] || 'N/A';
-                card.querySelector('.text-gray-600').textContent = prof['Designation'] || 'N/A';
-                card.querySelector('.text-sm').textContent = prof['Company name'] || 'N/A';
+                card.querySelector('p').textContent = `${prof['Designation']} at ${prof['Company name'] || 'N/A'}`;
                 referralGrid.appendChild(card);
             });
         } else {
@@ -503,13 +496,25 @@
         referralNextBtn.disabled = page === totalPages || totalPages === 0;
         referralPaginationControls.style.display = referrals.length > referralsPerPage ? 'flex' : 'none';
     };
+
+    const populateReferralCompanyFilter = (referrals) => {
+        const companies = [...new Set(referrals.map(r => r['Company name']).filter(Boolean))].sort();
+        const currentVal = referralCompanyFilter.value;
+        referralCompanyFilter.innerHTML = `<option value="">All Companies</option>`;
+        companies.forEach(company => {
+            referralCompanyFilter.innerHTML += `<option value="${company}">${company}</option>`;
+        });
+        referralCompanyFilter.value = currentVal;
+    };
     
     const filterAndRenderReferrals = () => {
         const searchTerm = referralSearch.value.toLowerCase();
+        const company = referralCompanyFilter.value;
+
         displayedReferrals = allReferrals.filter(prof => 
-            (prof['Name'] || '').toLowerCase().includes(searchTerm) ||
-            (prof['Designation'] || '').toLowerCase().includes(searchTerm) ||
-            (prof['Company name'] || '').toLowerCase().includes(searchTerm)
+            ((prof['Name'] || '').toLowerCase().includes(searchTerm) ||
+            (prof['Designation'] || '').toLowerCase().includes(searchTerm)) &&
+            (company === '' || prof['Company name'] === company)
         );
         currentReferralPage = 1;
         renderReferrals(displayedReferrals, currentReferralPage);
@@ -517,7 +522,7 @@
 
     // --- Data Fetching with Caching ---
     const fetchAndCacheData = async (options) => {
-        const { url, cacheKey, loadingElement, gridElement, setupFunction, forceRefresh = false, showLoading = false } = options;
+        const { url, cacheKey, setupFunction, forceRefresh = false, showLoading = false, loadingElement, gridElement } = options;
 
         if (!forceRefresh) {
             const cachedItem = localStorage.getItem(cacheKey);
@@ -531,7 +536,7 @@
             }
         }
 
-        if (showLoading) {
+        if (showLoading && loadingElement && gridElement) {
             loadingElement.style.display = 'grid';
             gridElement.style.display = 'none';
         }
@@ -541,13 +546,15 @@
             if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
             const data = await response.json();
             
-            localStorage.setItem(cacheKey, JSON.stringify({ timestamp: new Date().getTime(), data: data }));
-            setupFunction(data);
+            const dataWithIds = data.map((item, index) => ({ ...item, id: index + 1 }));
+            
+            localStorage.setItem(cacheKey, JSON.stringify({ timestamp: new Date().getTime(), data: dataWithIds }));
+            setupFunction(dataWithIds);
         } catch (error) {
             console.error(`Failed to fetch data from ${url}:`, error);
-            gridElement.innerHTML = `<p class="text-red-500 text-center col-span-3">Failed to load data. Please try again later.</p>`;
+            if(gridElement) gridElement.innerHTML = `<p class="text-red-500 text-center col-span-3">Failed to load data. Please try again later.</p>`;
         } finally {
-            if (showLoading) {
+            if (showLoading && loadingElement && gridElement) {
                 loadingElement.style.display = 'none';
                 gridElement.style.display = 'grid';
             }
@@ -556,16 +563,18 @@
 
     const setupJobs = (data) => {
         allJobs = data;
-        populateFilters(allJobs);
+        populateJobFilters(allJobs);
         filterAndRenderJobs();
+        handleDeepLink();
     };
 
     const setupReferrals = (data) => {
         allReferrals = data;
+        populateReferralCompanyFilter(allReferrals);
         filterAndRenderReferrals();
     };
     
-    // --- Auto-Refresh Logic ---
+    // --- Auto-Refresh & Deep Link Logic ---
     const handleToggleChange = (isChecked) => {
         autoRefreshToggle.checked = isChecked;
         autoRefreshToggleMobile.checked = isChecked;
@@ -578,14 +587,25 @@
 
             autoRefreshIntervalId = setInterval(() => {
                 console.log('Auto-refreshing data...');
-                fetchAndCacheData({ ...options, url: JOBS_API_URL, cacheKey: 'jobs_cache', loadingElement: jobBoardLoading, gridElement: jobBoard, setupFunction: setupJobs });
-                fetchAndCacheData({ ...options, url: REFERRALS_API_URL, cacheKey: 'referrals_cache', loadingElement: referralLoading, gridElement: referralGrid, setupFunction: setupReferrals });
+                fetchAndCacheData({ ...options, url: JOBS_API_URL, cacheKey: 'jobs_cache', setupFunction: setupJobs });
+                fetchAndCacheData({ ...options, url: REFERRALS_API_URL, cacheKey: 'referrals_cache', setupFunction: setupReferrals });
             }, REFRESH_INTERVAL);
         } else {
             console.log('Auto-refresh disabled.');
             if (autoRefreshIntervalId) {
                 clearInterval(autoRefreshIntervalId);
                 autoRefreshIntervalId = null;
+            }
+        }
+    };
+
+    const handleDeepLink = () => {
+        const params = new URLSearchParams(window.location.search);
+        const jobId = params.get('jobId');
+        if (jobId) {
+            const jobToOpen = allJobs.find(j => j.id == jobId);
+            if (jobToOpen) {
+                openJobModal(jobToOpen);
             }
         }
     };
@@ -599,7 +619,7 @@
             setupJobs(preloadedJobs);
         } catch (e) {
             console.error("Could not parse preloaded jobs data.", e);
-            jobBoard.innerHTML = `<p class="text-red-500 text-center col-span-3">Could not load initial job data.</p>`;
+            jobBoard.innerHTML = `<p class="text-red-500 text-center col-span-full">Could not load initial job data.</p>`;
         }
 
         try {
@@ -618,11 +638,9 @@
 
 
         // Job listeners
-        jobSearch.addEventListener('input', filterAndRenderJobs);
         companyFilter.addEventListener('change', filterAndRenderJobs);
         locationFilter.addEventListener('change', filterAndRenderJobs);
-        titleFilter.addEventListener('change', filterAndRenderJobs);
-        
+
         prevBtn.addEventListener('click', () => {  
           if (currentPage > 1) {  
             currentPage--;  
@@ -639,6 +657,7 @@
 
         // Referral listeners
         referralSearch.addEventListener('input', filterAndRenderReferrals);
+        referralCompanyFilter.addEventListener('change', filterAndRenderReferrals);
 
         referralPrevBtn.addEventListener('click', () => {
             if (currentReferralPage > 1) {
