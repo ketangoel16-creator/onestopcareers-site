@@ -29,10 +29,44 @@
       bottom: 0;
       background: rgba(0, 0, 0, 0.6);
     }
+    /* Modal styles */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 100;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0,0,0,0.4);
+    }
+    .modal-content {
+      background-color: #fefefe;
+      margin: 10% auto;
+      padding: 20px;
+      border-radius: 12px;
+      width: 90%;
+      max-width: 600px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    .close-btn {
+      color: #aaa;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+    }
+    .close-btn:hover,
+    .close-btn:focus {
+      color: #000;
+      text-decoration: none;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body class="bg-gray-50 text-gray-900 font-sans">
 
+  <!-- Header -->
   <header class="bg-white shadow-md sticky top-0 z-50">
     <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
       <div class="flex items-center">
@@ -44,14 +78,17 @@
         <a href="#resources" class="text-gray-600 hover:text-orange-600 font-medium">Job Hunt Resources</a>
         <a href="#mentor" class="text-gray-600 hover:text-orange-600 font-medium">Meet Your Mentor</a>
         <a href="#testimonials" class="text-gray-600 hover:text-orange-600 font-medium">Testimonials</a>
+        <!-- Sticky CTA Button -->
         <a href="#book-session" class="bg-orange-500 text-white px-5 py-2 rounded-lg shadow-md hover:bg-orange-600 transition-colors">Book Your Session</a>
       </nav>
+      <!-- Mobile menu button -->
       <button id="mobile-menu-btn" class="md:hidden text-gray-600">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
         </svg>
       </button>
     </div>
+    <!-- Mobile menu -->
     <nav id="mobile-menu" class="hidden md:hidden bg-white shadow-lg py-2">
       <a href="#jobs" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Job Board</a>
       <a href="#resources" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Job Hunt Resources</a>
@@ -61,6 +98,7 @@
     </nav>
   </header>
 
+  <!-- Hero Section -->
   <section class="hero-bg py-24 md:py-32 text-center text-white relative">
     <div class="relative z-10 max-w-4xl mx-auto px-4">
       <h2 class="text-5xl md:text-6xl font-extrabold leading-tight">
@@ -77,6 +115,7 @@
     </div>
   </section>
 
+  <!-- Problem Section -->
   <section class="bg-gray-800 text-white py-16">
     <div class="max-w-6xl mx-auto px-4 text-center">
       <h3 class="text-4xl font-bold">Feeling Lost in Your Job Search?</h3>
@@ -109,6 +148,7 @@
     </div>
   </section>
 
+  <!-- Mentorship Session Section -->
   <section id="book-session" class="bg-gray-100 py-16">
     <div class="max-w-6xl mx-auto px-4 text-center">
       <h3 class="text-4xl font-bold text-gray-800">Your Path to Career Clarity in 3 Simple Steps</h3>
@@ -140,6 +180,7 @@
     </div>
   </section>
 
+  <!-- Job Board -->
   <section id="jobs" class="max-w-6xl mx-auto px-4 py-16">
     <h3 class="text-4xl font-bold text-gray-800 mb-6 border-b-4 border-orange-500 inline-block pb-1">Job Board</h3>
     <p class="text-gray-600 mb-6">Check out recent openings</p>
@@ -157,6 +198,33 @@
         </select>
       </div>
     </div>
+    <!-- Loading state for job board -->
+    <div id="job-board-loading" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div class="bg-white p-5 rounded-xl shadow-lg border border-gray-200 animate-pulse">
+        <div class="h-6 bg-gray-200 rounded w-3/4 mb-2"></div>
+        <div class="h-4 bg-gray-200 rounded w-1/2 mb-4"></div>
+        <div class="h-3 bg-gray-200 rounded w-full mb-2"></div>
+        <div class="h-3 bg-gray-200 rounded w-5/6 mb-2"></div>
+        <div class="h-3 bg-gray-200 rounded w-4/6 mb-4"></div>
+        <div class="h-10 bg-orange-200 rounded-lg"></div>
+      </div>
+      <div class="bg-white p-5 rounded-xl shadow-lg border border-gray-200 animate-pulse hidden md:block">
+        <div class="h-6 bg-gray-200 rounded w-3/4 mb-2"></div>
+        <div class="h-4 bg-gray-200 rounded w-1/2 mb-4"></div>
+        <div class="h-3 bg-gray-200 rounded w-full mb-2"></div>
+        <div class="h-3 bg-gray-200 rounded w-5/6 mb-2"></div>
+        <div class="h-3 bg-gray-200 rounded w-4/6 mb-4"></div>
+        <div class="h-10 bg-orange-200 rounded-lg"></div>
+      </div>
+      <div class="bg-white p-5 rounded-xl shadow-lg border border-gray-200 animate-pulse hidden lg:block">
+        <div class="h-6 bg-gray-200 rounded w-3/4 mb-2"></div>
+        <div class="h-4 bg-gray-200 rounded w-1/2 mb-4"></div>
+        <div class="h-3 bg-gray-200 rounded w-full mb-2"></div>
+        <div class="h-3 bg-gray-200 rounded w-5/6 mb-2"></div>
+        <div class="h-3 bg-gray-200 rounded w-4/6 mb-4"></div>
+        <div class="h-10 bg-orange-200 rounded-lg"></div>
+      </div>
+    </div>
     <div id="job-board" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
     <div id="pagination-controls" class="flex justify-center items-center space-x-4 mt-8" style="display: none;">
       <button id="prev-btn" class="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300">Previous</button>
@@ -165,17 +233,45 @@
     </div>
   </section>
   
+  <!-- Job Hunt Resources (Dynamic) -->
   <section id="resources" class="py-16">
     <div class="max-w-6xl mx-auto px-4 text-center">
       <h3 class="text-4xl font-bold text-gray-800">Essential Job Hunt Resources</h3>
       <p class="text-gray-600 mt-4 max-w-3xl mx-auto">
         Equip yourself with the tools and knowledge to navigate your job search successfully.
       </p>
-      <div id="resources-grid" class="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mt-12">
+      <!-- Loading state for resources -->
+      <div id="resources-loading" class="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mt-12">
+        <div class="p-6 bg-white rounded-2xl shadow-lg border-l-4 border-orange-500 animate-pulse">
+          <div class="flex items-center space-x-4 mb-4">
+            <div class="h-10 w-10 bg-orange-200 rounded-full"></div>
+            <div>
+              <div class="h-6 bg-gray-200 rounded w-32 mb-1"></div>
+              <div class="h-4 bg-gray-200 rounded w-24"></div>
+            </div>
+          </div>
+          <div class="h-3 bg-gray-200 rounded w-full mb-2"></div>
+          <div class="h-3 bg-gray-200 rounded w-5/6 mb-4"></div>
         </div>
+        <div class="p-6 bg-white rounded-2xl shadow-lg border-l-4 border-orange-500 animate-pulse hidden md:block">
+          <div class="flex items-center space-x-4 mb-4">
+            <div class="h-10 w-10 bg-orange-200 rounded-full"></div>
+            <div>
+              <div class="h-6 bg-gray-200 rounded w-32 mb-1"></div>
+              <div class="h-4 bg-gray-200 rounded w-24"></div>
+            </div>
+          </div>
+          <div class="h-3 bg-gray-200 rounded w-full mb-2"></div>
+          <div class="h-3 bg-gray-200 rounded w-5/6 mb-4"></div>
+        </div>
+      </div>
+      <div id="resources-grid" class="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mt-12">
+        <!-- Resource cards will be loaded here via JavaScript -->
+      </div>
     </div>
   </section>
 
+  <!-- Meet Your Mentor -->
   <section id="mentor" class="bg-gray-100 py-16">
     <div class="max-w-6xl mx-auto px-4 grid md:grid-cols-2 items-center gap-12">
       <div class="flex justify-center">
@@ -218,19 +314,34 @@
     </div>
   </section>
 
+  <!-- Testimonials -->
   <section id="testimonials" class="bg-gray-800 py-16 text-white">
     <div class="max-w-6xl mx-auto px-4 text-center">
       <h3 class="text-4xl font-bold">What Our Mentees Say</h3>
       <p class="text-gray-300 mt-4 max-w-3xl mx-auto">
         Don't just take our word for it. Read success stories from professionals who have found clarity and success through our mentorship.
       </p>
-      </div>
+      <!-- Testimonials grid can go here -->
+    </div>
   </section>
 
+  <!-- Footer -->
   <footer class="bg-gray-900 text-white py-6 text-center">
     <p>© 2025 OneStopCareers. All rights reserved.</p>
   </footer>
 
+  <!-- Job Detail Modal -->
+  <div id="job-modal" class="modal">
+    <div class="modal-content">
+      <span class="close-btn">&times;</span>
+      <h4 id="modal-title" class="text-2xl font-bold text-orange-700 mb-2"></h4>
+      <p id="modal-company-location" class="text-gray-600 font-medium mb-4"></p>
+      <p id="modal-description" class="text-gray-700"></p>
+      <a id="modal-apply-btn" href="#" target="_blank" class="block mt-6 text-center bg-orange-500 text-white py-3 rounded-lg hover:bg-orange-600 transition-colors">Apply Now</a>
+    </div>
+  </div>
+
+  <!-- Scripts -->
   <script>
     const jobsPerPage = 6;
     let currentPage = 1;
@@ -238,6 +349,7 @@
     let displayedJobs = [];
 
     const jobBoard = document.getElementById('job-board');
+    const jobBoardLoading = document.getElementById('job-board-loading');
     const jobSearch = document.getElementById('job-search');
     const prevBtn = document.getElementById('prev-btn');
     const nextBtn = document.getElementById('next-btn');
@@ -249,9 +361,34 @@
     const mobileMenuBtn = document.getElementById('mobile-menu-btn');
     const mobileMenu = document.getElementById('mobile-menu');
 
+    const jobModal = document.getElementById('job-modal');
+    const modalCloseBtn = jobModal.querySelector('.close-btn');
+    const modalTitle = document.getElementById('modal-title');
+    const modalCompanyLocation = document.getElementById('modal-company-location');
+    const modalDescription = document.getElementById('modal-description');
+    const modalApplyBtn = document.getElementById('modal-apply-btn');
+
     // Toggle mobile menu
     mobileMenuBtn.addEventListener('click', () => {
       mobileMenu.classList.toggle('hidden');
+    });
+
+    const openJobModal = (job) => {
+      modalTitle.textContent = job['Job Title'];
+      modalCompanyLocation.textContent = `${job['Company']} - ${job['Location']}`;
+      modalDescription.textContent = job['Description'];
+      modalApplyBtn.href = job['Link'];
+      jobModal.style.display = 'block';
+    };
+
+    modalCloseBtn.addEventListener('click', () => {
+      jobModal.style.display = 'none';
+    });
+
+    window.addEventListener('click', (event) => {
+      if (event.target === jobModal) {
+        jobModal.style.display = 'none';
+      }
     });
 
     const renderJobs = (jobs, page = 1) => {
@@ -263,7 +400,14 @@
         html = '<p class="text-gray-500 text-center col-span-3">No jobs found matching your criteria.</p>';
       } else {
         paginatedJobs.forEach(job => {
-          html += `<div class="bg-white p-5 rounded-xl shadow-lg border border-gray-200 hover:shadow-xl transition-shadow"><h4 class="text-xl font-bold text-orange-700">${job['Job Title']}</h4><p class="text-gray-600 font-medium">${job['Company']} - ${job['Location']}</p><p class="text-gray-500 text-sm mt-2">${job['Description'] || ''}</p><a href="${job['Link']}" target="_blank" class="block mt-4 text-center bg-orange-500 text-white py-2 rounded-lg hover:bg-orange-600 transition-colors">Apply Now</a></div>`;
+          html += `
+            <div class="job-card cursor-pointer bg-white p-5 rounded-xl shadow-lg border border-gray-200 hover:shadow-xl transition-shadow" data-job-title="${job['Job Title']}" data-company="${job['Company']}" data-location="${job['Location']}" data-description="${job['Description']}" data-link="${job['Link']}">
+              <h4 class="text-xl font-bold text-orange-700">${job['Job Title']}</h4>
+              <p class="text-gray-600 font-medium">${job['Company']} - ${job['Location']}</p>
+              <p class="text-gray-500 text-sm mt-2">${job['Description'] || ''}</p>
+              <a href="${job['Link']}" target="_blank" class="block mt-4 text-center bg-orange-500 text-white py-2 rounded-lg hover:bg-orange-600 transition-colors">Apply Now</a>
+            </div>
+          `;
         });
       }
       jobBoard.innerHTML = html;
@@ -271,6 +415,24 @@
       pageInfo.textContent = `Page ${page} of ${totalPages}`;
       prevBtn.disabled = page === 1;
       nextBtn.disabled = page === totalPages;
+
+      // Attach click event listeners to job cards
+      document.querySelectorAll('.job-card').forEach(card => {
+        card.addEventListener('click', (e) => {
+          // Prevent opening modal if 'Apply Now' button is clicked
+          if (e.target.tagName.toLowerCase() !== 'a') {
+            const job = {
+              'Job Title': card.dataset.jobTitle,
+              'Company': card.dataset.company,
+              'Location': card.dataset.location,
+              'Description': card.dataset.description,
+              'Link': card.dataset.link,
+            };
+            openJobModal(job);
+          }
+        });
+      });
+
       window.scrollTo({ top: document.getElementById('jobs').offsetTop, behavior: 'smooth' });
     };
 
@@ -303,7 +465,8 @@
     };
 
     const fetchJobs = () => {
-      // ⚠️ YOUR GOOGLE APPS SCRIPT URL FOR THE JOB BOARD
+      jobBoardLoading.style.display = 'grid';
+      jobBoard.style.display = 'none';
       fetch('https://script.google.com/macros/s/AKfycbzxRN194Nx7sio2lGw7yiWBjL63h1eRstGJMCVrrrxzn1pKq2NThKz_GUKtrdQA2Q/exec')
         .then(res => res.json())
         .then(data => {
@@ -314,8 +477,12 @@
           if (allJobs.length > jobsPerPage) {
             paginationControls.style.display = 'flex';
           }
+          jobBoardLoading.style.display = 'none';
+          jobBoard.style.display = 'grid';
         })
         .catch(err => {
+          jobBoardLoading.style.display = 'none';
+          jobBoard.style.display = 'grid';
           jobBoard.innerHTML = `<p class="text-red-500 text-center col-span-3">Failed to load job listings. Please try again later.</p>`;
           console.error(err);
         });
@@ -343,8 +510,10 @@
 
     // Script for Dynamic Resources
     const resourcesGrid = document.getElementById('resources-grid');
+    const resourcesLoading = document.getElementById('resources-loading');
     const fetchResources = () => {
-      // ⚠️ YOUR GOOGLE APPS SCRIPT URL FOR THE RESOURCES
+      resourcesLoading.style.display = 'grid';
+      resourcesGrid.style.display = 'none';
       fetch('https://script.google.com/macros/s/AKfycbx4Ca1o7ogSpz28Z_9LjQisj9nw9IeZxeUbmaCVftb-So41EUzVqYZ1d8lHgpxtYO19/exec')
         .then(res => res.json())
         .then(data => {
@@ -364,8 +533,12 @@
             `;
           });
           resourcesGrid.innerHTML = html;
+          resourcesLoading.style.display = 'none';
+          resourcesGrid.style.display = 'grid';
         })
         .catch(err => {
+          resourcesLoading.style.display = 'none';
+          resourcesGrid.style.display = 'grid';
           resourcesGrid.innerHTML = `<p class="text-red-500 text-center col-span-4">Failed to load resources.</p>`;
           console.error(err);
         });
