@@ -346,12 +346,10 @@
       modalApplyBtn.href = job['Link'];
       modalShareBtn.dataset.jobId = job.id;
       jobModal.style.display = 'block';
-      // history.pushState({jobId: job.id}, '', `?jobId=${job.id}`); // Removed to prevent security error in sandbox
     };
 
     const closeModal = () => {
         jobModal.style.display = 'none';
-        // history.pushState({}, '', window.location.pathname); // Removed to prevent security error in sandbox
     };
 
     modalCloseBtn.addEventListener('click', closeModal);
@@ -394,13 +392,15 @@
       } else {
         paginatedJobs.forEach(job => {
           const companyInitial = (job.Company || 'C').charAt(0).toUpperCase();
-          const logoUrl = `https://placehold.co/100x100/f97316/FFFFFF?text=${companyInitial}`;
+          const placeholderLogo = `https://placehold.co/100x100/f97316/FFFFFF?text=${companyInitial}`;
+          const logoUrl = job['Company Logo URL'] || placeholderLogo;
 
           const jobCard = document.createElement('div');
           jobCard.className = 'job-card bg-white p-6 rounded-xl shadow-lg border hover:shadow-2xl transition-shadow duration-300 flex items-center gap-5 cursor-pointer';
+          jobCard.dataset.jobId = job.id;
           
           jobCard.innerHTML = `
-            <img src="${logoUrl}" alt="${job.Company} Logo" class="w-20 h-20 rounded-full flex-shrink-0 border-4 border-orange-100" onerror="this.onerror=null;this.src='https://placehold.co/100x100/EFEFEF/4A4A4A?text=...';">
+            <img src="${logoUrl}" alt="${job.Company} Logo" class="w-20 h-20 rounded-full flex-shrink-0 border-4 border-orange-100 object-cover" onerror="this.onerror=null;this.src='${placeholderLogo}';">
             <div class="text-left">
                 <h4 class="text-lg font-bold text-gray-800"></h4>
                 <p class="text-sm text-gray-500 font-medium mb-3"></p>
@@ -413,7 +413,11 @@
           
           jobCard.addEventListener('click', (e) => {
             if (e.target.tagName.toLowerCase() !== 'a') {
-              openJobModal(job);
+              const clickedJobId = e.currentTarget.dataset.jobId;
+              const jobToOpen = allJobs.find(j => j.id == clickedJobId);
+              if (jobToOpen) {
+                  openJobModal(jobToOpen);
+              }
             }
           });
           jobBoard.appendChild(jobCard);
