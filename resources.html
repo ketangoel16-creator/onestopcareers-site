@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OneStopCareers - Job Hunt Resources</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" />
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+    body {
+      font-family: 'Poppins', sans-serif;
+    }
+  </style>
+</head>
+<body class="bg-gray-50 text-gray-900 font-sans">
+
+  <!-- Header -->
+  <header class="bg-white shadow-md sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+      <div class="flex items-center">
+        <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="OneStopCareers Logo" class="rounded-full mr-2 h-10 w-10 object-cover" />
+        <h1 class="text-2xl font-bold">OneStopCareers</h1>
+      </div>
+      <nav class="hidden md:flex items-center space-x-6">
+        <a href="index.html" class="text-gray-600 hover:text-orange-600 font-medium">Home</a>
+        <a href="jobs.html" class="text-gray-600 hover:text-orange-600 font-medium">Job Board</a>
+        <a href="mentors.html" class="text-gray-600 hover:text-orange-600 font-medium">Mentors</a>
+        <a href="testimonials.html" class="text-gray-600 hover:text-orange-600 font-medium">Testimonials</a>
+        <a href="session.html" class="bg-orange-500 text-white px-5 py-2 rounded-lg shadow-md hover:bg-orange-600 transition-colors">Book Your Session</a>
+      </nav>
+      <button id="mobile-menu-btn" class="md:hidden text-gray-600">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+        </svg>
+      </button>
+    </div>
+    <nav id="mobile-menu" class="hidden md:hidden bg-white shadow-lg py-2">
+      <a href="index.html" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Home</a>
+      <a href="jobs.html" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Job Board</a>
+      <a href="mentors.html" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Mentors</a>
+      <a href="testimonials.html" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Testimonials</a>
+      <a href="session.html" class="block px-4 py-2 text-orange-500 font-semibold hover:bg-gray-100">Book Your Session</a>
+    </nav>
+  </header>
+
+  <!-- Job Hunt Resources (Dynamic) -->
+  <section id="resources" class="py-16">
+    <div class="max-w-6xl mx-auto px-4 text-center">
+      <h3 class="text-4xl font-bold text-gray-800">Essential Job Hunt Resources</h3>
+      <p class="text-gray-600 mt-4 max-w-3xl mx-auto">
+        Equip yourself with the tools and knowledge to navigate your job search successfully.
+      </p>
+      <div id="resources-loading" class="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mt-12">
+        <div class="p-6 bg-white rounded-2xl shadow-lg border-l-4 border-orange-500 animate-pulse">
+          <div class="flex items-center space-x-4 mb-4">
+            <div class="h-10 w-10 bg-orange-200 rounded-full"></div>
+            <div>
+              <div class="h-6 bg-gray-200 rounded w-32 mb-1"></div>
+              <div class="h-4 bg-gray-200 rounded w-24"></div>
+            </div>
+          </div>
+          <div class="h-3 bg-gray-200 rounded w-full mb-2"></div>
+          <div class="h-3 bg-gray-200 rounded w-5/6 mb-4"></div>
+        </div>
+        <div class="p-6 bg-white rounded-2xl shadow-lg border-l-4 border-orange-500 animate-pulse hidden md:block">
+          <div class="flex items-center space-x-4 mb-4">
+            <div class="h-10 w-10 bg-orange-200 rounded-full"></div>
+            <div>
+              <div class="h-6 bg-gray-200 rounded w-32 mb-1"></div>
+              <div class="h-4 bg-gray-200 rounded w-24"></div>
+            </div>
+          </div>
+          <div class="h-3 bg-gray-200 rounded w-full mb-2"></div>
+          <div class="h-3 bg-gray-200 rounded w-5/6 mb-4"></div>
+        </div>
+      </div>
+      <div id="resources-grid" class="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mt-12">
+        <!-- Resource cards will be loaded here via JavaScript -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Roadmaps Section -->
+  <section id="roadmaps" class="py-16 bg-gray-100">
+    <div class="max-w-6xl mx-auto px-4 text-center">
+      <h3 class="text-4xl font-bold text-gray-800">Find Your Career Roadmap</h3>
+      <p class="text-gray-600 mt-4 max-w-3xl mx-auto">
+        Get a clear, step-by-step plan for your career journey, from transitioning into a new role to advancing in your current one.
+      </p>
+      <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mt-12">
+        <a href="#" class="block p-6 bg-white rounded-2xl shadow-lg border-b-4 border-orange-500 transition-transform transform hover:scale-105 hover:shadow-xl">
+          <div class="text-center">
+            <img src="https://cdn-icons-png.flaticon.com/512/2880/2880753.png" class="h-16 w-16 mx-auto mb-4" alt="Roadmap Icon" />
+            <h4 class="text-2xl font-semibold text-gray-800 mb-2">Product Manager Roadmap</h4>
+            <span class="inline-block mt-4 text-orange-600 font-medium">Explore Plan →</span>
+          </div>
+        </a>
+        <a href="#" class="block p-8 bg-white rounded-2xl shadow-lg border-b-4 border-orange-500 transition-transform transform hover:scale-105 hover:shadow-xl">
+          <div class="text-center">
+            <img src="https://cdn-icons-png.flaticon.com/512/2880/2880753.png" class="h-16 w-16 mx-auto mb-4" alt="Roadmap Icon" />
+            <h4 class="text-2xl font-semibold text-gray-800 mb-2">Data Analyst Roadmap</h4>
+            <span class="inline-block mt-4 text-orange-600 font-medium">Explore Plan →</span>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Resources Testimonials -->
+  <section id="resources-testimonials" class="bg-gray-800 py-16 text-white">
+    <div class="max-w-6xl mx-auto px-4 text-center">
+      <h3 class="text-4xl font-bold">How Our Resources Led to Success</h3>
+      <p class="text-gray-300 mt-4 max-w-3xl mx-auto">
+        Read how our resources and guides helped professionals land their dream roles.
+      </p>
+      <div class="grid md:grid-cols-2 gap-8 mt-12">
+        <div class="p-8 bg-gray-700 rounded-2xl text-left">
+          <p class="text-gray-200 italic">
+            "The resume templates and interview questions were a game-changer. I felt so much more prepared and confident."
+          </p>
+          <p class="mt-4 font-semibold text-orange-500">- David Lee, Data Analyst</p>
+        </div>
+        <div class="p-8 bg-gray-700 rounded-2xl text-left">
+          <p class="text-gray-200 italic">
+            "I used the recruiter details to network directly with hiring managers. It was the key to getting my foot in the door at my target company."
+          </p>
+          <p class="mt-4 font-semibold text-orange-500">- Sarah Chen, Marketing Specialist</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Nudge Section -->
+  <section class="bg-gray-200 py-16 text-center">
+    <div class="max-w-4xl mx-auto px-4">
+      <h3 class="text-4xl font-bold text-gray-800">Confused About Your Career Path?</h3>
+      <p class="mt-4 text-gray-600">
+        If you're unsure which career is right for you, or how to transition into a new role, get a personalized roadmap from a mentor.
+      </p>
+      <a href="mentors.html" class="inline-block mt-8 bg-orange-500 text-white text-lg font-semibold px-8 py-4 rounded-xl shadow-lg hover:bg-orange-600 transition-colors">
+        Find Your Mentorship →
+      </a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-gray-900 text-white py-6 text-center">
+    <p>© 2025 OneStopCareers. All rights reserved.</p>
+  </footer>
+
+  <!-- Scripts -->
+  <script>
+    const resourcesGrid = document.getElementById('resources-grid');
+    const resourcesLoading = document.getElementById('resources-loading');
+    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+
+    mobileMenuBtn.addEventListener('click', () => {
+      mobileMenu.classList.toggle('hidden');
+    });
+
+    document.querySelectorAll('#mobile-menu a').forEach(link => {
+      link.addEventListener('click', () => {
+        mobileMenu.classList.add('hidden');
+      });
+    });
+
+    const fetchResources = () => {
+      resourcesLoading.style.display = 'grid';
+      resourcesGrid.style.display = 'none';
+      fetch('https://script.google.com/macros/s/AKfycbx4Ca1o7ogSpz28Z_9LjQisj9nw9IeZxeUbmaCVftb-So41EUzVqYZ1d8lHgpxtYO19/exec')
+        .then(res => res.json())
+        .then(data => {
+          let html = '';
+          data.forEach(resource => {
+            html += `
+              <a href="${resource['URL']}" target="_blank" class="p-6 bg-white rounded-2xl shadow-lg border-l-4 border-orange-500 hover:scale-105 transition-transform duration-200">
+                <div class="flex items-start space-x-4 mb-4">
+                  <img src="${resource['Icon']}" class="h-10 w-10 text-orange-500" alt="Icon" />
+                  <div>
+                    <h4 class="text-xl font-semibold text-gray-800">${resource['Link Name']}</h4>
+                    <p class="text-gray-500 text-sm">${resource['Link Type']}</p>
+                  </div>
+                </div>
+                <p class="text-gray-600">${resource['Description']}</p>
+              </a>
+            `;
+          });
+          resourcesGrid.innerHTML = html;
+          resourcesLoading.style.display = 'none';
+          resourcesGrid.style.display = 'grid';
+        })
+        .catch(err => {
+          resourcesLoading.style.display = 'none';
+          resourcesGrid.style.display = 'grid';
+          resourcesGrid.innerHTML = `<p class="text-red-500 text-center col-span-4">Failed to load resources.</p>`;
+          console.error(err);
+        });
+    };
+    fetchResources();
+  </script>
+
+</body>
+</html>
