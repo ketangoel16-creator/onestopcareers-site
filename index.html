@@ -303,7 +303,8 @@
     };
 
     const fetchJobs = () => {
-      fetch('https://sheetdb.io/api/v1/9tjp7sn6v4p8k')
+      // ⚠️ YOUR GOOGLE APPS SCRIPT URL FOR THE JOB BOARD
+      fetch('https://script.google.com/macros/s/AKfycbycE77E-K086TjVv2hXv1l1f4H8o-p1r2g2i3o/exec')
         .then(res => res.json())
         .then(data => {
           allJobs = data;
@@ -342,30 +343,34 @@
 
     // Script for Dynamic Resources
     const resourcesGrid = document.getElementById('resources-grid');
-    fetch('https://sheetdb.io/api/v1/d8e04clhrp9rr')
-      .then(res => res.json())
-      .then(data => {
-        let html = '';
-        data.forEach(resource => {
-          html += `
-            <a href="${resource['URL']}" target="_blank" class="p-6 bg-white rounded-2xl shadow-lg border-l-4 border-orange-500 hover:scale-105 transition-transform duration-200">
-              <div class="flex items-start space-x-4 mb-4">
-                <img src="${resource['Icon']}" class="h-10 w-10 text-orange-500" alt="Icon" />
-                <div>
-                  <h4 class="text-xl font-semibold text-gray-800">${resource['Link Name']}</h4>
-                  <p class="text-gray-500 text-sm">${resource['Link Type']}</p>
+    const fetchResources = () => {
+      // ⚠️ YOUR GOOGLE APPS SCRIPT URL FOR THE RESOURCES
+      fetch('https://script.google.com/macros/s/AKfycbx4Ca1o7ogSpz28Z_9LjQisj9nw9IeZxeUbmaCVftb-So41EUzVqYZ1d8lHgpxtYO19/exec')
+        .then(res => res.json())
+        .then(data => {
+          let html = '';
+          data.forEach(resource => {
+            html += `
+              <a href="${resource['URL']}" target="_blank" class="p-6 bg-white rounded-2xl shadow-lg border-l-4 border-orange-500 hover:scale-105 transition-transform duration-200">
+                <div class="flex items-start space-x-4 mb-4">
+                  <img src="${resource['Icon']}" class="h-10 w-10 text-orange-500" alt="Icon" />
+                  <div>
+                    <h4 class="text-xl font-semibold text-gray-800">${resource['Link Name']}</h4>
+                    <p class="text-gray-500 text-sm">${resource['Link Type']}</p>
+                  </div>
                 </div>
-              </div>
-              <p class="text-gray-600">${resource['Description']}</p>
-            </a>
-          `;
+                <p class="text-gray-600">${resource['Description']}</p>
+              </a>
+            `;
+          });
+          resourcesGrid.innerHTML = html;
+        })
+        .catch(err => {
+          resourcesGrid.innerHTML = `<p class="text-red-500 text-center col-span-4">Failed to load resources.</p>`;
+          console.error(err);
         });
-        resourcesGrid.innerHTML = html;
-      })
-      .catch(err => {
-        resourcesGrid.innerHTML = `<p class="text-red-500 text-center col-span-4">Failed to load resources.</p>`;
-        console.error(err);
-      });
+    };
+    fetchResources();
   </script>
 
 </body>
