@@ -32,7 +32,7 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         });
         
-        // Handle dropdowns
+        // Handle Desktop Dropdowns
         const dropdownToggles = document.querySelectorAll('.dropdown-toggle');
         dropdownToggles.forEach(toggle => {
             const menu = toggle.nextElementSibling;
@@ -59,14 +59,14 @@ document.addEventListener("DOMContentLoaded", function() {
             });
         });
 
-        // Close dropdowns when clicking outside
+        // Close desktop dropdowns when clicking outside
         window.addEventListener('click', () => {
             document.querySelectorAll('.dropdown-menu').forEach(menu => {
                 menu.classList.add('hidden');
             });
         });
 
-
+        // Handle Mobile Menu Toggle
         const mobileMenuBtn = document.getElementById('mobile-menu-btn');
         const mobileMenu = document.getElementById('mobile-menu');
         if (mobileMenuBtn && mobileMenu) {
@@ -74,6 +74,17 @@ document.addEventListener("DOMContentLoaded", function() {
                 mobileMenu.classList.toggle('hidden');
             });
         }
+
+        // Handle Mobile Dropdowns (Accordion style)
+        const mobileDropdownToggles = document.querySelectorAll('.mobile-dropdown-toggle');
+        mobileDropdownToggles.forEach(toggle => {
+            toggle.addEventListener('click', () => {
+                const menu = toggle.nextElementSibling;
+                const icon = toggle.querySelector('svg');
+                menu.classList.toggle('hidden');
+                icon.classList.toggle('rotate-180');
+            });
+        });
         
         document.dispatchEvent(headerLoadedEvent);
     }).catch(error => console.error('Error loading the header:', error));
