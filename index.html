@@ -13,8 +13,8 @@
       background-color: #121212;
       color: #EAEAEA;
     }
-    .hero-bg {
-      background: radial-gradient(circle at top, rgba(234, 88, 12, 0.1), transparent 40%), #121212;
+    .hero-bg-gradient {
+      background: #121212;
     }
     .problem-card {
         transition: all 0.3s ease-in-out;
@@ -26,15 +26,17 @@
         transform: translateY(-5px);
         box-shadow: 0 0 25px rgba(234, 88, 12, 0.3);
     }
-    #solution-container {
+    .solution-box {
         transition: opacity 0.4s ease-in-out, max-height 0.4s ease-in-out;
         max-height: 0;
         opacity: 0;
         overflow: hidden;
+        grid-column: 1 / -1; /* Span full width in grid */
     }
-    #solution-container.visible {
+    .solution-box.visible {
         max-height: 500px; /* Adjust as needed */
         opacity: 1;
+        margin-top: 1.5rem;
     }
   </style>
 </head>
@@ -46,18 +48,18 @@
   <!-- Main Content -->
   <main>
     <!-- Hero Section -->
-    <section class="hero-bg">
+    <section class="hero-bg-gradient">
       <div class="max-w-7xl mx-auto px-4 pt-24 pb-20 sm:pt-32 sm:pb-24 text-center relative">
         <div class="relative z-10">
             <h1 class="text-5xl md:text-7xl font-extrabold leading-tight text-white">
-              The End of<br class="hidden md:block" /> Career Chaos.
+              Your Career Struggles End Here.
             </h1>
             <p class="mt-6 max-w-2xl mx-auto text-lg text-gray-400">
-              Stop sending your resume into the void. We provide the tools, connections, and clarity to find the right path and get you noticed.
+              Applying to more jobs is like treating symptoms without a diagnosis. We help you pinpoint the real problem in your career journey, then provide the precise solution to move you forward.
             </p>
             <div class="mt-10">
               <a href="#problem-solver" class="group inline-flex items-center justify-center bg-orange-600 text-white py-4 px-8 rounded-full hover:bg-orange-700 transition-colors text-lg font-semibold shadow-lg shadow-orange-500/20">
-                Find Your Path Forward
+                Diagnose Your Career Path
               </a>
             </div>
         </div>
@@ -71,28 +73,35 @@
         <p class="text-gray-400 mt-4 max-w-3xl mx-auto">
           Every successful career journey starts with a single, clear step. Select your current challenge to reveal yours.
         </p>
-        <div id="problem-cards" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mt-12">
+        <div id="problem-cards-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mt-12">
           <!-- Problem Card 1 -->
-          <div class="problem-card cursor-pointer p-6 rounded-2xl" data-solution="solution1">
-            <h3 class="text-lg font-semibold text-white">"I'm not sure what career is right for me."</h3>
+          <div class="problem-card-container">
+            <div class="problem-card cursor-pointer p-6 rounded-2xl h-full flex flex-col justify-center" data-solution="solution1">
+                <img src="https://cdn-icons-png.flaticon.com/512/3356/3356885.png" class="h-16 w-16 mx-auto mb-4" alt="Compass Icon" />
+                <h3 class="text-lg font-semibold text-white">"I'm not sure what career is right for me."</h3>
+            </div>
           </div>
           <!-- Problem Card 2 -->
-          <div class="problem-card cursor-pointer p-6 rounded-2xl" data-solution="solution2">
-            <h3 class="text-lg font-semibold text-white">"I need to build my skills and portfolio."</h3>
+          <div class="problem-card-container">
+            <div class="problem-card cursor-pointer p-6 rounded-2xl h-full flex flex-col justify-center" data-solution="solution2">
+                <img src="https://cdn-icons-png.flaticon.com/512/2951/2951216.png" class="h-16 w-16 mx-auto mb-4" alt="Tools Icon" />
+                <h3 class="text-lg font-semibold text-white">"I need to build my skills and portfolio."</h3>
+            </div>
           </div>
           <!-- Problem Card 3 -->
-          <div class="problem-card cursor-pointer p-6 rounded-2xl" data-solution="solution3">
-            <h3 class="text-lg font-semibold text-white">"I'm applying but not getting interviews."</h3>
+          <div class="problem-card-container">
+            <div class="problem-card cursor-pointer p-6 rounded-2xl h-full flex flex-col justify-center" data-solution="solution3">
+                <img src="https://cdn-icons-png.flaticon.com/512/3176/3176295.png" class="h-16 w-16 mx-auto mb-4" alt="Magnifying Glass Icon" />
+                <h3 class="text-lg font-semibold text-white">"I'm applying but not getting interviews."</h3>
+            </div>
           </div>
           <!-- Problem Card 4 -->
-          <div class="problem-card cursor-pointer p-6 rounded-2xl" data-solution="solution4">
-            <h3 class="text-lg font-semibold text-white">"I'm getting interviews but no offers."</h3>
+          <div class="problem-card-container">
+            <div class="problem-card cursor-pointer p-6 rounded-2xl h-full flex flex-col justify-center" data-solution="solution4">
+                <img src="https://cdn-icons-png.flaticon.com/512/1000/1000965.png" class="h-16 w-16 mx-auto mb-4" alt="Handshake Icon" />
+                <h3 class="text-lg font-semibold text-white">"I'm getting interviews but no offers."</h3>
+            </div>
           </div>
-        </div>
-        
-        <!-- Solution Display Area -->
-        <div id="solution-container" class="mt-12">
-          <!-- Dynamically inserted solution will go here -->
         </div>
       </div>
     </section>
@@ -127,7 +136,7 @@
   <script>
     document.addEventListener('DOMContentLoaded', () => {
         const problemCards = document.querySelectorAll('.problem-card');
-        const solutionContainer = document.getElementById('solution-container');
+        const problemGrid = document.getElementById('problem-cards-grid');
 
         const solutions = {
             solution1: {
@@ -158,12 +167,23 @@
 
         problemCards.forEach(card => {
             card.addEventListener('click', () => {
+                // Close any existing solution box
+                const existingSolution = document.getElementById('solution-container');
+                if (existingSolution) {
+                    existingSolution.remove();
+                }
+                
+                // Remove selected state from all cards
                 problemCards.forEach(c => c.classList.remove('selected'));
+                // Add selected state to the clicked card
                 card.classList.add('selected');
 
                 const solutionKey = card.dataset.solution;
                 const solution = solutions[solutionKey];
 
+                const solutionContainer = document.createElement('div');
+                solutionContainer.id = 'solution-container';
+                solutionContainer.className = 'solution-box';
                 solutionContainer.innerHTML = `
                     <div class="bg-gray-900/50 p-8 rounded-2xl border border-orange-500/50 text-left transition-all duration-300">
                       <h3 class="text-2xl font-bold text-white">${solution.title}</h3>
@@ -176,7 +196,13 @@
                     </div>
                 `;
                 
-                solutionContainer.classList.add('visible');
+                // Insert the solution box after the parent container of the clicked card
+                card.parentElement.appendChild(solutionContainer);
+                
+                // Make the container visible with a slight delay for the animation
+                setTimeout(() => {
+                    solutionContainer.classList.add('visible');
+                }, 10);
             });
         });
     });
