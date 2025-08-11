@@ -1,93 +1,113 @@
-document.addEventListener("DOMContentLoaded", function() {
-    const loadComponent = (path, placeholderId) => {
-        return fetch(path)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`Failed to load ${path}: ${response.statusText}`);
-                }
-                return response.text();
-            })
-            .then(data => {
-                const placeholder = document.getElementById(placeholderId);
-                if (placeholder) {
-                    placeholder.innerHTML = data;
-                }
-            });
-    };
+<header class="bg-black/80 backdrop-blur-sm sticky top-0 z-50 border-b border-gray-800">
+  <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+    <!-- Logo and Brand Name -->
+    <a href="index.html" class="flex items-center gap-3">
+      <!-- The New Logo -->
+      <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="40" height="40" rx="8" fill="#27272A"/>
+          <defs>
+              <linearGradient id="brandGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" style="stop-color:#F97316;stop-opacity:1" />
+                  <stop offset="100%" style="stop-color:#FB923C;stop-opacity:1" />
+              </linearGradient>
+          </defs>
+          <path d="M9 20C9 17.5 10 15.5 12.5 14C15 12.5 16 15 16 16.5C16 18 14 19 13 21C12 23 14 25 16.5 25.5" stroke="#666" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M16.5 25.5C19 26 22 24 24 22L31 15" stroke="url(#brandGradient)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M26 15L31 15L31 20" stroke="url(#brandGradient)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <!-- The New Wordmark -->
+      <span class="text-2xl font-extrabold text-white">
+          <span class="font-bold">OneStop</span><span class="font-medium text-gray-300">Careers</span>
+      </span>
+    </a>
 
-    const headerLoadedEvent = new Event('headerLoaded');
-
-    loadComponent('header.html', 'header-placeholder').then(() => {
-        const currentPage = window.location.pathname.split('/').pop() || 'index.html';
-        const navLinks = document.querySelectorAll('.nav-link');
-
-        // Handle active state for non-dropdown links
-        navLinks.forEach(link => {
-            if (!link.classList.contains('dropdown-toggle')) {
-                const linkPage = (link.getAttribute('href') || '').split('/').pop();
-                if (linkPage === currentPage) {
-                    link.classList.add('text-white');
-                    link.classList.remove('text-gray-300');
-                }
-            }
-        });
+    <!-- Desktop Navigation and Developer Tools -->
+    <div class="hidden md:flex items-center space-x-8">
+      <nav class="flex items-center space-x-8">
+        <a href="index.html" class="nav-link text-gray-300 hover:text-white font-bold transition-colors">Home</a>
         
-        // Handle Desktop Dropdowns
-        const dropdownToggles = document.querySelectorAll('.dropdown-toggle');
-        dropdownToggles.forEach(toggle => {
-            const menu = toggle.nextElementSibling;
-            
-            // Highlight parent dropdown if a child link is active
-            const dropdownLinks = menu.querySelectorAll('a');
-            dropdownLinks.forEach(link => {
-                const linkPage = (link.getAttribute('href') || '').split('/').pop().split('#')[0];
-                if (linkPage === currentPage) {
-                     toggle.classList.add('text-white');
-                     toggle.classList.remove('text-gray-300');
-                }
-            });
+        <!-- Jobs Dropdown -->
+        <div class="relative dropdown-container">
+            <button class="nav-link dropdown-toggle flex items-center gap-1 text-gray-300 hover:text-white font-bold transition-colors">
+                <span>Find Jobs</span>
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+            </button>
+            <div class="dropdown-menu absolute top-full mt-2 w-48 bg-[#1C1C1C] border border-gray-700 rounded-lg shadow-lg hidden">
+                <a href="jobs.html" class="block px-4 py-2 text-gray-300 hover:bg-gray-800">Job Board</a>
+                <a href="jobs.html#referrals" class="block px-4 py-2 text-gray-300 hover:bg-gray-800">Referral Network</a>
+            </div>
+        </div>
 
-            toggle.addEventListener('click', (e) => {
-                e.stopPropagation();
-                // Close other open dropdowns
-                document.querySelectorAll('.dropdown-menu').forEach(m => {
-                    if (m !== menu) {
-                        m.classList.add('hidden');
-                    }
-                });
-                menu.classList.toggle('hidden');
-            });
-        });
+        <!-- Resources Dropdown -->
+        <div class="relative dropdown-container">
+            <button class="nav-link dropdown-toggle flex items-center gap-1 text-gray-300 hover:text-white font-bold transition-colors">
+                <span>Resources</span>
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+            </button>
+            <div class="dropdown-menu absolute top-full mt-2 w-48 bg-[#1C1C1C] border border-gray-700 rounded-lg shadow-lg hidden">
+                <a href="resources.html" class="block px-4 py-2 text-gray-300 hover:bg-gray-800">All Resources</a>
+                <a href="resources.html#roadmaps" class="block px-4 py-2 text-gray-300 hover:bg-gray-800">Roadmaps</a>
+            </div>
+        </div>
 
-        // Close desktop dropdowns when clicking outside
-        window.addEventListener('click', () => {
-            document.querySelectorAll('.dropdown-menu').forEach(menu => {
-                menu.classList.add('hidden');
-            });
-        });
+        <a href="mentors.html" class="nav-link text-gray-300 hover:text-white font-bold transition-colors">Mentors</a>
+      </nav>
+      
+      <!-- Auto-refresh Toggle (Desktop) - Hidden by default -->
+      <div class="dev-feature hidden items-center space-x-2">
+          <span class="text-sm font-medium text-gray-400" title="Automatically refresh data every minute">Auto-Refresh</span>
+          <label for="auto-refresh-toggle" class="inline-flex relative items-center cursor-pointer">
+              <input type="checkbox" id="auto-refresh-toggle" class="sr-only peer">
+              <div class="w-11 h-6 bg-gray-700 rounded-full peer peer-focus:ring-2 peer-focus:ring-orange-500/50 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-orange-600"></div>
+          </label>
+      </div>
+    </div>
 
-        // Handle Mobile Menu Toggle
-        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
-        const mobileMenu = document.getElementById('mobile-menu');
-        if (mobileMenuBtn && mobileMenu) {
-            mobileMenuBtn.addEventListener('click', () => {
-                mobileMenu.classList.toggle('hidden');
-            });
-        }
+    <!-- Mobile Menu Button -->
+    <button id="mobile-menu-btn" class="md:hidden text-gray-300">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+      </svg>
+    </button>
+  </div>
 
-        // Handle Mobile Dropdowns (Accordion style)
-        const mobileDropdownToggles = document.querySelectorAll('.mobile-dropdown-toggle');
-        mobileDropdownToggles.forEach(toggle => {
-            toggle.addEventListener('click', () => {
-                const menu = toggle.nextElementSibling;
-                const icon = toggle.querySelector('svg');
-                menu.classList.toggle('hidden');
-                icon.classList.toggle('rotate-180');
-            });
-        });
-        
-        document.dispatchEvent(headerLoadedEvent);
-    }).catch(error => console.error('Error loading the header:', error));
+  <!-- Mobile Navigation Menu -->
+  <nav id="mobile-menu" class="hidden md:hidden bg-black border-t border-gray-800 py-2">
+    <a href="index.html" class="block px-4 py-2 text-gray-300 hover:bg-gray-900 rounded-md">Home</a>
+    
+    <!-- Mobile Jobs Dropdown -->
+    <div>
+        <button class="mobile-dropdown-toggle w-full flex justify-between items-center px-4 py-2 text-gray-300 hover:bg-gray-900 rounded-md">
+            <span>Find Jobs/referrals</span>
+            <svg class="w-4 h-4 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+        </button>
+        <div class="mobile-dropdown-menu hidden pl-8">
+            <a href="jobs.html" class="block py-2 text-gray-400 hover:text-white">Job Board</a>
+            <a href="jobs.html#referrals" class="block py-2 text-gray-400 hover:text-white">Referral Network</a>
+        </div>
+    </div>
 
-    loadComponent('footer.html', 'footer-placeholder').catch(error => console.error('Error loading the footer:', error));
-});
+    <!-- Mobile Resources Dropdown -->
+    <div>
+        <button class="mobile-dropdown-toggle w-full flex justify-between items-center px-4 py-2 text-gray-300 hover:bg-gray-900 rounded-md">
+            <span>Resources</span>
+            <svg class="w-4 h-4 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+        </button>
+        <div class="mobile-dropdown-menu hidden pl-8">
+            <a href="resources.html" class="block py-2 text-gray-400 hover:text-white">All Resources</a>
+            <a href="resources.html#roadmaps" class="block py-2 text-gray-400 hover:text-white">Roadmaps</a>
+        </div>
+    </div>
+
+    <a href="mentors.html" class="block px-4 py-2 text-gray-300 hover:bg-gray-900 rounded-md">Mentors</a>
+     
+     <!-- Auto-refresh Toggle (Mobile) - Hidden by default -->
+    <div class="dev-feature hidden px-4 py-3 flex items-center justify-between border-t border-gray-800 mt-2">
+         <span class="text-sm font-medium text-gray-400">Auto-Refresh</span>
+         <label for="auto-refresh-toggle-mobile" class="inline-flex relative items-center cursor-pointer">
+            <input type="checkbox" id="auto-refresh-toggle-mobile" class="sr-only peer">
+            <div class="w-11 h-6 bg-gray-700 rounded-full peer peer-focus:ring-2 peer-focus:ring-orange-500/50 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-orange-600"></div>
+        </label>
+    </div>
+  </nav>
+</header>
