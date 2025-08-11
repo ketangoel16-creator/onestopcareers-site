@@ -46,8 +46,13 @@
       text-decoration: none;
       cursor: pointer;
     }
-    .filter-modal {
-        max-height: 70vh;
+    .filter-btn {
+        transition: all 0.2s ease-in-out;
+    }
+    .filter-btn-active {
+        background-color: #ea580c;
+        color: white;
+        font-weight: 600;
     }
   </style>
 </head>
@@ -62,48 +67,29 @@
     <section id="mentors" class="max-w-7xl mx-auto px-4 py-16">
       <div class="text-center">
           <h1 class="text-4xl md:text-5xl font-extrabold text-white mb-2">Connect with an Expert</h1>
-          <p class="text-gray-400 mb-8">Get personalized guidance from industry professionals to accelerate your career.</p>
+          <p class="text-gray-400 mb-12">Get personalized guidance from industry professionals to accelerate your career.</p>
+      </div>
+
+      <!-- USP Section -->
+      <div class="bg-[#1C1C1C] border border-gray-800 rounded-2xl p-8 mb-12 text-center">
+        <h2 class="text-2xl font-bold text-white">Finding the right mentor is hard. We've made it simple.</h2>
+        <p class="text-gray-400 mt-2 max-w-3xl mx-auto">
+          In a sea of self-proclaimed experts, it's tough to know who to trust. Worry not. We've carefully selected practicing professionals who can actually make an impact and put you in the right direction.
+        </p>
       </div>
       
       <!-- Filters -->
-      <div class="flex flex-col md:flex-row items-center justify-center gap-4 mb-12">
-          <input type="text" id="mentor-search" placeholder="Search by name, title, or company..." class="w-full md:w-auto p-3 rounded-lg border border-gray-700 bg-[#1C1C1C] text-white shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500" />
-          <button id="expertise-filter-btn" class="w-full md:w-auto p-3 rounded-lg border border-gray-700 bg-[#1C1C1C] text-white shadow-sm text-left">All Expertise</button>
+      <div id="expertise-filter-buttons" class="flex flex-wrap items-center justify-center gap-3 mb-12">
+          <!-- Filter buttons will be populated here -->
       </div>
 
-      <div id="mentors-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 justify-center"></div>
+      <div id="mentors-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 justify-center"></div>
     </section>
 
-    <!-- Nudge Section -->
-    <section class="bg-gray-900/50 py-16">
-      <div class="max-w-4xl mx-auto px-4 text-center">
-        <h2 class="text-3xl font-bold text-white">Ready to Book a Session?</h2>
-        <p class="mt-4 text-gray-400">
-          Take the next step in your career with a personalized roadmap from an expert mentor.
-        </p>
-        <a href="#" class="inline-block mt-8 bg-orange-600 text-white text-lg font-semibold px-8 py-4 rounded-full shadow-lg shadow-orange-500/20 hover:bg-orange-700 transition-colors">
-          Book Your Session →
-        </a>
-      </div>
-    </section>
   </main>
 
   <!-- Footer Placeholder -->
   <div id="footer-placeholder"></div>
-
-  <!-- Filter Modal -->
-  <div id="filter-modal" class="modal">
-      <div class="modal-content filter-modal">
-          <div class="flex justify-between items-center mb-4">
-              <h3 id="filter-modal-title" class="text-xl font-bold text-white"></h3>
-              <span id="filter-modal-close" class="close-btn">&times;</span>
-          </div>
-          <input type="text" id="filter-modal-search" class="w-full p-2 rounded-lg border border-gray-700 bg-[#1C1C1C] text-white mb-4" placeholder="Search...">
-          <div id="filter-modal-list" class="overflow-y-auto max-h-64">
-              <!-- Filter options will be populated here -->
-          </div>
-      </div>
-  </div>
 
   <!-- Mentor Details Modal -->
   <div id="mentor-modal" class="modal">
@@ -131,31 +117,19 @@
   <script>
     // --- DOM Elements ---
     const mentorsGrid = document.getElementById('mentors-grid');
-    const mentorSearch = document.getElementById('mentor-search');
-    const expertiseFilterBtn = document.getElementById('expertise-filter-btn');
-    const filterModal = document.getElementById('filter-modal');
-    const filterModalTitle = document.getElementById('filter-modal-title');
-    const filterModalSearch = document.getElementById('filter-modal-search');
-    const filterModalList = document.getElementById('filter-modal-list');
-    const filterModalClose = document.getElementById('filter-modal-close');
+    const expertiseFilterButtons = document.getElementById('expertise-filter-buttons');
     const mentorModal = document.getElementById('mentor-modal');
     const mentorModalClose = document.getElementById('mentor-modal-close');
     
-    let autoRefreshToggle, autoRefreshToggleMobile;
-    let autoRefreshIntervalId = null;
-
     // --- State Variables ---
     let allMentors = [];
     let displayedMentors = [];
     let currentExpertiseFilter = 'All';
 
-    // --- Hardcoded Mentor Data (Links will be fetched) ---
+    // --- Hardcoded Mentor Data ---
     const hardcodedMentors = [
-      { id: 1, "Name": "Ketan Goel", "Title": "Analytics Lead", "Company": "Meesho", "Image URL": "https://media.licdn.com/dms/image/v2/D5603AQFLl6nBaT2tpg/profile-displayphoto-shrink_800_800/B56ZN3TwD6GgAc-/0/1732873487436?e=1757548800&v=beta&t=pbe2rFUCG5uzmRUVe3i8dkLovyPg_AtHhFxYHj7irrM", "Expertise": ["Career Transition", "Analytics", "Interview Prep"], "Booking Link": "#", "Description": "I transitioned from service-based companies to Meesho, a top product company, and also cracked roles at other leading product firms. Throughout this journey, I faced numerous struggles and learned invaluable lessons. I'm here to mentor you so you don't have to go through those same challenges alone." }
+      { id: 1, "Name": "Ketan Goel", "Title": "Analytics Lead", "Company": "Meesho", "Image URL": "https://i.ibb.co/7jZ1kYQ/ketan-goel-profile.jpg", "Expertise": ["Career Transition", "Analytics", "Interview Prep"], "Booking Link": "#", "Description": "I transitioned from service-based companies to Meesho, a top product company, and also cracked roles at other leading product firms. Throughout this journey, I faced numerous struggles and learned invaluable lessons. I'm here to mentor you so you don't have to go through those same challenges alone." }
     ];
-
-    // --- Config ---
-    const MENTORS_API_URL = 'https://script.google.com/macros/s/AKfycbxkrDnF3ABiwsf2M8dD7hKtCGwQ4XSRdQebmJOqL8jsSpdQtCwrb6xH7KeHxKUoK0IB/exec'; // Placeholder URL
 
     // --- Modal Logic ---
     const openMentorModal = (mentor) => {
@@ -171,35 +145,27 @@
     const closeModal = (modal) => {
         modal.style.display = 'none';
     };
-    filterModalClose.addEventListener('click', () => closeModal(filterModal));
     mentorModalClose.addEventListener('click', () => closeModal(mentorModal));
     window.addEventListener('click', (event) => {
-      if (event.target === filterModal) closeModal(filterModal);
       if (event.target === mentorModal) closeModal(mentorModal);
     });
 
     // --- Mentor Rendering ---
     const renderMentors = (mentors) => {
       mentorsGrid.innerHTML = '';
-      if (mentors.length === 0) {
-        mentorsGrid.innerHTML = '<p class="text-gray-400 text-center col-span-full">No mentors found.</p>';
+      if (mentors.length === 0 && currentExpertiseFilter !== 'All') {
+        mentorsGrid.innerHTML = '<p class="text-gray-400 text-center col-span-full">No mentors found for this expertise.</p>';
       } else {
         mentors.forEach(mentor => {
           const card = document.createElement('div');
-          card.className = 'bg-[#1C1C1C] rounded-2xl shadow-lg border border-gray-800 overflow-hidden transform hover:-translate-y-2 transition-transform duration-300';
+          card.className = 'text-center p-6 transform hover:-translate-y-2 transition-transform duration-300 cursor-pointer';
           card.innerHTML = `
-            <img src="${mentor['Image URL']}" alt="${mentor.Name}" class="w-full h-64 object-cover">
-            <div class="p-6">
-              <h3 class="text-2xl font-bold text-white">${mentor.Name}</h3>
-              <p class="text-orange-500 font-semibold">${mentor.Title} @ ${mentor.Company}</p>
-              <div class="mt-4 flex flex-wrap gap-2">
-                ${mentor.Expertise.slice(0, 2).map(skill => `<span class="bg-gray-700 text-gray-300 text-xs font-medium px-2.5 py-1 rounded-full">${skill}</span>`).join('')}
-                ${mentor.Expertise.length > 2 ? `<span class="bg-gray-700 text-gray-300 text-xs font-medium px-2.5 py-1 rounded-full">+${mentor.Expertise.length - 2} more</span>` : ''}
-              </div>
-              <button class="view-profile-btn group mt-6 inline-flex items-center justify-center w-full bg-gray-800 text-white py-3 px-6 rounded-full hover:bg-gray-700 transition-colors font-semibold">
+            <img src="${mentor['Image URL']}" alt="${mentor.Name}" class="w-40 h-40 rounded-full mx-auto mb-4 border-4 border-gray-800 object-cover">
+            <h3 class="text-xl font-bold text-white">${mentor.Name}</h3>
+            <p class="text-gray-400">${mentor.Title} @ ${mentor.Company}</p>
+            <button class="view-profile-btn group mt-4 inline-flex items-center justify-center w-full bg-gray-800 text-white py-2 px-4 rounded-full hover:bg-gray-700 transition-colors font-semibold text-sm">
                 View Profile
-              </button>
-            </div>
+            </button>
           `;
           card.querySelector('.view-profile-btn').addEventListener('click', () => openMentorModal(mentor));
           mentorsGrid.appendChild(card);
@@ -207,8 +173,9 @@
       }
       
       // "Become a Mentor" card
-      const becomeMentorCard = document.createElement('div');
-      becomeMentorCard.className = 'bg-[#1C1C1C] rounded-2xl border border-dashed border-gray-700 flex flex-col items-center justify-center p-6 text-center';
+      const becomeMentorCard = document.createElement('a');
+      becomeMentorCard.href = "#"; // Replace with your form link later
+      becomeMentorCard.className = 'bg-[#1C1C1C] rounded-2xl border border-dashed border-gray-700 flex flex-col items-center justify-center p-6 text-center hover:border-orange-500 transition-colors';
       becomeMentorCard.innerHTML = `
         <div class="flex items-center justify-center h-16 w-16 bg-gray-800 rounded-full mb-4">
             <svg class="w-8 h-8 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -216,92 +183,41 @@
             </svg>
         </div>
         <h3 class="text-xl font-bold text-white">Become a Mentor</h3>
-        <p class="text-gray-400 mt-2 mb-4">Share your expertise and help shape the next generation of talent.</p>
-        <a href="#" class="inline-block bg-orange-600 text-white py-2 px-5 rounded-full hover:bg-orange-700 transition-colors font-semibold">
-            Apply to Join
-        </a>
+        <p class="text-gray-400 mt-2">Share your expertise and help shape the next generation of talent.</p>
       `;
       mentorsGrid.appendChild(becomeMentorCard);
-      
-      // "Coming Soon" card
-      const comingSoonCard = document.createElement('div');
-      comingSoonCard.className = 'bg-[#1C1C1C] rounded-2xl border border-dashed border-gray-700 flex flex-col items-center justify-center p-6 text-center';
-      comingSoonCard.innerHTML = `
-        <div class="flex items-center justify-center h-16 w-16 bg-gray-800 rounded-full mb-4">
-          <svg class="w-8 h-8 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-          </svg>
-        </div>
-        <h3 class="text-xl font-bold text-white">More Mentors Coming Soon</h3>
-        <p class="text-gray-400 mt-2">We are onboarding more experts from different domains.</p>
-      `;
-      mentorsGrid.appendChild(comingSoonCard);
     };
 
     // --- Filtering Logic ---
-    const openFilterModal = (title, items, currentFilter, onSelect) => {
-        filterModalTitle.textContent = title;
-        const renderList = (filterItems) => {
-            filterModalList.innerHTML = '';
-            ['All', ...filterItems].forEach(item => {
-                const div = document.createElement('div');
-                div.textContent = item;
-                div.className = `p-2 cursor-pointer rounded-md hover:bg-gray-700 ${item === currentFilter ? 'bg-orange-600' : ''}`;
-                div.onclick = () => {
-                    onSelect(item);
-                    closeModal(filterModal);
-                };
-                filterModalList.appendChild(div);
-            });
-        };
-        renderList(items);
-        filterModalSearch.oninput = (e) => {
-            const searchTerm = e.target.value.toLowerCase();
-            renderList(items.filter(item => item.toLowerCase().includes(searchTerm)));
-        };
-        filterModal.style.display = 'block';
+    const createFilterButtons = () => {
+        const allExpertise = [...new Set(allMentors.flatMap(m => m.Expertise))].sort();
+        const expertiseToShow = ['All', ...allExpertise];
+        
+        expertiseFilterButtons.innerHTML = '';
+        expertiseToShow.forEach(expertise => {
+            const button = document.createElement('button');
+            button.textContent = expertise;
+            button.className = `filter-btn px-4 py-2 rounded-full text-sm font-medium border ${expertise === currentExpertiseFilter ? 'filter-btn-active border-orange-600' : 'bg-[#1C1C1C] border-gray-700 text-gray-300 hover:border-gray-500'}`;
+            button.onclick = () => {
+                currentExpertiseFilter = expertise;
+                filterAndRenderMentors();
+            };
+            expertiseFilterButtons.appendChild(button);
+        });
     };
     
     const filterAndRenderMentors = () => {
-        const searchTerm = mentorSearch.value.toLowerCase();
         displayedMentors = allMentors.filter(m => 
-            ((m['Name'] || '').toLowerCase().includes(searchTerm) || 
-             (m['Title'] || '').toLowerCase().includes(searchTerm) ||
-             (m['Company'] || '').toLowerCase().includes(searchTerm)) &&
-            (currentExpertiseFilter === 'All' || m.Expertise.includes(currentExpertiseFilter))
+            currentExpertiseFilter === 'All' || m.Expertise.includes(currentExpertiseFilter)
         );
         renderMentors(displayedMentors);
+        createFilterButtons(); // Re-render to update active state
     };
 
-    // --- Data Fetching ---
-    const setupMentors = () => {
+    // --- Initial Load ---
+    document.addEventListener('DOMContentLoaded', () => {
         allMentors = hardcodedMentors;
         filterAndRenderMentors();
-    };
-    
-    // --- Initial Load & Event Listeners ---
-    document.addEventListener('DOMContentLoaded', () => {
-        setupMentors();
-
-        mentorSearch.addEventListener('input', filterAndRenderMentors);
-        expertiseFilterBtn.addEventListener('click', () => {
-            const allExpertise = [...new Set(allMentors.flatMap(m => m.Expertise))].sort();
-            openFilterModal('Filter by Expertise', allExpertise, currentExpertiseFilter, (selection) => {
-                currentExpertiseFilter = selection;
-                expertiseFilterBtn.textContent = selection;
-                filterAndRenderMentors();
-            });
-        });
-    });
-
-    document.addEventListener('headerLoaded', () => {
-        autoRefreshToggle = document.getElementById('auto-refresh-toggle');
-        autoRefreshToggleMobile = document.getElementById('auto-refresh-toggle-mobile');
-        if (new URLSearchParams(window.location.search).get('dev') === 'true') {
-            document.querySelectorAll('.dev-feature').forEach(el => el.classList.remove('hidden'));
-        }
-        if(autoRefreshToggle) autoRefreshToggle.addEventListener('change', (e) => handleToggleChange(e.target.checked));
-        if(autoRefreshToggleMobile) autoRefreshToggleMobile.addEventListener('change', (e) => handleToggleChange(e.target.checked));
     });
   </script>
 
