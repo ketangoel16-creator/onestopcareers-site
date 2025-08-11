@@ -83,6 +83,30 @@
     .filter-modal {
         max-height: 70vh;
     }
+    /* Hide scrollbar for toolkit carousel */
+    .toolkit-carousel::-webkit-scrollbar {
+        display: none;
+    }
+    .toolkit-carousel {
+        -ms-overflow-style: none;  /* IE and Edge */
+        scrollbar-width: none;  /* Firefox */
+    }
+    /* Shine effect for desktop */
+    @keyframes shine {
+      0% { transform: translateX(-100%) skewX(-25deg); }
+      100% { transform: translateX(200%) skewX(-25deg); }
+    }
+    .toolkit-card::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 50%;
+      height: 100%;
+      background: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.1) 50%, rgba(255, 255, 255, 0) 100%);
+      transform: translateX(-100%) skewX(-25deg);
+      animation: shine 4s infinite 2s; /* Start after 2s delay */
+    }
   </style>
 </head>
 <body class="bg-black text-white">
@@ -113,6 +137,54 @@
       <div id="see-more-jobs-container" class="text-center mt-12" style="display: none;">
         <button id="see-more-jobs-btn" class="bg-gray-800 text-gray-300 px-6 py-3 rounded-lg hover:bg-gray-700">See More Jobs</button>
       </div>
+    </section>
+
+    <!-- Career Toolkit Section -->
+    <section class="py-16">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="text-center">
+                <h2 class="text-3xl font-bold text-white">Your Career Toolkit</h2>
+                <p class="text-gray-400 mt-2 mb-8">The resources you need to get ahead.</p>
+            </div>
+            <div class="toolkit-carousel flex md:grid md:grid-cols-3 gap-6 overflow-x-auto snap-x snap-mandatory py-4">
+                <!-- Toolkit Card 1 -->
+                <a href="resources.html" class="toolkit-card relative overflow-hidden flex-shrink-0 w-4/5 sm:w-1/2 md:w-auto snap-center block p-6 bg-[#1C1C1C] rounded-xl border border-gray-800 hover:border-orange-500/50 transition-colors duration-300">
+                    <div class="flex items-center space-x-4">
+                        <div class="flex-shrink-0 h-12 w-12 flex items-center justify-center bg-orange-900/50 rounded-full">
+                            <svg class="w-7 h-7 text-orange-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-bold text-white">Resume Templates</h3>
+                            <p class="text-gray-400 text-sm">Get ATS-friendly designs.</p>
+                        </div>
+                    </div>
+                </a>
+                <!-- Toolkit Card 2 -->
+                <a href="resources.html" class="toolkit-card relative overflow-hidden flex-shrink-0 w-4/5 sm:w-1/2 md:w-auto snap-center block p-6 bg-[#1C1C1C] rounded-xl border border-gray-800 hover:border-orange-500/50 transition-colors duration-300">
+                    <div class="flex items-center space-x-4">
+                        <div class="flex-shrink-0 h-12 w-12 flex items-center justify-center bg-orange-900/50 rounded-full">
+                           <svg class="w-7 h-7 text-orange-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" /></svg>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-bold text-white">Interview Prep</h3>
+                            <p class="text-gray-400 text-sm">Master the STAR method.</p>
+                        </div>
+                    </div>
+                </a>
+                <!-- Toolkit Card 3 -->
+                <a href="resources.html" class="toolkit-card relative overflow-hidden flex-shrink-0 w-4/5 sm:w-1/2 md:w-auto snap-center block p-6 bg-[#1C1C1C] rounded-xl border border-gray-800 hover:border-orange-500/50 transition-colors duration-300">
+                    <div class="flex items-center space-x-4">
+                        <div class="flex-shrink-0 h-12 w-12 flex items-center justify-center bg-orange-900/50 rounded-full">
+                           <svg class="w-7 h-7 text-orange-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-bold text-white">Salary Guides</h3>
+                            <p class="text-gray-400 text-sm">Negotiate your worth.</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
     </section>
 
     <!-- Referral Network Section -->
@@ -223,6 +295,7 @@
     
     let autoRefreshToggle, autoRefreshToggleMobile;
     let autoRefreshIntervalId = null;
+    let autoScrollInterval = null;
 
     // --- State Variables ---
     let jobsPerPage = 8;
@@ -338,7 +411,6 @@
         if (paginatedReferrals.length > 0) {
             paginatedReferrals.forEach(prof => {
                 const card = document.createElement('a');
-                // FIX: Check for multiple common column names for the URL
                 const referralLink = prof['LinkedIn ID url'] || prof['LinkedIn URL'] || prof['Link'] || '#';
                 card.href = referralLink;
                 card.target = '_blank';
@@ -480,6 +552,27 @@
         }
     };
 
+    const startAutoScroll = () => {
+        if (window.innerWidth >= 768) return; // Only run on mobile
+        const carousel = document.querySelector('.toolkit-carousel');
+        if (!carousel) return;
+        stopAutoScroll(); // Clear any existing interval
+        autoScrollInterval = setInterval(() => {
+            const scrollWidth = carousel.scrollWidth;
+            const clientWidth = carousel.clientWidth;
+            if (carousel.scrollLeft + clientWidth >= scrollWidth) {
+                carousel.scrollTo({ left: 0, behavior: 'smooth' });
+            } else {
+                carousel.scrollBy({ left: clientWidth / 2, behavior: 'smooth' });
+            }
+        }, 3000);
+        carousel.addEventListener('touchstart', stopAutoScroll, { passive: true });
+    };
+
+    const stopAutoScroll = () => {
+        clearInterval(autoScrollInterval);
+    };
+
     // --- Initial Load & Event Listeners ---
     document.addEventListener('DOMContentLoaded', () => {
         updateItemsPerPage();
@@ -530,7 +623,10 @@
             updateItemsPerPage(); 
             filterAndRenderJobs();
             filterAndRenderReferrals();
+            startAutoScroll();
         });
+
+        startAutoScroll();
     });
 
     document.addEventListener('headerLoaded', () => {
