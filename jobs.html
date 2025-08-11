@@ -1,61 +1,76 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Job Board - Staging</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Staging - Jobs</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f9fafb;
+    }
+    .job-card {
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      padding: 16px;
+      background-color: white;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    .job-title {
+      font-size: 1.125rem;
+      font-weight: bold;
+      color: #111827;
+    }
+    .job-company {
+      color: #6b7280;
+    }
+    .apply-link {
+      color: #2563eb;
+      font-weight: 500;
+      text-decoration: underline;
+    }
+  </style>
 </head>
-<body class="bg-gray-100 text-gray-900">
-  <div class="container mx-auto p-6">
-    <h1 class="text-3xl font-bold mb-6">Job Board (Staging)</h1>
-    <div id="jobsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+<body class="p-6">
+  <h1 class="text-2xl font-bold mb-6">Staging Job Board</h1>
+  <div id="jobs-container" class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+    <p>Loading jobs...</p>
   </div>
 
   <script>
-    async function fetchJobs() {
-      try {
-        // Replace with your staging script URL (must point to Staging tab in Apps Script)
-        const response = await fetch('YOUR_STAGING_WEB_APP_URL');
-        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+    const jobsContainer = document.getElementById("jobs-container");
 
-        const jobs = await response.json();
-        displayJobs(jobs);
-      } catch (error) {
-        console.error('Error fetching jobs:', error);
-        document.getElementById('jobsContainer').innerHTML = 
-          `<p class="text-red-500">Failed to load jobs. Please try again later.</p>`;
-      }
-    }
+    fetch("https://script.google.com/macros/s/AKfycbw3xvcb15RpkcHqZtc8tEYoyn6P-PpOqiCEtyBzchB5__-MVm98ZTYSh_4u5Wp-oVoJ/exec")
+      .then(response => response.json())
+      .then(data => {
+        jobsContainer.innerHTML = "";
 
-    function displayJobs(jobs) {
-      const container = document.getElementById('jobsContainer');
-      container.innerHTML = '';
+        if (!data || data.length === 0) {
+          jobsContainer.innerHTML = "<p>No jobs available in staging.</p>";
+          return;
+        }
 
-      if (!jobs.length) {
-        container.innerHTML = '<p>No jobs available at the moment.</p>';
-        return;
-      }
+        data.forEach(job => {
+          const card = document.createElement("div");
+          card.className = "job-card";
 
-      jobs.forEach(job => {
-        const jobCard = document.createElement('div');
-        jobCard.className = 'bg-white p-4 rounded-lg shadow hover:shadow-lg transition-shadow';
+          card.innerHTML = `
+            <div class="job-title">${job["Job Title"] || "No title"}</div>
+            <div class="job-company">${job["Company"] || "No company"}</div>
+            <div class="mt-2">${job["Location"] || "No location"}</div>
+            <div class="mt-4">
+              <a class="apply-link" href="${job["Apply Link"] || "#"}" target="_blank">Apply</a>
+            </div>
+          `;
 
-        jobCard.innerHTML = `
-          <h2 class="text-xl font-semibold mb-2">${job['Job Title'] || 'Untitled Job'}</h2>
-          <p class="text-gray-700 mb-1"><strong>Company:</strong> ${job['Company'] || 'N/A'}</p>
-          <p class="text-gray-700 mb-1"><strong>Location:</strong> ${job['Location'] || 'N/A'}</p>
-          <p class="text-gray-700 mb-3"><strong>Posted on:</strong> ${job['Date'] || 'N/A'}</p>
-          <a href="${job['Apply Link'] || '#'}" 
-             target="_blank" 
-             class="text-blue-500 hover:underline">Apply Now</a>
-        `;
-
-        container.appendChild(jobCard);
+          jobsContainer.appendChild(card);
+        });
+      })
+      .catch(error => {
+        console.error("Error fetching jobs:", error);
+        jobsContainer.innerHTML = "<p>Failed to load jobs from staging.</p>";
       });
-    }
-
-    fetchJobs();
   </script>
 </body>
 </html>
