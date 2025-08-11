@@ -3,238 +3,205 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>OneStopCareers - Landing Page</title>
+  <title>OneStopCareers - Your Gateway to Referral-Based Jobs</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" />
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&display=swap');
     body {
-      font-family: 'Poppins', sans-serif;
-    }
-    .strikethrough {
-      text-decoration: line-through;
+      font-family: 'Manrope', sans-serif;
+      background-color: #121212;
+      color: #EAEAEA;
     }
     .hero-bg {
-      background-image: url('https://images.unsplash.com/photo-1517048676732-d65bc937f952?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
-      background-size: cover;
-      background-position: center;
-      position: relative;
+      background: radial-gradient(circle at top, rgba(234, 88, 12, 0.1), transparent 40%), #121212;
     }
-    .hero-bg::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(0, 0, 0, 0.6);
+    .problem-card {
+        transition: all 0.3s ease-in-out;
+        border: 1px solid #333;
+        background-color: #1C1C1C;
     }
-    /* Tooltip styles for Resources hover */
-    .resource-tooltip {
-      visibility: hidden;
-      width: 200px;
-      background-color: #333;
-      color: #fff;
-      text-align: center;
-      border-radius: 6px;
-      padding: 8px 0;
-      position: absolute;
-      z-index: 1;
-      bottom: -40px; /* Position the tooltip below the link */
-      left: 50%;
-      margin-left: -100px; /* Center the tooltip */
-      opacity: 0;
-      transition: opacity 0.3s;
+    .problem-card.selected {
+        border-color: #ea580c;
+        transform: translateY(-5px);
+        box-shadow: 0 0 25px rgba(234, 88, 12, 0.3);
     }
-    .resources-link:hover .resource-tooltip {
-      visibility: visible;
-      opacity: 1;
+    #solution-container {
+        transition: opacity 0.4s ease-in-out, max-height 0.4s ease-in-out;
+        max-height: 0;
+        opacity: 0;
+        overflow: hidden;
     }
-    /* Active navigation link style */
-    .nav-active {
-        color: #ea580c; /* Orange-600 */
-        font-weight: 600;
-        border-bottom: 2px solid #ea580c;
-    }
-    /* The problem-card container now uses Flexbox for consistent alignment */
-    .problem-card-container {
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        height: 100%;
+    #solution-container.visible {
+        max-height: 500px; /* Adjust as needed */
+        opacity: 1;
     }
   </style>
 </head>
-<body class="bg-gray-50 text-gray-900 font-sans">
+<body class="bg-black text-white">
 
-  <!-- Header -->
-  <header class="bg-white shadow-md sticky top-0 z-50">
-    <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
-      <div class="flex items-center">
-        <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="OneStopCareers Logo" class="rounded-full mr-2 h-10 w-10 object-cover" />
-        <a href="index.html" class="text-2xl font-bold">OneStopCareers</a>
+  <!-- Header Placeholder -->
+  <div id="header-placeholder"></div>
+
+  <!-- Main Content -->
+  <main>
+    <!-- Hero Section -->
+    <section class="hero-bg">
+      <div class="max-w-7xl mx-auto px-4 pt-24 pb-20 sm:pt-32 sm:pb-24 text-center relative">
+        <div class="relative z-10">
+            <h1 class="text-5xl md:text-7xl font-extrabold leading-tight text-white">
+              The End of<br class="hidden md:block" /> Career Chaos.
+            </h1>
+            <p class="mt-6 max-w-2xl mx-auto text-lg text-gray-400">
+              Stop sending your resume into the void. We provide the tools, connections, and clarity to find the right path and get you noticed.
+            </p>
+            <div class="mt-10">
+              <a href="#problem-solver" class="group inline-flex items-center justify-center bg-orange-600 text-white py-4 px-8 rounded-full hover:bg-orange-700 transition-colors text-lg font-semibold shadow-lg shadow-orange-500/20">
+                Find Your Path Forward
+              </a>
+            </div>
+        </div>
       </div>
-      <nav class="hidden md:flex items-center space-x-6">
-        <a href="index.html" class="text-gray-600 hover:text-orange-600 font-medium">Home</a>
-        <a href="jobs.html" class="text-gray-600 hover:text-orange-600 font-medium">Find Jobs/referrals</a>
-        <a href="resources.html" class="text-gray-600 hover:text-orange-600 font-medium">Resources</a>
-        <a href="mentors.html" class="text-gray-600 hover:text-orange-600 font-medium">Mentors</a>
+    </section>
+
+    <!-- Interactive Problem Section -->
+    <section id="problem-solver" class="bg-black py-20">
+      <div class="max-w-6xl mx-auto px-4 text-center">
+        <h2 class="text-4xl font-bold text-white">Find your starting point.</h2>
+        <p class="text-gray-400 mt-4 max-w-3xl mx-auto">
+          Every successful career journey starts with a single, clear step. Select your current challenge to reveal yours.
+        </p>
+        <div id="problem-cards" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mt-12">
+          <!-- Problem Card 1 -->
+          <div class="problem-card cursor-pointer p-6 rounded-2xl" data-solution="solution1">
+            <h3 class="text-lg font-semibold text-white">"I'm not sure what career is right for me."</h3>
+          </div>
+          <!-- Problem Card 2 -->
+          <div class="problem-card cursor-pointer p-6 rounded-2xl" data-solution="solution2">
+            <h3 class="text-lg font-semibold text-white">"I need to build my skills and portfolio."</h3>
+          </div>
+          <!-- Problem Card 3 -->
+          <div class="problem-card cursor-pointer p-6 rounded-2xl" data-solution="solution3">
+            <h3 class="text-lg font-semibold text-white">"I'm applying but not getting interviews."</h3>
+          </div>
+          <!-- Problem Card 4 -->
+          <div class="problem-card cursor-pointer p-6 rounded-2xl" data-solution="solution4">
+            <h3 class="text-lg font-semibold text-white">"I'm getting interviews but no offers."</h3>
+          </div>
+        </div>
         
-      </nav>
-      <!-- Mobile menu button -->
-      <button id="mobile-menu-btn" class="md:hidden text-gray-600">
-        <svg xmlns="http://www.w3.org/2d00/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
-        </svg>
-      </button>
-    </div>
-    <!-- Mobile menu -->
-    <nav id="mobile-menu" class="hidden md:hidden bg-white shadow-lg py-2">
-      <a href="index.html" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Home</a>
-      <a href="jobs.html" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Find Jobs/referrals</a>
-      <a href="resources.html" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Resources</a>
-      <a href="mentors.html" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Mentors</a>
-      
-    </nav>
-  </header>
-
-  <!-- Hero Section -->
-  <section class="hero-bg py-24 md:py-32 text-center text-white relative">
-    <div class="relative z-10 max-w-4xl mx-auto px-4">
-      <h2 class="text-5xl md:text-6xl font-extrabold leading-tight">
-        Your Career Clarity Awaits
-      </h2>
-      <p class="mt-6 max-w-3xl mx-auto text-xl font-light">
-        The market is a maze of free content. We help you find a single, honest path forward.
-      </p>
-    </div>
-  </section>
-
-  <!-- Problem Section -->
-  <section class="bg-gray-50 py-16">
-    <div class="max-w-6xl mx-auto px-4 text-center">
-      <h3 class="text-4xl font-bold text-gray-800">Where Are You on Your Career Journey?</h3>
-      <p class="text-gray-600 mt-4 max-w-3xl mx-auto">
-        Click on the scenario that best describes you, and we’ll guide you to the right solution.
-      </p>
-      <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mt-12">
-        <!-- Problem Card 1: Initial Confusion -->
-        <a href="mentors.html" class="block p-8 bg-white rounded-2xl shadow-lg border-b-4 border-orange-500 transition-transform transform hover:scale-105 hover:shadow-xl">
-          <div class="problem-card-container">
-            <div class="text-center">
-              <img src="https://cdn-icons-png.flaticon.com/512/3356/3356885.png" class="h-16 w-16 mx-auto mb-4" alt="Domains Icon" />
-              <h4 class="text-2xl font-semibold text-gray-800 mb-2">"I don't know which career path is right for me."</h4>
-              <p class="text-gray-600">
-                You're a fresher, or considering a transition, and feel lost among all the options.
-              </p>
-            </div>
-            <span class="inline-block mt-4 text-orange-600 font-medium self-center">Explore Career Roles →</span>
-          </div>
-        </a>
-
-        <!-- Problem Card 2: Knowledge Gaps -->
-        <a href="resources.html" class="block p-8 bg-white rounded-2xl shadow-lg border-b-4 border-orange-500 transition-transform transform hover:scale-105 hover:shadow-xl">
-          <div class="problem-card-container">
-            <div class="text-center">
-              <img src="https://cdn-icons-png.flaticon.com/512/2951/2951216.png" class="h-16 w-16 mx-auto mb-4" alt="Interview Icon" />
-              <h4 class="text-2xl font-semibold text-gray-800 mb-2">"I need help with projects, templates and recruiter details."</h4>
-              <p class="text-gray-600">
-                You know your role but need help building a resume, portfolio, or preparing for interviews.
-              </p>
-            </div>
-            <span class="inline-block mt-4 text-orange-600 font-medium self-center">Find Resources & Guidance →</span>
-          </div>
-        </a>
-
-        <!-- Problem Card 3: Job/Referral Search -->
-        <a href="jobs.html" class="block p-8 bg-white rounded-2xl shadow-lg border-b-4 border-orange-500 transition-transform transform hover:scale-105 hover:shadow-xl">
-          <div class="problem-card-container">
-            <div class="text-center">
-              <img src="https://cdn-icons-png.flaticon.com/512/3176/3176295.png" class="h-16 w-16 mx-auto mb-4" alt="Career Path Icon" />
-              <h4 class="text-2xl font-semibold text-gray-800 mb-2">"I'm applying but not getting interview calls."</h4>
-              <p class="text-gray-600">
-                You're confident in your skills but are struggling with job searching and referrals.
-              </p>
-            </div>
-            <span class="inline-block mt-4 text-orange-600 font-medium self-center">Explore Job Board & Referrals →</span>
-          </div>
-        </a>
-
-        <!-- Problem Card 4: Cracking the Interview -->
-        <a href="mentors.html" class="block p-8 bg-white rounded-2xl shadow-lg border-b-4 border-orange-500 transition-transform transform hover:scale-105 hover:shadow-xl">
-          <div class="problem-card-container">
-            <div class="text-center">
-              <img src="https://cdn-icons-png.flaticon.com/512/1000/1000965.png" class="h-16 w-16 mx-auto mb-4" alt="Handshake Icon" />
-              <h4 class="text-2xl font-semibold text-gray-800 mb-2">"I'm getting interviews but can't crack them."</h4>
-              <p class="text-gray-600">
-                You're making it to the interview stage but struggling with performance and closing the deal.
-              </p>
-            </div>
-            <span class="inline-block mt-4 text-orange-600 font-medium self-center">Get Mentorship & Interview Prep →</span>
-          </div>
-        </a>
-      </div>
-    </div>
-  </section>
-
-  <!-- Mixed Testimonials -->
-  <section id="home-testimonials" class="bg-gray-800 py-16 text-white">
-    <div class="max-w-6xl mx-auto px-4 text-center">
-      <h3 class="text-4xl font-bold">What Our Users Are Saying</h3>
-      <p class="text-gray-300 mt-4 max-w-3xl mx-auto">
-        Hear from professionals who found clarity and success through our various offerings.
-      </p>
-      <div class="grid md:grid-cols-2 gap-8 mt-12">
-        <div class="p-8 bg-gray-700 rounded-2xl text-left">
-          <p class="text-gray-200 italic">
-            "The resume templates and interview questions were a game-changer. I felt so much more prepared and confident."
-          </p>
-          <p class="mt-4 font-semibold text-orange-500">- David L., Job Seeker</p>
-        </div>
-        <div class="p-8 bg-gray-700 rounded-2xl text-left">
-          <p class="text-gray-200 italic">
-            "Ketan's guidance was instrumental in helping me transition from a service-based role to a product company. His insights were invaluable."
-          </p>
-          <p class="mt-4 font-semibold text-orange-500">- Michael J., Product Manager</p>
+        <!-- Solution Display Area -->
+        <div id="solution-container" class="mt-12">
+          <!-- Dynamically inserted solution will go here -->
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- Footer -->
-  <footer class="bg-gray-900 text-white py-6 text-center">
-    <p>© 2025 OneStopCareers. All rights reserved.</p>
-  </footer>
+    <!-- Mixed Testimonials -->
+    <section id="home-testimonials" class="bg-gray-900/50 py-16">
+      <div class="max-w-6xl mx-auto px-4 text-center">
+        <h2 class="text-4xl font-bold text-white">What Our Users Are Saying</h2>
+        <div class="grid md:grid-cols-2 gap-8 mt-12">
+          <div class="p-8 bg-gray-800 rounded-2xl text-left border border-gray-700">
+            <p class="text-gray-300 italic">
+              "The resume templates and interview questions were a game-changer. I felt so much more prepared and confident."
+            </p>
+            <p class="mt-4 font-semibold text-orange-500">- David L., Job Seeker</p>
+          </div>
+          <div class="p-8 bg-gray-800 rounded-2xl text-left border border-gray-700">
+            <p class="text-gray-300 italic">
+              "Ketan's guidance was instrumental in helping me transition from a service-based role to a product company. His insights were invaluable."
+            </p>
+            <p class="mt-4 font-semibold text-orange-500">- Michael J., Product Manager</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
 
-  <!-- Scripts -->
+  <!-- Footer Placeholder -->
+  <div id="footer-placeholder"></div>
+
+  <!-- Common scripts -->
+  <script src="main.js"></script>
   <script>
-    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
-    const mobileMenu = document.getElementById('mobile-menu');
+    document.addEventListener('DOMContentLoaded', () => {
+        const problemCards = document.querySelectorAll('.problem-card');
+        const solutionContainer = document.getElementById('solution-container');
 
-    mobileMenuBtn.addEventListener('click', () => {
-      mobileMenu.classList.toggle('hidden');
+        const solutions = {
+            solution1: {
+                title: "Our Recommendation: Explore with a Mentor",
+                description: "Clarity comes from conversation. A mentor can help you navigate your options, understand different career paths, and create a plan to get there.",
+                ctaText: "Find Your Mentor →",
+                link: "mentors.html"
+            },
+            solution2: {
+                title: "Our Recommendation: Dive into Resources",
+                description: "Build a strong foundation. Our resources provide resume templates, project ideas, and recruiter details to help you build a compelling profile.",
+                ctaText: "Get Resources →",
+                link: "resources.html"
+            },
+            solution3: {
+                title: "Our Recommendation: Use the Job & Referral Board",
+                description: "It's time for a new strategy. Our job board and referral network connect you with opportunities and insiders who can champion your application.",
+                ctaText: "Find Jobs & Referrals →",
+                link: "jobs.html"
+            },
+            solution4: {
+                title: "Our Recommendation: Prepare with a Mentor",
+                description: "You're at the final hurdle. A mentor can provide mock interviews, targeted feedback, and strategies to help you ace the interview and land the offer.",
+                ctaText: "Prepare with a Mentor →",
+                link: "mentors.html"
+            }
+        };
+
+        problemCards.forEach(card => {
+            card.addEventListener('click', () => {
+                problemCards.forEach(c => c.classList.remove('selected'));
+                card.classList.add('selected');
+
+                const solutionKey = card.dataset.solution;
+                const solution = solutions[solutionKey];
+
+                solutionContainer.innerHTML = `
+                    <div class="bg-gray-900/50 p-8 rounded-2xl border border-orange-500/50 text-left transition-all duration-300">
+                      <h3 class="text-2xl font-bold text-white">${solution.title}</h3>
+                      <p class="mt-2 text-gray-400 max-w-3xl">${solution.description}</p>
+                      <div class="mt-6">
+                          <a href="${solution.link}" class="inline-block bg-orange-600 text-white py-3 px-6 rounded-full hover:bg-orange-700 transition-colors font-semibold shadow-lg shadow-orange-500/20">
+                            ${solution.ctaText}
+                          </a>
+                      </div>
+                    </div>
+                `;
+                
+                solutionContainer.classList.add('visible');
+            });
+        });
     });
-
-    document.querySelectorAll('#mobile-menu a').forEach(link => {
-      link.addEventListener('click', () => {
-        mobileMenu.classList.add('hidden');
-      });
-    });
-
-    // Function to add 'active' class to the current page's nav link
-    function highlightActivePage() {
-      const path = window.location.pathname.split('/').pop() || 'index.html';
-      const navLinks = document.querySelectorAll('header nav a');
-      navLinks.forEach(link => {
-        const linkPath = link.href.split('/').pop();
-        if (linkPath === path) {
-          link.classList.add('nav-active');
+    
+    // Page-specific script for dev features
+    document.addEventListener('headerLoaded', () => {
+        const autoRefreshToggle = document.getElementById('auto-refresh-toggle');
+        const autoRefreshToggleMobile = document.getElementById('auto-refresh-toggle-mobile');
+        
+        const params = new URLSearchParams(window.location.search);
+        if (params.get('dev') === 'true') {
+            document.querySelectorAll('.dev-feature').forEach(el => el.classList.remove('hidden'));
         }
-      });
-    }
 
-    // Run on page load
-    window.addEventListener('load', highlightActivePage);
+        if(autoRefreshToggle) autoRefreshToggle.addEventListener('change', (e) => handleToggleChange(e.target.checked));
+        if(autoRefreshToggleMobile) autoRefreshToggleMobile.addEventListener('change', (e) => handleToggleChange(e.target.checked));
+    });
+
+    function handleToggleChange(isChecked) {
+        if (isChecked) {
+            console.log('Auto-refresh enabled.');
+        } else {
+            console.log('Auto-refresh disabled.');
+        }
+    }
   </script>
 
 </body>
