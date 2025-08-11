@@ -66,6 +66,14 @@
         visibility: visible;
         opacity: 1;
     }
+    .custom-select {
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%239CA3AF' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+        background-position: right 0.5rem center;
+        background-repeat: no-repeat;
+        background-size: 1.5em 1.5em;
+        padding-right: 2.5rem;
+    }
     .job-board-grid {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(288px, 1fr));
@@ -330,7 +338,9 @@
         if (paginatedReferrals.length > 0) {
             paginatedReferrals.forEach(prof => {
                 const card = document.createElement('a');
-                card.href = prof['LinkedIn ID url'] || '#';
+                // FIX: Check for multiple common column names for the URL
+                const referralLink = prof['LinkedIn ID url'] || prof['LinkedIn URL'] || prof['Link'] || '#';
+                card.href = referralLink;
                 card.target = '_blank';
                 card.className = 'block p-6 bg-[#1C1C1C] rounded-xl border border-gray-800 hover:border-orange-500/50 transition-all duration-300';
                 card.innerHTML = `
