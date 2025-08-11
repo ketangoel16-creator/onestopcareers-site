@@ -7,198 +7,303 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" />
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&display=swap');
     body {
-      font-family: 'Poppins', sans-serif;
+      font-family: 'Manrope', sans-serif;
+      background-color: #121212;
+      color: #EAEAEA;
+    }
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 100;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0,0,0,0.7);
+    }
+    .modal-content {
+      background-color: #1C1C1C;
+      margin: 10% auto;
+      padding: 24px;
+      border-radius: 12px;
+      width: 90%;
+      max-width: 600px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+      border: 1px solid #333;
+    }
+    .close-btn {
+      color: #aaa;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+    }
+    .close-btn:hover,
+    .close-btn:focus {
+      color: #fff;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .filter-modal {
+        max-height: 70vh;
     }
   </style>
 </head>
-<body class="bg-gray-50 text-gray-900 font-sans">
+<body class="bg-black text-white">
 
-  <!-- Header -->
-  <header class="bg-white shadow-md sticky top-0 z-50">
-    <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
-      <div class="flex items-center">
-        <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="OneStopCareers Logo" class="rounded-full mr-2 h-10 w-10 object-cover" />
-        <a href="index.html" class="text-2xl font-bold">OneStopCareers</a>
+  <!-- Header Placeholder -->
+  <div id="header-placeholder"></div>
+
+  <!-- Main Content -->
+  <main>
+    <!-- Resources Section -->
+    <section id="resources" class="max-w-7xl mx-auto px-4 py-16">
+      <div class="text-center">
+          <h1 class="text-4xl md:text-5xl font-extrabold text-white mb-2">Unlock Your Potential</h1>
+          <p class="text-gray-400 mb-8">Essential resources to sharpen your skills and land your dream job.</p>
       </div>
-      <nav class="hidden md:flex items-center space-x-6">
-        <a href="index.html" class="text-gray-600 hover:text-orange-600 font-medium">Home</a>
-        <a href="jobs.html" class="text-gray-600 hover:text-orange-600 font-medium">Find Jobs/referrals</a>
-        <a href="resources.html" class="text-gray-600 hover:text-orange-600 font-medium">Resources</a>
-        <a href="mentors.html" class="text-gray-600 hover:text-orange-600 font-medium">Mentors</a>
-        
-      </nav>
-      <button id="mobile-menu-btn" class="md:hidden text-gray-600">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
-        </svg>
-      </button>
-    </div>
-    <nav id="mobile-menu" class="hidden md:hidden bg-white shadow-lg py-2">
-      <a href="index.html" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Home</a>
-      <a href="jobs.html" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Find Jobs/referrals</a>
-      <a href="resources.html" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Resources</a>
-      <a href="mentors.html" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Mentors</a>
       
-    </nav>
-  </header>
-
-  <!-- Job Hunt Resources (Dynamic) -->
-  <section id="resources" class="py-16">
-    <div class="max-w-6xl mx-auto px-4 text-center">
-      <h3 class="text-4xl font-bold text-gray-800">Essential Job Hunt Resources</h3>
-      <p class="text-gray-600 mt-4 max-w-3xl mx-auto">
-        Equip yourself with the tools and knowledge to navigate your job search successfully.
-      </p>
-      <div id="resources-loading" class="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mt-12">
-        <div class="p-6 bg-white rounded-2xl shadow-lg border-l-4 border-orange-500 animate-pulse">
-          <div class="flex items-center space-x-4 mb-4">
-            <div class="h-10 w-10 bg-orange-200 rounded-full"></div>
-            <div>
-              <div class="h-6 bg-gray-200 rounded w-32 mb-1"></div>
-              <div class="h-4 bg-gray-200 rounded w-24"></div>
-            </div>
-          </div>
-          <div class="h-3 bg-gray-200 rounded w-full mb-2"></div>
-          <div class="h-3 bg-gray-200 rounded w-5/6 mb-4"></div>
-        </div>
-        <div class="p-6 bg-white rounded-2xl shadow-lg border-l-4 border-orange-500 animate-pulse hidden md:block">
-          <div class="flex items-center space-x-4 mb-4">
-            <div class="h-10 w-10 bg-orange-200 rounded-full"></div>
-            <div>
-              <div class="h-6 bg-gray-200 rounded w-32 mb-1"></div>
-              <div class="h-4 bg-gray-200 rounded w-24"></div>
-            </div>
-          </div>
-          <div class="h-3 bg-gray-200 rounded w-full mb-2"></div>
-          <div class="h-3 bg-gray-200 rounded w-5/6 mb-4"></div>
-        </div>
+      <!-- Filters -->
+      <div class="flex flex-col md:flex-row items-center justify-center gap-4 mb-12">
+          <input type="text" id="resource-search" placeholder="Search resources..." class="w-full md:w-auto p-3 rounded-lg border border-gray-700 bg-[#1C1C1C] text-white shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500" />
+          <button id="category-filter-btn" class="w-full md:w-auto p-3 rounded-lg border border-gray-700 bg-[#1C1C1C] text-white shadow-sm text-left">All Categories</button>
       </div>
-      <div id="resources-grid" class="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mt-12">
-        <!-- Resource cards will be loaded here via JavaScript -->
-      </div>
-    </div>
-  </section>
 
-  <!-- Roadmaps Section -->
-  <section id="roadmaps" class="py-16 bg-gray-100">
-    <div class="max-w-6xl mx-auto px-4 text-center">
-      <h3 class="text-4xl font-bold text-gray-800">Find Your Career Roadmap</h3>
-      <p class="text-gray-600 mt-4 max-w-3xl mx-auto">
-        Get a clear, step-by-step plan for your career journey, from transitioning into a new role to advancing in your current one.
-      </p>
-      <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mt-12">
-        <a href="#" class="block p-6 bg-white rounded-2xl shadow-lg border-b-4 border-orange-500 transition-transform transform hover:scale-105 hover:shadow-xl">
-          <div class="text-center">
-            <img src="https://cdn-icons-png.flaticon.com/512/2880/2880753.png" class="h-16 w-16 mx-auto mb-4" alt="Roadmap Icon" />
-            <h4 class="text-2xl font-semibold text-gray-800 mb-2">Product Manager Roadmap</h4>
-            <span class="inline-block mt-4 text-orange-600 font-medium">Explore Plan →</span>
-          </div>
-        </a>
-        <a href="#" class="block p-8 bg-white rounded-2xl shadow-lg border-b-4 border-orange-500 transition-transform transform hover:scale-105 hover:shadow-xl">
-          <div class="text-center">
-            <img src="https://cdn-icons-png.flaticon.com/512/2880/2880753.png" class="h-16 w-16 mx-auto mb-4" alt="Roadmap Icon" />
-            <h4 class="text-2xl font-semibold text-gray-800 mb-2">Data Analyst Roadmap</h4>
-            <span class="inline-block mt-4 text-orange-600 font-medium">Explore Plan →</span>
-          </div>
+      <div id="resources-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
+      <div id="see-more-resources-container" class="text-center mt-12" style="display: none;">
+        <button id="see-more-resources-btn" class="bg-gray-800 text-gray-300 px-6 py-3 rounded-lg hover:bg-gray-700">See More Resources</button>
+      </div>
+    </section>
+
+    <!-- Nudge Section -->
+    <section class="bg-gray-900/50 py-16">
+      <div class="max-w-4xl mx-auto px-4 text-center">
+        <h2 class="text-3xl font-bold text-white">Need Personalized Guidance?</h2>
+        <p class="mt-4 text-gray-400">
+          If you're unsure how to apply these resources, a mentor can provide a personalized roadmap for your career.
+        </p>
+        <a href="mentors.html" class="inline-block mt-8 bg-orange-600 text-white text-lg font-semibold px-8 py-4 rounded-full shadow-lg shadow-orange-500/20 hover:bg-orange-700 transition-colors">
+          Find Your Mentor →
         </a>
       </div>
-    </div>
-  </section>
+    </section>
+  </main>
 
-  <!-- Resources Testimonials -->
-  <section id="resources-testimonials" class="bg-gray-800 py-16 text-white">
-    <div class="max-w-6xl mx-auto px-4 text-center">
-      <h3 class="text-4xl font-bold">How Our Resources Led to Success</h3>
-      <p class="text-gray-300 mt-4 max-w-3xl mx-auto">
-        Read how our resources and guides helped professionals land their dream roles.
-      </p>
-      <div class="grid md:grid-cols-2 gap-8 mt-12">
-        <div class="p-8 bg-gray-700 rounded-2xl text-left">
-          <p class="text-gray-200 italic">
-            "The resume templates and interview questions were a game-changer. I felt so much more prepared and confident."
-          </p>
-          <p class="mt-4 font-semibold text-orange-500">- David Lee, Data Analyst</p>
-        </div>
-        <div class="p-8 bg-gray-700 rounded-2xl text-left">
-          <p class="text-gray-200 italic">
-            "I used the recruiter details to network directly with hiring managers. It was the key to getting my foot in the door at my target company."
-          </p>
-          <p class="mt-4 font-semibold text-orange-500">- Sarah Chen, Marketing Specialist</p>
-        </div>
+  <!-- Footer Placeholder -->
+  <div id="footer-placeholder"></div>
+
+  <!-- Filter Modal -->
+  <div id="filter-modal" class="modal">
+      <div class="modal-content filter-modal">
+          <div class="flex justify-between items-center mb-4">
+              <h3 id="filter-modal-title" class="text-xl font-bold text-white"></h3>
+              <span id="filter-modal-close" class="close-btn">&times;</span>
+          </div>
+          <input type="text" id="filter-modal-search" class="w-full p-2 rounded-lg border border-gray-700 bg-[#1C1C1C] text-white mb-4" placeholder="Search...">
+          <div id="filter-modal-list" class="overflow-y-auto max-h-64">
+              <!-- Filter options will be populated here -->
+          </div>
       </div>
-    </div>
-  </section>
-
-  <!-- Nudge Section -->
-  <section class="bg-gray-200 py-16 text-center">
-    <div class="max-w-4xl mx-auto px-4">
-      <h3 class="text-4xl font-bold text-gray-800">Confused About Your Career Path?</h3>
-      <p class="mt-4 text-gray-600">
-        If you're unsure which career is right for you, or how to transition into a new role, get a personalized roadmap from a mentor.
-      </p>
-      <a href="mentors.html" class="inline-block mt-8 bg-orange-500 text-white text-lg font-semibold px-8 py-4 rounded-xl shadow-lg hover:bg-orange-600 transition-colors">
-        Find Your Mentorship →
-      </a>
-    </div>
-  </section>
-
-  <!-- Footer -->
-  <footer class="bg-gray-900 text-white py-6 text-center">
-    <p>© 2025 OneStopCareers. All rights reserved.</p>
-  </footer>
+  </div>
 
   <!-- Scripts -->
+  <script src="main.js"></script>
   <script>
+    // --- DOM Elements ---
     const resourcesGrid = document.getElementById('resources-grid');
-    const resourcesLoading = document.getElementById('resources-loading');
-    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
-    const mobileMenu = document.getElementById('mobile-menu');
+    const resourceSearch = document.getElementById('resource-search');
+    const categoryFilterBtn = document.getElementById('category-filter-btn');
+    const seeMoreResourcesBtn = document.getElementById('see-more-resources-btn');
+    const seeMoreResourcesContainer = document.getElementById('see-more-resources-container');
+    const filterModal = document.getElementById('filter-modal');
+    const filterModalTitle = document.getElementById('filter-modal-title');
+    const filterModalSearch = document.getElementById('filter-modal-search');
+    const filterModalList = document.getElementById('filter-modal-list');
+    const filterModalClose = document.getElementById('filter-modal-close');
+    
+    let autoRefreshToggle, autoRefreshToggleMobile;
+    let autoRefreshIntervalId = null;
 
-    mobileMenuBtn.addEventListener('click', () => {
-      mobileMenu.classList.toggle('hidden');
-    });
+    // --- State Variables ---
+    let resourcesPerPage = 6;
+    let currentResourcePage = 1;
+    let allResources = [];
+    let displayedResources = [];
+    let currentCategoryFilter = 'All';
 
-    document.querySelectorAll('#mobile-menu a').forEach(link => {
-      link.addEventListener('click', () => {
-        mobileMenu.classList.add('hidden');
-      });
-    });
+    // --- Hardcoded Resource Data (URLs will be fetched) ---
+    const hardcodedResources = [
+      { id: 1, "Link Name": "FAANG Resume Template", "Description": "A professional, ATS-friendly resume template designed to get you noticed by top tech companies.", "URL": "#", "Link Type": "Resume Building", "Icon": "https://cdn-icons-png.flaticon.com/512/2920/2920244.png" },
+      { id: 2, "Link Name": "STAR Method Interview Guide", "Description": "Master the STAR method to structure your answers and ace behavioral interviews.", "URL": "#", "Link Type": "Interview Prep", "Icon": "https://cdn-icons-png.flaticon.com/512/3281/3281329.png" },
+      { id: 3, "Link Name": "Product Manager Case Studies", "Description": "Explore real-world case studies to sharpen your product thinking and problem-solving skills.", "URL": "#", "Link Type": "Case Studies", "Icon": "https://cdn-icons-png.flaticon.com/512/3408/3408506.png" },
+      { id: 4, "Link Name": "Top Recruiter Contact List", "Description": "A curated list of top tech recruiters to expand your networking efforts.", "URL": "#", "Link Type": "Networking", "Icon": "https://cdn-icons-png.flaticon.com/512/1256/1256650.png" },
+      { id: 5, "Link Name": "Salary Negotiation Scripts", "Description": "Scripts and strategies to help you confidently negotiate your salary and benefits.", "URL": "#", "Link Type": "Career Growth", "Icon": "https://cdn-icons-png.flaticon.com/512/2621/2621838.png" },
+      { id: 6, "Link Name": "Frontend Developer Portfolio Template", "Description": "A modern portfolio template to showcase your projects and skills effectively.", "URL": "#", "Link Type": "Portfolio Building", "Icon": "https://cdn-icons-png.flaticon.com/512/1089/1089187.png" }
+    ];
 
-    const fetchResources = () => {
-      resourcesLoading.style.display = 'grid';
-      resourcesGrid.style.display = 'none';
-      fetch('https://script.google.com/macros/s/AKfycbx4Ca1o7ogSpz28Z_9LjQisj9nw9IeZxeUbmaCVftb-So41EUzVqYZ1d8lHgpxtYO19/exec')
-        .then(res => res.json())
-        .then(data => {
-          let html = '';
-          data.forEach(resource => {
-            html += `
-              <a href="${resource['URL']}" target="_blank" class="p-6 bg-white rounded-2xl shadow-lg border-l-4 border-orange-500 hover:scale-105 transition-transform duration-200">
-                <div class="flex items-start space-x-4 mb-4">
-                  <img src="${resource['Icon']}" class="h-10 w-10 text-orange-500" alt="Icon" />
-                  <div>
-                    <h4 class="text-xl font-semibold text-gray-800">${resource['Link Name']}</h4>
-                    <p class="text-gray-500 text-sm">${resource['Link Type']}</p>
-                  </div>
-                </div>
-                <p class="text-gray-600">${resource['Description']}</p>
-              </a>
-            `;
-          });
-          resourcesGrid.innerHTML = html;
-          resourcesLoading.style.display = 'none';
-          resourcesGrid.style.display = 'grid';
-        })
-        .catch(err => {
-          resourcesLoading.style.display = 'none';
-          resourcesGrid.style.display = 'grid';
-          resourcesGrid.innerHTML = `<p class="text-red-500 text-center col-span-4">Failed to load resources.</p>`;
-          console.error(err);
-        });
+    // --- Config ---
+    const CACHE_DURATION = 6 * 60 * 60 * 1000;
+    const REFRESH_INTERVAL = 60 * 1000;
+    const RESOURCES_API_URL = 'https://script.google.com/macros/s/AKfycbx4Ca1o7ogSpz28Z_9LjQisj9nw9IeZxeUbmaCVftb-So41EUzVqYZ1d8lHgpxtYO19/exec';
+
+    // --- Modal Logic ---
+    const closeModal = (modal) => {
+        modal.style.display = 'none';
     };
-    fetchResources();
+    filterModalClose.addEventListener('click', () => closeModal(filterModal));
+    window.addEventListener('click', (event) => {
+      if (event.target === filterModal) closeModal(filterModal);
+    });
+
+    // --- Resource Rendering ---
+    const renderResources = (resources, page = 1, append = false) => {
+      if (!append) resourcesGrid.innerHTML = '';
+      const start = (page - 1) * resourcesPerPage;
+      const end = start + resourcesPerPage;
+      const paginatedResources = resources.slice(start, end);
+
+      if (paginatedResources.length === 0 && !append) {
+        resourcesGrid.innerHTML = '<p class="text-gray-400 text-center col-span-full">No resources found.</p>';
+      } else {
+        paginatedResources.forEach(resource => {
+          const card = document.createElement('a');
+          card.href = resource['URL'] || '#';
+          card.target = '_blank';
+          card.className = 'block p-6 bg-[#1C1C1C] rounded-xl border border-gray-800 hover:border-orange-500/50 transition-all duration-300';
+          card.innerHTML = `
+            <div class="flex items-center space-x-4 mb-4">
+              <img src="${resource['Icon']}" class="h-10 w-10" alt="Icon" />
+              <div>
+                <h4 class="text-lg font-bold text-white">${resource['Link Name']}</h4>
+                <p class="text-sm text-orange-500 font-semibold">${resource['Link Type']}</p>
+              </div>
+            </div>
+            <p class="text-gray-400">${resource['Description']}</p>
+          `;
+          resourcesGrid.appendChild(card);
+        });
+      }
+      seeMoreResourcesContainer.style.display = end < resources.length ? 'block' : 'none';
+    };
+
+    // --- Filtering Logic ---
+    const openFilterModal = (title, items, currentFilter, onSelect) => {
+        filterModalTitle.textContent = title;
+        const renderList = (filterItems) => {
+            filterModalList.innerHTML = '';
+            ['All', ...filterItems].forEach(item => {
+                const div = document.createElement('div');
+                div.textContent = item;
+                div.className = `p-2 cursor-pointer rounded-md hover:bg-gray-700 ${item === currentFilter ? 'bg-orange-600' : ''}`;
+                div.onclick = () => {
+                    onSelect(item);
+                    closeModal(filterModal);
+                };
+                filterModalList.appendChild(div);
+            });
+        };
+        renderList(items);
+        filterModalSearch.oninput = (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            renderList(items.filter(item => item.toLowerCase().includes(searchTerm)));
+        };
+        filterModal.style.display = 'block';
+    };
+    
+    const filterAndRenderResources = () => {
+        const searchTerm = resourceSearch.value.toLowerCase();
+        displayedResources = allResources.filter(r => 
+            ((r['Link Name'] || '').toLowerCase().includes(searchTerm) || (r['Description'] || '').toLowerCase().includes(searchTerm)) &&
+            (currentCategoryFilter === 'All' || r['Link Type'] === currentCategoryFilter)
+        );
+        currentResourcePage = 1;
+        renderResources(displayedResources, currentResourcePage);
+    };
+
+    // --- Data Fetching ---
+    const fetchAndCacheData = async (options) => {
+        const { url, cacheKey, setupFunction, forceRefresh = false } = options;
+        if (!forceRefresh) {
+            const cached = localStorage.getItem(cacheKey);
+            if (cached) {
+                const { timestamp, data } = JSON.parse(cached);
+                if (Date.now() - timestamp < CACHE_DURATION) {
+                    setupFunction(data);
+                    return;
+                }
+            }
+        }
+        try {
+            const response = await fetch(url);
+            const urlData = await response.json(); // This will be an array of {id, URL}
+            localStorage.setItem(cacheKey, JSON.stringify({ timestamp: Date.now(), data: urlData }));
+            setupFunction(urlData);
+        } catch (error) {
+            console.error(`Failed to fetch from ${url}:`, error);
+        }
+    };
+
+    const setupResources = (urlData) => {
+        // Merge URLs into the hardcoded data
+        allResources = hardcodedResources.map(resource => {
+            const matchingUrlData = urlData.find(item => item.id == resource.id);
+            return {
+                ...resource,
+                URL: matchingUrlData ? matchingUrlData.URL : resource.URL // Fallback to default '#'
+            };
+        });
+        filterAndRenderResources();
+    };
+    
+    // --- App Logic ---
+    const handleToggleChange = (isChecked) => {
+        if(autoRefreshToggle) autoRefreshToggle.checked = isChecked;
+        if(autoRefreshToggleMobile) autoRefreshToggleMobile.checked = isChecked;
+        if (isChecked) {
+            autoRefreshIntervalId = setInterval(() => {
+                fetchAndCacheData({ url: RESOURCES_API_URL, cacheKey: 'resources_urls_cache', setupFunction: setupResources, forceRefresh: true });
+            }, REFRESH_INTERVAL);
+        } else if (autoRefreshIntervalId) {
+            clearInterval(autoRefreshIntervalId);
+        }
+    };
+
+    // --- Initial Load & Event Listeners ---
+    document.addEventListener('DOMContentLoaded', () => {
+        // 1. Render hardcoded data immediately for instant UI
+        setupResources([]); // Initial render with placeholder URLs
+
+        // 2. Fetch fresh URLs in the background
+        setTimeout(() => {
+            fetchAndCacheData({ url: RESOURCES_API_URL, cacheKey: 'resources_urls_cache', setupFunction: setupResources });
+        }, 500);
+
+        resourceSearch.addEventListener('input', filterAndRenderResources);
+        categoryFilterBtn.addEventListener('click', () => {
+            const categories = [...new Set(allResources.map(r => r['Link Type']).filter(Boolean))].sort();
+            openFilterModal('Filter by Category', categories, currentCategoryFilter, (selection) => {
+                currentCategoryFilter = selection;
+                categoryFilterBtn.textContent = selection;
+                filterAndRenderResources();
+            });
+        });
+        seeMoreResourcesBtn.addEventListener('click', () => {
+            currentResourcePage++;
+            renderResources(displayedResources, currentResourcePage, true);
+        });
+    });
+
+    document.addEventListener('headerLoaded', () => {
+        autoRefreshToggle = document.getElementById('auto-refresh-toggle');
+        autoRefreshToggleMobile = document.getElementById('auto-refresh-toggle-mobile');
+        if (new URLSearchParams(window.location.search).get('dev') === 'true') {
+            document.querySelectorAll('.dev-feature').forEach(el => el.classList.remove('hidden'));
+        }
+        if(autoRefreshToggle) autoRefreshToggle.addEventListener('change', (e) => handleToggleChange(e.target.checked));
+        if(autoRefreshToggleMobile) autoRefreshToggleMobile.addEventListener('change', (e) => handleToggleChange(e.target.checked));
+    });
   </script>
 
 </body>
