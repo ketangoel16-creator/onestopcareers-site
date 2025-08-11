@@ -26,7 +26,9 @@ document.addEventListener("DOMContentLoaded", function() {
         navLinks.forEach(link => {
             const linkPage = (link.getAttribute('href') || '').split('/').pop();
             if (linkPage === currentPage) {
-                link.classList.add('nav-active');
+                // For dark theme, a different active style might be better
+                link.classList.add('text-white', 'font-bold');
+                link.classList.remove('text-gray-300');
             }
         });
 
@@ -39,7 +41,7 @@ document.addEventListener("DOMContentLoaded", function() {
             });
         }
         
-        // Dispatch the custom event
+        // Dispatch the custom event so page-specific scripts can run
         document.dispatchEvent(headerLoadedEvent);
     }).catch(error => console.error('Error loading the header:', error));
 
