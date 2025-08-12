@@ -1,234 +1,236 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>OneStopCareers - Your Gateway to Referral-Based Jobs</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" />
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&display=swap');
-    body {
-      font-family: 'Manrope', sans-serif;
-      background-color: #121212;
-      color: #EAEAEA;
-    }
-    .hero-bg-gradient {
-      background: #121212;
-    }
-    .problem-card {
-        transition: all 0.3s ease-in-out;
-        border: 1px solid #333;
-        background-color: #1C1C1C;
-    }
-    .problem-card.selected {
-        border-color: #ea580c;
-        transform: translateY(-5px);
-        box-shadow: 0 0 25px rgba(234, 88, 12, 0.3);
-    }
-    .solution-box {
-        transition: opacity 0.4s ease-in-out, max-height 0.4s ease-in-out;
-        max-height: 0;
-        opacity: 0;
-        overflow: hidden;
-        grid-column: 1 / -1; /* Span full width in grid */
-    }
-    .solution-box.visible {
-        max-height: 500px; /* Adjust as needed */
-        opacity: 1;
-        margin-top: 1.5rem;
-    }
-  </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OneStopCareers - Your Gateway to Referral-Based Jobs</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" />
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&display=swap');
+    body {
+      font-family: 'Manrope', sans-serif;
+      background-color: #121212;
+      color: #EAEAEA;
+    }
+    .hero-bg-gradient {
+      background: #121212;
+    }
+    .stage-card {
+        transition: all 0.3s ease-in-out;
+        border: 1px solid #333;
+        background-color: #1C1C1C;
+    }
+    .stage-card.selected {
+        border-color: #ea580c;
+        transform: translateY(-5px);
+        box-shadow: 0 0 25px rgba(234, 88, 12, 0.3);
+    }
+    .stage-details {
+        transition: opacity 0.4s ease-in-out, max-height 0.4s ease-in-out, margin 0.4s ease-in-out;
+        max-height: 0;
+        opacity: 0;
+        overflow: hidden;
+        margin-top: 0;
+        grid-column: 1 / -1; /* Span full width in grid */
+    }
+    .stage-details.visible {
+        max-height: 500px;
+        opacity: 1;
+        margin-top: 1.5rem;
+    }
+  </style>
 </head>
 <body class="bg-black text-white">
 
-  <!-- Header Placeholder -->
-  <div id="header-placeholder"></div>
+    <div id="header-placeholder"></div>
 
-  <!-- Main Content -->
-  <main>
-    <!-- Hero Section -->
-    <section class="hero-bg-gradient">
-      <div class="max-w-7xl mx-auto px-4 pt-24 pb-20 sm:pt-32 sm:pb-24 text-center relative">
-        <div class="relative z-10">
-            <h1 class="text-5xl md:text-7xl font-extrabold leading-tight text-white">
-              Your Career Struggles End Here.
-            </h1>
-            <p class="mt-6 max-w-2xl mx-auto text-lg text-gray-400">
-              Applying to more jobs is like treating symptoms without a diagnosis. We help you pinpoint the real problem in your career journey, then provide the precise solution to move you forward.
-            </p>
-            <div class="mt-10">
-              <a href="#problem-solver" class="group inline-flex items-center justify-center bg-orange-600 text-white py-4 px-8 rounded-full hover:bg-orange-700 transition-colors text-lg font-semibold shadow-lg shadow-orange-500/20">
-                Diagnose Your Career Path
-              </a>
-            </div>
-        </div>
-      </div>
-    </section>
+    <main>
+        <section class="hero-bg-gradient">
+      <div class="max-w-7xl mx-auto px-4 pt-24 pb-20 sm:pt-32 sm:pb-24 text-center relative">
+        <div class="relative z-10">
+            <h1 class="text-5xl md:text-7xl font-extrabold leading-tight text-white">
+              Your Career Struggles End Here.
+            </h1>
+            <p class="mt-6 max-w-2xl mx-auto text-lg text-gray-400">
+              Applying to more jobs is like treating symptoms without a diagnosis. We help you pinpoint the real problem in your career journey, then provide the precise solution to move you forward.
+            </p>
+            <div class="mt-10">
+              <a href="#career-stages" class="group inline-flex items-center justify-center bg-orange-600 text-white py-4 px-8 rounded-full hover:bg-orange-700 transition-colors text-lg font-semibold shadow-lg shadow-orange-500/20">
+                Find Your Career Stage
+              </a>
+            </div>
+        </div>
+      </div>
+    </section>
 
-    <!-- Interactive Problem Section -->
-    <section id="problem-solver" class="bg-black py-20">
-      <div class="max-w-6xl mx-auto px-4 text-center">
-        <h2 class="text-4xl font-bold text-white">Find your starting point.</h2>
-        <p class="text-gray-400 mt-4 max-w-3xl mx-auto">
-          Every successful career journey starts with a single, clear step. Select your current challenge to reveal yours.
-        </p>
-        <div id="problem-cards-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mt-12">
-          <!-- Problem Card 1 -->
-          <div class="problem-card-container">
-            <div class="problem-card cursor-pointer p-6 rounded-2xl h-full flex flex-col justify-center" data-solution="solution1">
-                <img src="https://cdn-icons-png.flaticon.com/512/3356/3356885.png" class="h-16 w-16 mx-auto mb-4" alt="Compass Icon" />
-                <h3 class="text-lg font-semibold text-white">"I'm not sure what career is right for me."</h3>
-            </div>
-          </div>
-          <!-- Problem Card 2 -->
-          <div class="problem-card-container">
-            <div class="problem-card cursor-pointer p-6 rounded-2xl h-full flex flex-col justify-center" data-solution="solution2">
-                <img src="https://cdn-icons-png.flaticon.com/512/2951/2951216.png" class="h-16 w-16 mx-auto mb-4" alt="Tools Icon" />
-                <h3 class="text-lg font-semibold text-white">"I need to build my skills and portfolio."</h3>
-            </div>
-          </div>
-          <!-- Problem Card 3 -->
-          <div class="problem-card-container">
-            <div class="problem-card cursor-pointer p-6 rounded-2xl h-full flex flex-col justify-center" data-solution="solution3">
-                <img src="https://cdn-icons-png.flaticon.com/512/3176/3176295.png" class="h-16 w-16 mx-auto mb-4" alt="Magnifying Glass Icon" />
-                <h3 class="text-lg font-semibold text-white">"I'm applying but not getting interviews."</h3>
-            </div>
-          </div>
-          <!-- Problem Card 4 -->
-          <div class="problem-card-container">
-            <div class="problem-card cursor-pointer p-6 rounded-2xl h-full flex flex-col justify-center" data-solution="solution4">
-                <img src="https://cdn-icons-png.flaticon.com/512/1000/1000965.png" class="h-16 w-16 mx-auto mb-4" alt="Handshake Icon" />
-                <h3 class="text-lg font-semibold text-white">"I'm getting interviews but no offers."</h3>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
+                <section id="career-stages" class="bg-black py-20">
+          <div class="max-w-6xl mx-auto px-4 text-center">
+            <h2 class="text-4xl font-bold text-white">Find your starting point.</h2>
+            <p class="text-gray-400 mt-4 max-w-3xl mx-auto">
+              Every journey starts with a single, clear step. Select where you are in your career journey to reveal your personalized path forward.
+            </p>
+                        <div id="stage-selection-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mt-12">
+                            <div class="stage-card-container cursor-pointer p-6 rounded-2xl h-full flex flex-col justify-center" data-stage="starting-out">
+                <img src="https://cdn-icons-png.flaticon.com/512/3356/3356885.png" class="h-16 w-16 mx-auto mb-4" alt="Starting Out Icon" />
+                <h3 class="text-lg font-semibold text-white">Just Starting Out</h3>
+              </div>
+                            <div class="stage-card-container cursor-pointer p-6 rounded-2xl h-full flex flex-col justify-center" data-stage="skill-up">
+                <img src="https://cdn-icons-png.flaticon.com/512/2951/2951216.png" class="h-16 w-16 mx-auto mb-4" alt="Skill Up Icon" />
+                <h3 class="text-lg font-semibold text-white">Skill Up & Search</h3>
+              </div>
+                            <div class="stage-card-container cursor-pointer p-6 rounded-2xl h-full flex flex-col justify-center" data-stage="interview-loop">
+                <img src="https://cdn-icons-png.flaticon.com/512/3176/3176295.png" class="h-16 w-16 mx-auto mb-4" alt="Interview Loop Icon" />
+                <h3 class="text-lg font-semibold text-white">In the Interview Loop</h3>
+              </div>
+                            <div class="stage-card-container cursor-pointer p-6 rounded-2xl h-full flex flex-col justify-center" data-stage="stuck">
+                <img src="https://cdn-icons-png.flaticon.com/512/1000/1000965.png" class="h-16 w-16 mx-auto mb-4" alt="Stuck Icon" />
+                <h3 class="text-lg font-semibold text-white">Stuck or Unmotivated</h3>
+              </div>
+            </div>
+                        <div id="stage-details-container" class="stage-details"></div>
+          </div>
+        </section>
 
-    <!-- Mixed Testimonials -->
-    <section id="home-testimonials" class="bg-gray-900/50 py-16">
-      <div class="max-w-6xl mx-auto px-4 text-center">
-        <h2 class="text-4xl font-bold text-white">What Our Users Are Saying</h2>
-        <div class="grid md:grid-cols-2 gap-8 mt-12">
-          <div class="p-8 bg-gray-800 rounded-2xl text-left border border-gray-700">
-            <p class="text-gray-300 italic">
-              "The resume templates and interview questions were a game-changer. I felt so much more prepared and confident."
-            </p>
-            <p class="mt-4 font-semibold text-orange-500">- David L., Job Seeker</p>
-          </div>
-          <div class="p-8 bg-gray-800 rounded-2xl text-left border border-gray-700">
-            <p class="text-gray-300 italic">
-              "Ketan's guidance was instrumental in helping me transition from a service-based role to a product company. His insights were invaluable."
-            </p>
-            <p class="mt-4 font-semibold text-orange-500">- Michael J., Product Manager</p>
-          </div>
-        </div>
-      </div>
-    </section>
-  </main>
+        <section id="home-testimonials" class="bg-gray-900/50 py-16">
+      <div class="max-w-6xl mx-auto px-4 text-center">
+        <h2 class="text-4xl font-bold text-white">What Our Users Are Saying</h2>
+        <div class="grid md:grid-cols-2 gap-8 mt-12">
+          <div class="p-8 bg-gray-800 rounded-2xl text-left border border-gray-700">
+            <p class="text-gray-300 italic">
+              "The resume templates and interview questions were a game-changer. I felt so much more prepared and confident."
+            </p>
+            <p class="mt-4 font-semibold text-orange-500">- David L., Job Seeker</p>
+          </div>
+          <div class="p-8 bg-gray-800 rounded-2xl text-left border border-gray-700">
+            <p class="text-gray-300 italic">
+              "Ketan's guidance was instrumental in helping me transition from a service-based role to a product company. His insights were invaluable."
+            </p>
+            <p class="mt-4 font-semibold text-orange-500">- Michael J., Product Manager</p>
+          </div>
+        </div>
+      </div>
+    </section>
+    </main>
 
-  <!-- Footer Placeholder -->
-  <div id="footer-placeholder"></div>
+    <div id="footer-placeholder"></div>
 
-  <!-- Common scripts -->
-  <script src="main.js"></script>
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const problemCards = document.querySelectorAll('.problem-card');
-        const problemGrid = document.getElementById('problem-cards-grid');
+    <script src="main.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const stageCategories = document.querySelectorAll('.stage-card-container');
+        const stageDetailsContainer = document.getElementById('stage-details-container');
+        
+        const stagesMap = {
+            'starting-out': {
+                title: "Just Starting Out",
+                description: "You're at the beginning of your career journey.",
+                substages: [
+                    { name: "Explore Roles", icon: "https://cdn-icons-png.flaticon.com/512/3356/3356885.png" },
+                    { name: "Finalize a Role", icon: "https://cdn-icons-png.flaticon.com/512/2951/2951216.png" },
+                    { name: "Prepare a Roadmap", icon: "https://cdn-icons-png.flaticon.com/512/3176/3176295.png" }
+                ]
+            },
+            'skill-up': {
+                title: "Skill Up & Search",
+                description: "You know your path, but need to build your profile.",
+                substages: [
+                    { name: "Figure out Resources", icon: "https://cdn-icons-png.flaticon.com/512/2951/2951216.png" },
+                    { name: "Practical Exposure", icon: "https://cdn-icons-png.flaticon.com/512/3176/3176295.png" },
+                    { name: "Resume Building", icon: "https://cdn-icons-png.flaticon.com/512/3356/3356885.png" }
+                ]
+            },
+            'interview-loop': {
+                title: "In the Interview Loop",
+                description: "You're getting interviews but need to land the offer.",
+                substages: [
+                    { name: "Job Application Strategy", icon: "https://cdn-icons-png.flaticon.com/512/3176/3176295.png" },
+                    { name: "Interview Rounds", icon: "https://cdn-icons-png.flaticon.com/512/3356/3356885.png" },
+                    { name: "Rejections", icon: "https://cdn-icons-png.flaticon.com/512/2951/2951216.png" }
+                ]
+            },
+            'stuck': {
+                title: "Stuck or Unmotivated",
+                description: "You're feeling stuck, burnt out, or need a fresh perspective.",
+                substages: [
+                    { name: "Motivation", icon: "https://cdn-icons-png.flaticon.com/512/1000/1000965.png" },
+                    { name: "Feedback Loop", icon: "https://cdn-icons-png.flaticon.com/512/2951/2951216.png" }
+                ]
+            }
+        };
 
-        const solutions = {
-            solution1: {
-                title: "Our Recommendation: Explore with a Mentor",
-                description: "Clarity comes from conversation. A mentor can help you navigate your options, understand different career paths, and create a plan to get there.",
-                ctaText: "Find Your Mentor →",
-                link: "mentors.html"
-            },
-            solution2: {
-                title: "Our Recommendation: Dive into Resources",
-                description: "Build a strong foundation. Our resources provide resume templates, project ideas, and recruiter details to help you build a compelling profile.",
-                ctaText: "Get Resources →",
-                link: "resources.html"
-            },
-            solution3: {
-                title: "Our Recommendation: Use the Job & Referral Board",
-                description: "It's time for a new strategy. Our job board and referral network connect you with opportunities and insiders who can champion your application.",
-                ctaText: "Find Jobs & Referrals →",
-                link: "jobs.html"
-            },
-            solution4: {
-                title: "Our Recommendation: Prepare with a Mentor",
-                description: "You're at the final hurdle. A mentor can provide mock interviews, targeted feedback, and strategies to help you ace the interview and land the offer.",
-                ctaText: "Prepare with a Mentor →",
-                link: "mentors.html"
-            }
-        };
+        let currentSelectedCategory = null;
 
-        problemCards.forEach(card => {
-            card.addEventListener('click', () => {
-                // Close any existing solution box
-                const existingSolution = document.getElementById('solution-container');
-                if (existingSolution) {
-                    existingSolution.remove();
-                }
-                
-                // Remove selected state from all cards
-                problemCards.forEach(c => c.classList.remove('selected'));
-                // Add selected state to the clicked card
-                card.classList.add('selected');
+        stageCategories.forEach(category => {
+            category.addEventListener('click', () => {
+                const stageKey = category.dataset.stage;
+                const stage = stagesMap[stageKey];
+                
+                // Toggle logic for the category cards
+                if (currentSelectedCategory === category) {
+                    category.classList.remove('selected');
+                    stageDetailsContainer.classList.remove('visible');
+                    setTimeout(() => { stageDetailsContainer.innerHTML = ''; }, 400);
+                    currentSelectedCategory = null;
+                    return;
+                }
+                
+                // Reset state for all categories and containers
+                stageCategories.forEach(c => c.classList.remove('selected'));
+                currentSelectedCategory = category;
+                stageDetailsContainer.classList.remove('visible');
+                
+                // Add selected state to the clicked category
+                category.classList.add('selected');
+                
+                // Populate the sub-stages
+                let substagesHtml = stage.substages.map(sub => `
+                    <div class="stage-card cursor-pointer p-6 rounded-2xl text-center h-full flex flex-col justify-center">
+                        <img src="${sub.icon}" class="h-16 w-16 mx-auto mb-4" alt="${sub.name} Icon" />
+                        <h3 class="text-lg font-semibold text-white">${sub.name}</h3>
+                    </div>
+                `).join('');
 
-                const solutionKey = card.dataset.solution;
-                const solution = solutions[solutionKey];
+                stageDetailsContainer.innerHTML = `
+                    <div class="bg-gray-900/50 p-8 rounded-2xl border border-orange-500/50 text-left transition-all duration-300">
+                      <h3 class="text-2xl font-bold text-white">${stage.title}</h3>
+                      <p class="mt-2 text-gray-400 max-w-3xl">${stage.description}</p>
+                      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-6">
+                        ${substagesHtml}
+                      </div>
+                    </div>
+                `;
+                
+                // Show the container after a slight delay for the transition
+                setTimeout(() => {
+                    stageDetailsContainer.classList.add('visible');
+                }, 10);
+            });
+        });
+    });
+    
+    // Page-specific script for dev features
+    document.addEventListener('headerLoaded', () => {
+        const autoRefreshToggle = document.getElementById('auto-refresh-toggle');
+        const autoRefreshToggleMobile = document.getElementById('auto-refresh-toggle-mobile');
+        
+        const params = new URLSearchParams(window.location.search);
+        if (params.get('dev') === 'true') {
+            document.querySelectorAll('.dev-feature').forEach(el => el.classList.remove('hidden'));
+        }
 
-                const solutionContainer = document.createElement('div');
-                solutionContainer.id = 'solution-container';
-                solutionContainer.className = 'solution-box';
-                solutionContainer.innerHTML = `
-                    <div class="bg-gray-900/50 p-8 rounded-2xl border border-orange-500/50 text-left transition-all duration-300">
-                      <h3 class="text-2xl font-bold text-white">${solution.title}</h3>
-                      <p class="mt-2 text-gray-400 max-w-3xl">${solution.description}</p>
-                      <div class="mt-6">
-                          <a href="${solution.link}" class="inline-block bg-orange-600 text-white py-3 px-6 rounded-full hover:bg-orange-700 transition-colors font-semibold shadow-lg shadow-orange-500/20">
-                            ${solution.ctaText}
-                          </a>
-                      </div>
-                    </div>
-                `;
-                
-                // Insert the solution box after the parent container of the clicked card
-                card.parentElement.appendChild(solutionContainer);
-                
-                // Make the container visible with a slight delay for the animation
-                setTimeout(() => {
-                    solutionContainer.classList.add('visible');
-                }, 10);
-            });
-        });
-    });
-    
-    // Page-specific script for dev features
-    document.addEventListener('headerLoaded', () => {
-        const autoRefreshToggle = document.getElementById('auto-refresh-toggle');
-        const autoRefreshToggleMobile = document.getElementById('auto-refresh-toggle-mobile');
-        
-        const params = new URLSearchParams(window.location.search);
-        if (params.get('dev') === 'true') {
-            document.querySelectorAll('.dev-feature').forEach(el => el.classList.remove('hidden'));
-        }
+        if(autoRefreshToggle) autoRefreshToggle.addEventListener('change', (e) => handleToggleChange(e.target.checked));
+        if(autoRefreshToggleMobile) autoRefreshToggleMobile.addEventListener('change', (e) => handleToggleChange(e.target.checked));
+    });
 
-        if(autoRefreshToggle) autoRefreshToggle.addEventListener('change', (e) => handleToggleChange(e.target.checked));
-        if(autoRefreshToggleMobile) autoRefreshToggleMobile.addEventListener('change', (e) => handleToggleChange(e.target.checked));
-    });
-
-    function handleToggleChange(isChecked) {
-        if (isChecked) {
-            console.log('Auto-refresh enabled.');
-        } else {
-            console.log('Auto-refresh disabled.');
-        }
-    }
-  </script>
+    function handleToggleChange(isChecked) {
+        if (isChecked) {
+            console.log('Auto-refresh enabled.');
+        } else {
+            console.log('Auto-refresh disabled.');
+        }
+    }
+  </script>
 
 </body>
 </html>
