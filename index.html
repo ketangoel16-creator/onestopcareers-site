@@ -1,219 +1,244 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>OneStopCareers - Your Gateway to Referral-Based Jobs</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" />
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&display=swap');
-    body {
-      font-family: 'Manrope', sans-serif;
-      background-color: #121212;
-      color: #EAEAEA;
-    }
-    .hero-bg-gradient {
-      background: #121212;
-    }
-    .problem-card {
-        transition: all 0.3s ease-in-out;
-        border: 1px solid #333;
-        background-color: #1C1C1C;
-    }
-    .problem-card.selected {
-        border-color: #ea580c;
-        transform: translateY(-5px);
-        box-shadow: 0 0 25px rgba(234, 88, 12, 0.3);
-    }
-    .solution-box-wrapper {
-        transition: opacity 0.4s ease-in-out, max-height 0.4s ease-in-out, margin 0.4s ease-in-out;
-        max-height: 0;
-        opacity: 0;
-        overflow: hidden;
-        margin-top: 0;
-    }
-    .solution-box-wrapper.visible {
-        max-height: 500px;
-        opacity: 1;
-        margin-top: 1.5rem;
-    }
-  </style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OneStopCareers - Your Gateway to Referral-Based Jobs</title>
+    <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- CORE STYLES & LAYOUT --- */
+        :root { --orange-500: #f97316; } /* Keep one variable for the brand color */
+        *,::before,::after {box-sizing:border-box;border-width:0;border-style:solid;border-color:#374151;}
+        html {line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;tab-size:4;font-family: 'Manrope', sans-serif;}
+        body {margin:0;line-height:inherit;background-color:#121212;color:#EAEAEA;}
+        h1,h2,h3,p,button {margin:0}
+        a {color:inherit;text-decoration:inherit}
+        button {font-family:inherit;font-size:100%;background-color:transparent;background-image:none;padding:0;cursor:pointer;text-align:left;}
+        img,svg {display:block;vertical-align:middle;max-width:100%;height:auto;}
+
+        .container {width:100%;margin-left:auto;margin-right:auto;padding-left:1.5rem;padding-right:1.5rem;}
+        @media(min-width:1024px){.container{max-width:1100px;}}
+        .text-center{text-align:center;}
+
+        /* --- PAGE SECTIONS --- */
+        .hero-section {padding: 6rem 0 5rem;}
+        @media(min-width:768px){.hero-section{padding: 8rem 0 6rem;}}
+        .hero-section h1 {font-size:3rem;line-height:1.1;font-weight:800;}
+        @media(min-width:768px){.hero-section h1{font-size:4.25rem;}}
+        .hero-section p {margin-top:1.5rem;max-width:42rem;margin-left:auto;margin-right:auto;font-size:1.125rem;line-height:1.75rem;color:#9ca3af;}
+        .cta-button {display:inline-flex;align-items:center;justify-content:center;margin-top:2.5rem;background-color:#ea580c;color:#ffffff;padding:1rem 2rem;border-radius:9999px;font-weight:700;transition:background-color 0.2s ease-in-out;box-shadow:0 0 25px rgba(234,88,12,0.3);}
+        .cta-button:hover {background-color:var(--orange-500);}
+
+        #home-testimonials {background-color:rgba(17,24,39,0.5); padding:5rem 0;}
+        #home-testimonials h2 {font-size:2.25rem;font-weight:800;}
+        .testimonials-grid {margin-top:3rem;display:grid;grid-template-columns:repeat(1,1fr);gap:2rem;}
+        @media(min-width:768px){.testimonials-grid{grid-template-columns:repeat(2,1fr);}}
+        .testimonial-card {background-color:#1f2937;border:1px solid #374151;padding:2rem;border-radius:1rem;text-align:left;}
+        .testimonial-card p:first-child {color:#d1d5db;font-style:italic;}
+        .testimonial-card p:last-child {margin-top:1rem;font-weight:600;color:var(--orange-500);}
+
+        /* --- JOURNEY SECTION (INTERACTIVE COMPONENT) --- */
+        #journey-section {padding:5rem 0;}
+        .section-title {font-size:2.25rem;line-height:2.5rem;font-weight:800;}
+        .section-subtitle {margin-top:1rem;max-width:48rem;margin-left:auto;margin-right:auto;color:#9ca3af;}
+        
+        /* The container that manages the view states with overflow:hidden */
+        .journey-container {margin-top:3rem;position:relative;overflow:hidden;}
+        /* A wrapper to hold both views for easy sliding */
+        .views-wrapper {display:flex;transition: transform 0.45s cubic-bezier(0.65, 0, 0.35, 1);}
+        
+        .journey-view {width:100%;flex-shrink:0;}
+        
+        /* NEW: Class-based state management for animations */
+        .journey-container.step-2-active .views-wrapper {transform: translateX(-100%);}
+
+        /* Card Styles */
+        .card-grid {display:grid;gap:1.5rem;grid-template-columns:repeat(1,1fr);}
+        @media(min-width:768px){.card-grid{grid-template-columns:repeat(2,1fr);}}
+        @media(min-width:1024px){.card-grid-main{grid-template-columns:repeat(4,1fr);}}
+        @media(min-width:1024px){.card-grid-sub{grid-template-columns:repeat(3,1fr);}}
+
+        .stage-card {
+            background-color: #1C1C1C; /* FIX: Direct color value */
+            border: 1px solid #333;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .stage-card:focus-visible, .back-button:focus-visible {outline:2px solid var(--orange-500); outline-offset:2px; border-radius: 1rem;}
+        .stage-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.3); /* FIX: Simpler, more reliable hover effect */
+        }
+        .stage-card svg {width:2rem;height:2rem;margin-bottom:1rem;color:var(--orange-500);}
+        .stage-card h3 {font-size:1.125rem;font-weight:700;margin-bottom:0.5rem;color:#EAEAEA;}
+        .stage-card p {color:#9ca3af; font-size: 0.9rem; line-height: 1.6;}
+        
+        /* Step 2 View Styles */
+        .step-2-header {text-align:left; margin-bottom: 2.5rem;}
+        .back-button {display:inline-flex;align-items:center;gap:0.5rem;color:#9ca3af;margin-bottom:1.5rem;font-weight:500;padding:0.25rem;}
+        .back-button:hover {color:#ffffff;}
+        .back-button svg {width:1.25rem;height:1.25rem;}
+        #step-2-title {font-size: 2.25rem;}
+        #step-2-description {margin-top: 0.5rem;}
+        #progress-indicator {color: #9ca3af; font-weight: 500; margin-top: 1rem;}
+    </style>
 </head>
-<body class="bg-black text-white">
+<body>
 
-    <div id="header-placeholder"></div>
+    <main>
+        <section class="hero-section">
+            <div class="container text-center">
+                <h1>Your Career Struggles End Here.</h1>
+                <p>Applying to more jobs is like treating symptoms without a diagnosis. We help you pinpoint the real problem in your career journey, then provide the precise solution to move you forward.</p>
+                <a href="#journey-section" class="cta-button">Find Your Career Stage</a>
+            </div>
+        </section>
 
-    <main>
-        <section class="hero-bg-gradient">
-      <div class="max-w-7xl mx-auto px-4 pt-24 pb-20 sm:pt-32 sm:pb-24 text-center relative">
-        <div class="relative z-10">
-            <h1 class="text-5xl md:text-7xl font-extrabold leading-tight text-white">
-              Your Career Struggles End Here.
-            </h1>
-            <p class="mt-6 max-w-2xl mx-auto text-lg text-gray-400">
-              Applying to more jobs is like treating symptoms without a diagnosis. We help you pinpoint the real problem in your career journey, then provide the precise solution to move you forward.
-            </p>
-            <div class="mt-10">
-              <a href="#problem-solver" class="group inline-flex items-center justify-center bg-orange-600 text-white py-4 px-8 rounded-full hover:bg-orange-700 transition-colors text-lg font-semibold shadow-lg shadow-orange-500/20">
-                Diagnose Your Career Path
-              </a>
-            </div>
-        </div>
-      </div>
-    </section>
+        <section id="journey-section">
+            <div class="container text-center">
+                <h2 class="section-title">Find your starting point.</h2>
+                <p class="section-subtitle">Every journey starts with a single, clear step. Select where you are in your career to reveal a personalized path forward.</p>
+                
+                <div id="journey-container" class="journey-container">
+                    <div class="views-wrapper">
+                        <div id="step-1-view" class="journey-view">
+                            <div id="stage-selection-grid" class="card-grid card-grid-main">
+                                </div>
+                        </div>
 
-        <section id="problem-solver" class="bg-black py-20">
-      <div class="max-w-6xl mx-auto px-4 text-center">
-        <h2 class="text-4xl font-bold text-white">Find your starting point.</h2>
-        <p class="text-gray-400 mt-4 max-w-3xl mx-auto">
-          Every successful career journey starts with a single, clear step. Select your current challenge to reveal yours.
-        </p>
-        <div id="problem-cards-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mt-12">
-                    <div class="problem-card-container">
-            <div class="problem-card cursor-pointer p-6 rounded-2xl h-full flex flex-col justify-center" data-solution="solution1">
-                <img src="https://cdn-icons-png.flaticon.com/512/3356/3356885.png" class="h-16 w-16 mx-auto mb-4" alt="Compass Icon" />
-                <h3 class="text-lg font-semibold text-white">"I'm not sure what career is right for me."</h3>
-            </div>
-            <div class="solution-box-wrapper" data-solution-key="solution1"></div>
-          </div>
-                    <div class="problem-card-container">
-            <div class="problem-card cursor-pointer p-6 rounded-2xl h-full flex flex-col justify-center" data-solution="solution2">
-                <img src="https://cdn-icons-png.flaticon.com/512/2951/2951216.png" class="h-16 w-16 mx-auto mb-4" alt="Tools Icon" />
-                <h3 class="text-lg font-semibold text-white">"I need to build my skills and portfolio."</h3>
-            </div>
-            <div class="solution-box-wrapper" data-solution-key="solution2"></div>
-          </div>
-                    <div class="problem-card-container">
-            <div class="problem-card cursor-pointer p-6 rounded-2xl h-full flex flex-col justify-center" data-solution="solution3">
-                <img src="https://cdn-icons-png.flaticon.com/512/3176/3176295.png" class="h-16 w-16 mx-auto mb-4" alt="Magnifying Glass Icon" />
-                <h3 class="text-lg font-semibold text-white">"I'm applying but not getting interviews."</h3>
-            </div>
-            <div class="solution-box-wrapper" data-solution-key="solution3"></div>
-          </div>
-                    <div class="problem-card-container">
-            <div class="problem-card cursor-pointer p-6 rounded-2xl h-full flex flex-col justify-center" data-solution="solution4">
-                <img src="https://cdn-icons-png.flaticon.com/512/1000/1000965.png" class="h-16 w-16 mx-auto mb-4" alt="Handshake Icon" />
-                <h3 class="text-lg font-semibold text-white">"I'm getting interviews but no offers."</h3>
-            </div>
-            <div class="solution-box-wrapper" data-solution-key="solution4"></div>
-          </div>
-        </div>
-      </div>
-    </section>
+                        <div id="step-2-view" class="journey-view">
+                            <div class="step-2-header">
+                                <button id="back-button" class="back-button">
+                                    <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" /></svg>
+                                    Back to All Stages
+                                </button>
+                                <h2 id="step-2-title" class="section-title"></h2>
+                                <p id="step-2-description" class="section-subtitle" style="margin-left: 0;"></p>
+                                <p id="progress-indicator"></p>
+                            </div>
+                            <div id="sub-stage-grid" class="card-grid card-grid-sub">
+                                </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-        <section id="home-testimonials" class="bg-gray-900/50 py-16">
-      <div class="max-w-6xl mx-auto px-4 text-center">
-        <h2 class="text-4xl font-bold text-white">What Our Users Are Saying</h2>
-        <div class="grid md:grid-cols-2 gap-8 mt-12">
-          <div class="p-8 bg-gray-800 rounded-2xl text-left border border-gray-700">
-            <p class="text-gray-300 italic">
-              "The resume templates and interview questions were a game-changer. I felt so much more prepared and confident."
-            </p>
-            <p class="mt-4 font-semibold text-orange-500">- David L., Job Seeker</p>
-          </div>
-          <div class="p-8 bg-gray-800 rounded-2xl text-left border border-gray-700">
-            <p class="text-gray-300 italic">
-              "Ketan's guidance was instrumental in helping me transition from a service-based role to a product company. His insights were invaluable."
-            </p>
-            <p class="mt-4 font-semibold text-orange-500">- Michael J., Product Manager</p>
-          </div>
-        </div>
-      </div>
-    </section>
-  </main>
+        <section id="home-testimonials">
+            <div class="container text-center">
+                <h2>What Our Users Are Saying</h2>
+                <div class="testimonials-grid">
+                    <div class="testimonial-card">
+                        <p>"The resume templates and interview questions were a game-changer. I felt so much more prepared and confident."</p>
+                        <p>- David L., Job Seeker</p>
+                    </div>
+                    <div class="testimonial-card">
+                        <p>"Ketan's guidance was instrumental in helping me transition from a service-based role to a product company. His insights were invaluable."</p>
+                        <p>- Michael J., Product Manager</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
 
-    <div id="footer-placeholder"></div>
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
 
-    <script src="main.js"></script>
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const problemCards = document.querySelectorAll('.problem-card');
-        
-        const solutions = {
-            solution1: {
-                title: "Our Recommendation: Explore with a Mentor",
-                description: "Clarity comes from conversation. A mentor can help you navigate your options, understand different career paths, and create a plan to get there.",
-                ctaText: "Find Your Mentor →",
-                link: "mentors.html"
-            },
-            solution2: {
-                title: "Our Recommendation: Dive into Resources",
-                description: "Build a strong foundation. Our resources provide resume templates, project ideas, and recruiter details to help you build a compelling profile.",
-                ctaText: "Get Resources →",
-                link: "resources.html"
-            },
-            solution3: {
-                title: "Our Recommendation: Use the Job & Referral Board",
-                description: "It's time for a new strategy. Our job board and referral network connect you with opportunities and insiders who can champion your application.",
-                ctaText: "Find Jobs & Referrals →",
-                link: "jobs.html"
-            },
-            solution4: {
-                title: "Our Recommendation: Prepare with a Mentor",
-                description: "You're at the final hurdle. A mentor can provide mock interviews, targeted feedback, and strategies to help you ace the interview and land the offer.",
-                ctaText: "Prepare with a Mentor →",
-                link: "mentors.html"
-            }
-        };
+        const stagesMap = {
+            'starting-out': {
+                title: "Just Starting Out",
+                description: "You're at the very beginning, trying to find your footing and choose a direction that excites you. Let's build your foundation.",
+                icon: `<svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" /></svg>`,
+                substages: [
+                    { name: "Explore Roles", subDescription: "Discover different career paths that match your interests and skills." },
+                    { name: "Finalize a Role", subDescription: "Commit to a specific path and understand what it takes to succeed." },
+                    { name: "Prepare a Roadmap", subDescription: "Create a step-by-step plan for the skills and experience you'll need." }
+                ]
+            },
+            'skill-up': {
+                title: "Skill Up & Search",
+                description: "You know your target role, but need the skills and a powerful resume to get noticed by recruiters.",
+                icon: `<svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 10.5L12 3m0 0l7.5 7.5M12 3v18" /></svg>`,
+                substages: [
+                    { name: "Find Learning Resources", subDescription: "Identify the best courses, books, and projects to build your expertise." },
+                    { name: "Gain Practical Exposure", subDescription: "Apply your knowledge through internships, projects, or freelance work." },
+                    { name: "Build a Killer Resume", subDescription: "Craft a resume that highlights your new skills and gets past ATS filters." }
+                ]
+            },
+            'interview-loop': {
+                title: "In the Interview Loop",
+                description: "You're landing interviews but not the offers. It's time to master the art of the interview process.",
+                icon: `<svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m-7.28-2.72a3 3 0 01-4.682-2.72a9.094 9.094 0 013.741-.479m-4.26 9.574a9.094 9.094 0 003.741.479a3 3 0 004.682 2.72m-7.28 2.72a3 3 0 014.682 2.72a9.094 9.094 0 01-3.741.479m-4.26-9.574a9.094 9.094 0 01-3.741-.479a3 3 0 014.682-2.72m7.28-2.72a3 3 0 00-4.682-2.72a9.094 9.094 0 00-3.741-.479M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>`,
+                substages: [
+                    { name: "Application Strategy", subDescription: "Optimize how and where you apply to maximize your interview chances." },
+                    { name: "Master Interview Rounds", subDescription: "Prepare for technical, behavioral, and situational interview questions." },
+                    { name: "Handle Rejections", subDescription: "Learn from feedback and stay motivated after a 'no'." }
+                ]
+            },
+            'stuck': {
+                title: "Stuck or Unmotivated",
+                description: "Your career has stalled, or your motivation has faded. Let's find a new perspective and get you moving again.",
+                icon: `<svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m0-10.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.75c0 5.592 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.57-.598-3.75h-.152c-3.196 0-6.1-1.249-8.25-3.286zm0 13.036h.008v.008H12v-.008z" /></svg>`,
+                substages: [
+                    { name: "Rediscover Motivation", subDescription: "Use proven techniques to reignite your professional passion and set new goals." },
+                    { name: "Create a Feedback Loop", subDescription: "Build a system for getting constructive feedback to break through plateaus." },
+                ]
+            }
+        };
 
-        problemCards.forEach(card => {
-            card.addEventListener('click', () => {
-                const parentContainer = card.parentElement;
-                const solutionWrapper = parentContainer.querySelector('.solution-box-wrapper');
-                const solutionKey = card.dataset.solution;
-                const solution = solutions[solutionKey];
+        const journeyContainer = document.getElementById('journey-container');
+        const stageSelectionGrid = document.getElementById('stage-selection-grid');
+        const backButton = document.getElementById('back-button');
 
-                // Remove selected state from all cards and hide all solution boxes
-                document.querySelectorAll('.problem-card').forEach(c => c.classList.remove('selected'));
-                document.querySelectorAll('.solution-box-wrapper').forEach(s => {
-                    s.classList.remove('visible');
-                    // Reset inner HTML for the transition effect
-                    s.innerHTML = '';
-                });
+        function populateStep1View() {
+            stageSelectionGrid.innerHTML = '';
+            for (const key in stagesMap) {
+                const stage = stagesMap[key];
+                const card = document.createElement('button');
+                card.className = 'stage-card';
+                card.dataset.stage = key;
+                card.innerHTML = `${stage.icon}<h3>${stage.title}</h3><p>${stage.description}</p>`;
+                card.addEventListener('click', () => navigateToStep2(key));
+                stageSelectionGrid.appendChild(card);
+            }
+        }
 
-                // Add selected state to the clicked card
-                card.classList.add('selected');
+        function populateStep2View(stageKey) {
+            const stage = stagesMap[stageKey];
+            document.getElementById('step-2-title').textContent = stage.title;
+            document.getElementById('step-2-description').textContent = "Here is your personalized path forward. Choose an area to focus on.";
+            document.getElementById('progress-indicator').textContent = 'Step 2 of 2';
+            
+            const subStageGrid = document.getElementById('sub-stage-grid');
+            subStageGrid.innerHTML = '';
+            
+            stage.substages.forEach(sub => {
+                const card = document.createElement('button');
+                card.className = 'stage-card';
+                card.innerHTML = `${stage.icon}<h3>${sub.name}</h3><p>${sub.subDescription}</p>`;
+                subStageGrid.appendChild(card);
+            });
+        }
+        
+        function navigateToStep2(stageKey) {
+            populateStep2View(stageKey);
+            // This class-based approach is more robust for animations
+            journeyContainer.classList.add('step-2-active');
+        }
 
-                // Populate and show the selected solution box
-                solutionWrapper.innerHTML = `
-                    <div class="bg-gray-900/50 p-8 rounded-2xl border border-orange-500/50 text-left transition-all duration-300">
-                      <h3 class="text-2xl font-bold text-white">${solution.title}</h3>
-                      <p class="mt-2 text-gray-400 max-w-3xl">${solution.description}</p>
-                      <div class="mt-6">
-                          <a href="${solution.link}" class="inline-block bg-orange-600 text-white py-3 px-6 rounded-full hover:bg-orange-700 transition-colors font-semibold shadow-lg shadow-orange-500/20">
-                            ${solution.ctaText}
-                          </a>
-                      </div>
-                    </div>
-                `;
-                solutionWrapper.classList.add('visible');
-            });
-        });
-    });
-    
-    // Page-specific script for dev features
-    document.addEventListener('headerLoaded', () => {
-        const autoRefreshToggle = document.getElementById('auto-refresh-toggle');
-        const autoRefreshToggleMobile = document.getElementById('auto-refresh-toggle-mobile');
-        
-        const params = new URLSearchParams(window.location.search);
-        if (params.get('dev') === 'true') {
-            document.querySelectorAll('.dev-feature').forEach(el => el.classList.remove('hidden'));
-        }
-
-        if(autoRefreshToggle) autoRefreshToggle.addEventListener('change', (e) => handleToggleChange(e.target.checked));
-        if(autoRefreshToggleMobile) autoRefreshToggleMobile.addEventListener('change', (e) => handleToggleChange(e.target.checked));
-    });
-
-    function handleToggleChange(isChecked) {
-        if (isChecked) {
-            console.log('Auto-refresh enabled.');
-        } else {
-            console.log('Auto-refresh disabled.');
-        }
-    }
-  </script>
-
+        function navigateToStep1() {
+            journeyContainer.classList.remove('step-2-active');
+        }
+        
+        // --- Initialize Component ---
+        backButton.addEventListener('click', navigateToStep1);
+        populateStep1View();
+    });
+    </script>
 </body>
 </html>
