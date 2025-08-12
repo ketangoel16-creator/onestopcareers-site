@@ -10,63 +10,51 @@
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&display=swap" rel="stylesheet">
     
     <style>
-        /* Base Tailwind & Custom Properties */
-        :root {
-            --orange-500: #f97316;
-            --orange-600: #ea580c;
-            --gray-300: #d1d5db;
-            --gray-400: #9ca3af;
-            --gray-700: #374151;
-            --gray-800: #1f2937;
-            --gray-900: #111827;
-            --dark-bg: #121212;
-            --dark-card: #1C1C1C;
-            --white: #ffffff;
-            --text-primary: #EAEAEA;
-        }
-        *,::before,::after {box-sizing:border-box;border-width:0;border-style:solid;border-color:var(--gray-700)}
+        /* --- CORE STYLES & LAYOUT --- */
+        :root { --orange-500: #f97316; } /* Keep one variable for the brand color */
+        *,::before,::after {box-sizing:border-box;border-width:0;border-style:solid;border-color:#374151;}
         html {line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;tab-size:4;font-family: 'Manrope', sans-serif;}
-        body {margin:0;line-height:inherit;background-color:var(--dark-bg);color:var(--text-primary);}
+        body {margin:0;line-height:inherit;background-color:#121212;color:#EAEAEA;}
         h1,h2,h3,p,button {margin:0}
         a {color:inherit;text-decoration:inherit}
-        button {font-family:inherit;font-size:100%;background-color:transparent;background-image:none;padding:0;cursor:pointer;}
+        button {font-family:inherit;font-size:100%;background-color:transparent;background-image:none;padding:0;cursor:pointer;text-align:left;}
         img,svg {display:block;vertical-align:middle;max-width:100%;height:auto;}
 
-        /* Main Page Layout Styles */
-        .container {width:100%;margin-left:auto;margin-right:auto;padding-left:1rem;padding-right:1rem;}
-        @media(min-width:640px){.container{max-width:640px}}
-        @media(min-width:768px){.container{max-width:768px}}
-        @media(min-width:1024px){.container{max-width:1024px}}
-        @media(min-width:1280px){.container{max-width:1280px; padding-left:2rem; padding-right:2rem;}}
+        .container {width:100%;margin-left:auto;margin-right:auto;padding-left:1.5rem;padding-right:1.5rem;}
+        @media(min-width:1024px){.container{max-width:1100px;}}
         .text-center{text-align:center;}
 
-        /* Hero Section */
-        .hero-section {padding-top:6rem;padding-bottom:5rem;}
-        @media(min-width:640px){.hero-section{padding-top:8rem;padding-bottom:6rem;}}
-        .hero-section h1 {font-size:3rem;line-height:1;font-weight:800;}
-        @media(min-width:768px){.hero-section h1{font-size:4.5rem;}}
-        .hero-section p {margin-top:1.5rem;max-width:42rem;margin-left:auto;margin-right:auto;font-size:1.125rem;line-height:1.75rem;color:var(--gray-400);}
-        .cta-button {display:inline-flex;align-items:center;justify-content:center;margin-top:2.5rem;background-color:var(--orange-600);color:var(--white);padding:1rem 2rem;border-radius:9999px;font-weight:700;transition:background-color 0.2s ease-in-out;box-shadow:0 0 25px rgba(234,88,12,0.3);}
+        /* --- PAGE SECTIONS --- */
+        .hero-section {padding: 6rem 0 5rem;}
+        @media(min-width:768px){.hero-section{padding: 8rem 0 6rem;}}
+        .hero-section h1 {font-size:3rem;line-height:1.1;font-weight:800;}
+        @media(min-width:768px){.hero-section h1{font-size:4.25rem;}}
+        .hero-section p {margin-top:1.5rem;max-width:42rem;margin-left:auto;margin-right:auto;font-size:1.125rem;line-height:1.75rem;color:#9ca3af;}
+        .cta-button {display:inline-flex;align-items:center;justify-content:center;margin-top:2.5rem;background-color:#ea580c;color:#ffffff;padding:1rem 2rem;border-radius:9999px;font-weight:700;transition:background-color 0.2s ease-in-out;box-shadow:0 0 25px rgba(234,88,12,0.3);}
         .cta-button:hover {background-color:var(--orange-500);}
 
-        /* Journey Section Styles */
-        #journey-section {padding-top:5rem;padding-bottom:5rem;}
-        #journey-section .section-title {font-size:2.25rem;line-height:2.5rem;font-weight:800;}
-        #journey-section .section-subtitle {margin-top:1rem;max-width:48rem;margin-left:auto;margin-right:auto;color:var(--gray-400);}
+        #home-testimonials {background-color:rgba(17,24,39,0.5); padding:5rem 0;}
+        #home-testimonials h2 {font-size:2.25rem;font-weight:800;}
+        .testimonials-grid {margin-top:3rem;display:grid;grid-template-columns:repeat(1,1fr);gap:2rem;}
+        @media(min-width:768px){.testimonials-grid{grid-template-columns:repeat(2,1fr);}}
+        .testimonial-card {background-color:#1f2937;border:1px solid #374151;padding:2rem;border-radius:1rem;text-align:left;}
+        .testimonial-card p:first-child {color:#d1d5db;font-style:italic;}
+        .testimonial-card p:last-child {margin-top:1rem;font-weight:600;color:var(--orange-500);}
+
+        /* --- JOURNEY SECTION (INTERACTIVE COMPONENT) --- */
+        #journey-section {padding:5rem 0;}
+        .section-title {font-size:2.25rem;line-height:2.5rem;font-weight:800;}
+        .section-subtitle {margin-top:1rem;max-width:48rem;margin-left:auto;margin-right:auto;color:#9ca3af;}
+        
+        /* The container that manages the view states with overflow:hidden */
         .journey-container {margin-top:3rem;position:relative;overflow:hidden;}
-        .journey-view {
-            width:100%;
-            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease;
-        }
-        .journey-view.hidden {
-            position:absolute;
-            top:0;
-            left:0;
-            opacity:0;
-            pointer-events:none;
-        }
-        .slide-out-to-left {transform: translateX(-100%); opacity:0;}
-        .slide-in-from-right {transform: translateX(100%);}
+        /* A wrapper to hold both views for easy sliding */
+        .views-wrapper {display:flex;transition: transform 0.45s cubic-bezier(0.65, 0, 0.35, 1);}
+        
+        .journey-view {width:100%;flex-shrink:0;}
+        
+        /* NEW: Class-based state management for animations */
+        .journey-container.step-2-active .views-wrapper {transform: translateX(-100%);}
 
         /* Card Styles */
         .card-grid {display:grid;gap:1.5rem;grid-template-columns:repeat(1,1fr);}
@@ -75,47 +63,29 @@
         @media(min-width:1024px){.card-grid-sub{grid-template-columns:repeat(3,1fr);}}
 
         .stage-card {
-            background-color:var(--dark-card);
-            border:1px solid #333;
-            border-radius:1rem;
-            padding:2rem 1.5rem;
-            text-align:left;
-            transition:transform 0.3s ease, border-color 0.3s ease;
-            position:relative;
-            overflow:hidden;
+            background-color: #1C1C1C; /* FIX: Direct color value */
+            border: 1px solid #333;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
-        .stage-card:focus-visible {outline:2px solid var(--orange-500); outline-offset:2px;}
-        .stage-card svg {width:2.5rem;height:2.5rem;margin-bottom:1rem;color:var(--orange-500);}
-        .stage-card h3 {font-size:1.25rem;font-weight:700;margin-bottom:0.5rem;}
-        .stage-card p {color:var(--gray-400); font-size: 0.95rem; line-height: 1.6;}
-
-        /* Card Glow Effect */
-        .stage-card::before {
-            content:'';
-            position:absolute;
-            top:0; left:0; right:0; bottom:0;
-            background:radial-gradient(400px circle at var(--x) var(--y), rgba(249, 115, 22, 0.2), transparent 80%);
-            opacity:0;
-            transition:opacity 0.4s ease;
+        .stage-card:focus-visible, .back-button:focus-visible {outline:2px solid var(--orange-500); outline-offset:2px; border-radius: 1rem;}
+        .stage-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.3); /* FIX: Simpler, more reliable hover effect */
         }
-        .stage-card:hover {transform:translateY(-4px); border-color: #444;}
-        .stage-card:hover::before {opacity:1;}
+        .stage-card svg {width:2rem;height:2rem;margin-bottom:1rem;color:var(--orange-500);}
+        .stage-card h3 {font-size:1.125rem;font-weight:700;margin-bottom:0.5rem;color:#EAEAEA;}
+        .stage-card p {color:#9ca3af; font-size: 0.9rem; line-height: 1.6;}
         
         /* Step 2 View Styles */
-        .step-2-header {text-align:left; margin-bottom: 2rem;}
-        .back-button {display:inline-flex;align-items:center;gap:0.5rem;color:var(--gray-400);margin-bottom:1rem;font-weight:500;}
-        .back-button:hover {color:var(--white);}
+        .step-2-header {text-align:left; margin-bottom: 2.5rem;}
+        .back-button {display:inline-flex;align-items:center;gap:0.5rem;color:#9ca3af;margin-bottom:1.5rem;font-weight:500;padding:0.25rem;}
+        .back-button:hover {color:#ffffff;}
         .back-button svg {width:1.25rem;height:1.25rem;}
-        #progress-indicator {color: var(--gray-400); font-weight: 500;}
-
-        /* Testimonials Section */
-        #home-testimonials {background-color:rgba(17,24,39,0.5); padding:4rem 0;}
-        #home-testimonials h2 {font-size:2.25rem;font-weight:800;}
-        .testimonials-grid {margin-top:3rem;display:grid;grid-template-columns:repeat(1,1fr);gap:2rem;}
-        @media(min-width:768px){.testimonials-grid{grid-template-columns:repeat(2,1fr);}}
-        .testimonial-card {background-color:var(--gray-800);border:1px solid var(--gray-700);padding:2rem;border-radius:1rem;text-align:left;}
-        .testimonial-card p:first-child {color:var(--gray-300);font-style:italic;}
-        .testimonial-card p:last-child {margin-top:1rem;font-weight:600;color:var(--orange-500);}
+        #step-2-title {font-size: 2.25rem;}
+        #step-2-description {margin-top: 0.5rem;}
+        #progress-indicator {color: #9ca3af; font-weight: 500; margin-top: 1rem;}
     </style>
 </head>
 <body>
@@ -134,24 +104,26 @@
                 <h2 class="section-title">Find your starting point.</h2>
                 <p class="section-subtitle">Every journey starts with a single, clear step. Select where you are in your career to reveal a personalized path forward.</p>
                 
-                <div id="journey-container">
-                    <div id="step-1-view" class="journey-view">
-                        <div id="stage-selection-grid" class="card-grid card-grid-main">
-                            </div>
-                    </div>
-
-                    <div id="step-2-view" class="journey-view hidden">
-                        <div class="step-2-header">
-                            <button id="back-button" class="back-button">
-                                <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" /></svg>
-                                Back to All Stages
-                            </button>
-                            <h2 id="step-2-title" class="section-title"></h2>
-                            <p id="step-2-description" class="section-subtitle" style="margin-left: 0;"></p>
-                            <p id="progress-indicator" class="mt-4"></p>
+                <div id="journey-container" class="journey-container">
+                    <div class="views-wrapper">
+                        <div id="step-1-view" class="journey-view">
+                            <div id="stage-selection-grid" class="card-grid card-grid-main">
+                                </div>
                         </div>
-                        <div id="sub-stage-grid" class="card-grid card-grid-sub">
+
+                        <div id="step-2-view" class="journey-view">
+                            <div class="step-2-header">
+                                <button id="back-button" class="back-button">
+                                    <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" /></svg>
+                                    Back to All Stages
+                                </button>
+                                <h2 id="step-2-title" class="section-title"></h2>
+                                <p id="step-2-description" class="section-subtitle" style="margin-left: 0;"></p>
+                                <p id="progress-indicator"></p>
                             </div>
+                            <div id="sub-stage-grid" class="card-grid card-grid-sub">
+                                </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -177,9 +149,6 @@
     <script>
     document.addEventListener('DOMContentLoaded', () => {
 
-        // --- DATA ---
-        // Storing data separately from logic makes it easy to update.
-        // Icons are embedded as SVGs for performance and style control.
         const stagesMap = {
             'starting-out': {
                 title: "Just Starting Out",
@@ -222,105 +191,53 @@
             }
         };
 
-        // --- DOM Elements ---
-        const step1View = document.getElementById('step-1-view');
-        const step2View = document.getElementById('step-2-view');
+        const journeyContainer = document.getElementById('journey-container');
         const stageSelectionGrid = document.getElementById('stage-selection-grid');
         const backButton = document.getElementById('back-button');
-        const progressIndicator = document.getElementById('progress-indicator');
 
-        // --- Functions ---
-        
-        /**
-         * Populates the main selection grid with career stages.
-         */
         function populateStep1View() {
-            stageSelectionGrid.innerHTML = ''; // Clear existing content
+            stageSelectionGrid.innerHTML = '';
             for (const key in stagesMap) {
                 const stage = stagesMap[key];
                 const card = document.createElement('button');
                 card.className = 'stage-card';
                 card.dataset.stage = key;
-                card.innerHTML = `
-                    ${stage.icon}
-                    <h3>${stage.title}</h3>
-                    <p>${stage.description}</p>
-                `;
+                card.innerHTML = `${stage.icon}<h3>${stage.title}</h3><p>${stage.description}</p>`;
                 card.addEventListener('click', () => navigateToStep2(key));
                 stageSelectionGrid.appendChild(card);
             }
         }
 
-        /**
-         * Populates the detail view (Step 2) based on the selected stage.
-         * @param {string} stageKey - The key of the selected stage (e.g., 'stuck').
-         */
         function populateStep2View(stageKey) {
             const stage = stagesMap[stageKey];
             document.getElementById('step-2-title').textContent = stage.title;
             document.getElementById('step-2-description').textContent = "Here is your personalized path forward. Choose an area to focus on.";
-            progressIndicator.textContent = 'Step 2 of 2';
+            document.getElementById('progress-indicator').textContent = 'Step 2 of 2';
             
             const subStageGrid = document.getElementById('sub-stage-grid');
-            subStageGrid.innerHTML = ''; // Clear previous sub-stages
+            subStageGrid.innerHTML = '';
             
             stage.substages.forEach(sub => {
                 const card = document.createElement('button');
                 card.className = 'stage-card';
-                card.innerHTML = `
-                    ${stagesMap[stageKey].icon}
-                    <h3>${sub.name}</h3>
-                    <p>${sub.subDescription}</p>
-                `;
+                card.innerHTML = `${stage.icon}<h3>${sub.name}</h3><p>${sub.subDescription}</p>`;
                 subStageGrid.appendChild(card);
             });
         }
-
-        /**
-         * Handles the animation and logic to move from Step 1 to Step 2.
-         * @param {string} stageKey - The key of the stage to navigate to.
-         */
+        
         function navigateToStep2(stageKey) {
             populateStep2View(stageKey);
-            
-            step1View.classList.add('slide-out-to-left');
-            
-            step2View.classList.remove('hidden', 'slide-in-from-right');
-            step2View.style.transform = 'translateX(100%)'; // Start off-screen
-            
-            requestAnimationFrame(() => {
-                step2View.style.transform = 'translateX(0)';
-            });
+            // This class-based approach is more robust for animations
+            journeyContainer.classList.add('step-2-active');
         }
 
-        /**
-         * Handles the animation and logic to move back from Step 2 to Step 1.
-         */
         function navigateToStep1() {
-            step1View.classList.remove('slide-out-to-left');
-            step2View.style.transform = 'translateX(100%)';
-            
-            // Add hidden class after the transition ends
-            step2View.addEventListener('transitionend', () => {
-                step2View.classList.add('hidden');
-            }, { once: true });
+            journeyContainer.classList.remove('step-2-active');
         }
         
-        // --- Event Listeners & Initialization ---
-        
+        // --- Initialize Component ---
         backButton.addEventListener('click', navigateToStep1);
         populateStep1View();
-
-        // Card glow effect
-        document.querySelectorAll('.stage-card').forEach(card => {
-            card.addEventListener('mousemove', e => {
-                const rect = card.getBoundingClientRect();
-                const x = e.clientX - rect.left;
-                const y = e.clientY - rect.top;
-                card.style.setProperty('--x', `${x}px`);
-                card.style.setProperty('--y', `${y}px`);
-            });
-        });
     });
     </script>
 </body>
