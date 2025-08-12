@@ -1,233 +1,327 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>OneStopCareers - Your Gateway to Referral-Based Jobs</title>
-  <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" />
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&display=swap" rel="stylesheet">
-  
-  <style>
-    /* Tailwind CSS Reset and Base Styles */
-    *,::before,::after {box-sizing:border-box;border-width:0;border-style:solid;border-color:#e5e7eb}::before,::after {--tw-content:''}html {line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;tab-size:4;font-family:ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";font-feature-settings:normal;font-variation-settings:normal}body {margin:0;line-height:inherit}hr {height:0;color:inherit;border-top-width:1px}h1,h2,h3,h4,h5,h6 {font-size:inherit;font-weight:inherit}a {color:inherit;text-decoration:inherit}b,strong {font-weight:bolder}code,kbd,samp,pre {font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;font-size:1em}small {font-size:80%}sub,sup {font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub {bottom:-0.25em}sup {top:-0.5em}table {text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea {font-family:inherit;font-feature-settings:inherit;font-variation-settings:inherit;font-size:100%;font-weight:inherit;line-height:inherit;color:inherit;margin:0;padding:0}button,select {text-transform:none}button,[type='button'],[type='reset'],[type='submit'] {-webkit-appearance:button;background-color:transparent;background-image:none}::-moz-focus-inner {border-style:none;padding:0}:-moz-focusring {outline:1px dotted ButtonText}:-moz-ui-invalid {box-shadow:none}progress {vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button {height:auto}summary {display:list-item}blockquote,dl,dd,h1,h2,h3,h4,h5,h6,hr,figure,p,pre {margin:0}fieldset {margin:0;padding:0}legend {padding:0}ol,ul,menu {list-style:none;margin:0;padding:0}dialog {padding:0}textarea {resize:vertical}input::placeholder,textarea::placeholder {opacity:1;color:#9ca3af}button,[role="button"] {cursor:pointer}:disabled {cursor:default}img,svg,video,canvas,audio,iframe,embed,object {display:block;vertical-align:middle}img,video {max-width:100%;height:auto}[hidden] {display:none}
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OneStopCareers - Your Gateway to Referral-Based Jobs</title>
+    <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Base Tailwind & Custom Properties */
+        :root {
+            --orange-500: #f97316;
+            --orange-600: #ea580c;
+            --gray-300: #d1d5db;
+            --gray-400: #9ca3af;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+            --gray-900: #111827;
+            --dark-bg: #121212;
+            --dark-card: #1C1C1C;
+            --white: #ffffff;
+            --text-primary: #EAEAEA;
+        }
+        *,::before,::after {box-sizing:border-box;border-width:0;border-style:solid;border-color:var(--gray-700)}
+        html {line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;tab-size:4;font-family: 'Manrope', sans-serif;}
+        body {margin:0;line-height:inherit;background-color:var(--dark-bg);color:var(--text-primary);}
+        h1,h2,h3,p,button {margin:0}
+        a {color:inherit;text-decoration:inherit}
+        button {font-family:inherit;font-size:100%;background-color:transparent;background-image:none;padding:0;cursor:pointer;}
+        img,svg {display:block;vertical-align:middle;max-width:100%;height:auto;}
 
-    /* Tailwind CSS Generated Utility Classes */
-    .h-16{height:4rem}.h-full{height:100%}.w-16{width:4rem}.cursor-pointer{cursor:pointer}.flex{display:flex}.inline-flex{display:inline-flex}.grid{display:grid}.hidden{display:none}.flex-col{flex-direction:column}.items-center{align-items:center}.justify-center{justify-content:center}.gap-8{gap:2rem}.rounded-2xl{border-radius:1rem}.rounded-full{border-radius:9999px}.border{border-width:1px}.border-gray-700{border-color:#374151}.border-orange-500\/50{border-color:rgba(249,115,22,0.5)}.bg-black{background-color:#000}.bg-gray-800{background-color:#1f2937}.bg-gray-900\/50{background-color:rgba(17,24,39,0.5)}.bg-orange-600{background-color:#ea580c}.p-6{padding:1.5rem}.p-8{padding:2rem}.px-4{padding-left:1rem;padding-right:1rem}.px-8{padding-left:2rem;padding-right:2rem}.py-16{padding-top:4rem;padding-bottom:4rem}.py-20{padding-top:5rem;padding-bottom:5rem}.py-4{padding-top:1rem;padding-bottom:1rem}.pb-20{padding-bottom:5rem}.pt-24{padding-top:6rem}.text-left{text-align:left}.text-center{text-align:center}.font-manrope{font-family:Manrope,sans-serif}.text-2xl{font-size:1.5rem;line-height:2rem}.text-4xl{font-size:2.25rem;line-height:2.5rem}.text-5xl{font-size:3rem;line-height:1}.text-lg{font-size:1.125rem;line-height:1.75rem}.italic{font-style:italic}.text-white{color:#fff}.text-gray-300{color:#d1d5db}.text-gray-400{color:#9ca3af}.text-orange-500{color:#f97316}.shadow-lg{box-shadow:0 10px 15px -3px rgba(0,0,0,0.1),0 4px 6px -4px rgba(0,0,0,0.1)}.shadow-orange-500\/20{box-shadow:0 0 25px rgba(249,115,22,0.2)}.transition-colors{transition-property:color,background-color,border-color,text-decoration-color,fill,stroke;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.group:hover .group-hover\:bg-orange-700{background-color:#c2410c}.hover\:bg-orange-700:hover{background-color:#c2410c}
-    .relative{position:relative}.z-10{z-index:10}.mx-auto{margin-left:auto;margin-right:auto}.mb-4{margin-bottom:1rem}.mt-10{margin-top:2.5rem}.mt-12{margin-top:3rem}.mt-2{margin-top:0.5rem}.mt-4{margin-top:1rem}.mt-6{margin-top:1.5rem}.h-full{height:100%}.max-w-2xl{max-width:42rem}.max-w-3xl{max-width:48rem}.max-w-6xl{max-width:72rem}.max-w-7xl{max-width:80rem}.font-bold{font-weight:700}.font-extrabold{font-weight:800}.font-semibold{font-weight:600}.leading-tight{line-height:1.25}
-    @media (min-width: 640px){.sm\:pb-24{padding-bottom:6rem}.sm\:pt-32{padding-top:8rem}}
-    @media (min-width: 768px){.md\:grid-cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}.md\:text-7xl{font-size:4.5rem;line-height:1}}
-    @media (min-width: 1024px){.lg\:grid-cols-3{grid-template-columns:repeat(3,minmax(0,1fr))}.lg\:grid-cols-4{grid-template-columns:repeat(4,minmax(0,1fr))}}
+        /* Main Page Layout Styles */
+        .container {width:100%;margin-left:auto;margin-right:auto;padding-left:1rem;padding-right:1rem;}
+        @media(min-width:640px){.container{max-width:640px}}
+        @media(min-width:768px){.container{max-width:768px}}
+        @media(min-width:1024px){.container{max-width:1024px}}
+        @media(min-width:1280px){.container{max-width:1280px; padding-left:2rem; padding-right:2rem;}}
+        .text-center{text-align:center;}
 
-    /* Your Custom CSS */
-    body {
-      font-family: 'Manrope', sans-serif;
-      background-color: #121212;
-      color: #EAEAEA;
-    }
-    .hero-bg-gradient {
-      background: #121212;
-    }
-    .stage-card {
-        transition: all 0.3s ease-in-out;
-        border: 1px solid #333;
-        background-color: #1C1C1C;
-    }
-    .stage-card.selected {
-        border-color: #ea580c;
-        transform: translateY(-5px);
-        box-shadow: 0 0 25px rgba(234, 88, 12, 0.3);
-    }
-    .stage-details {
-        transition: opacity 0.4s ease-in-out, max-height 0.4s ease-in-out, margin 0.4s ease-in-out;
-        max-height: 0;
-        opacity: 0;
-        overflow: hidden;
-        margin-top: 0;
-        grid-column: 1 / -1; /* Span full width in grid */
-    }
-    .stage-details.visible {
-        max-height: 500px; /* Adjust as needed */
-        opacity: 1;
-        margin-top: 1.5rem;
-    }
-  </style>
+        /* Hero Section */
+        .hero-section {padding-top:6rem;padding-bottom:5rem;}
+        @media(min-width:640px){.hero-section{padding-top:8rem;padding-bottom:6rem;}}
+        .hero-section h1 {font-size:3rem;line-height:1;font-weight:800;}
+        @media(min-width:768px){.hero-section h1{font-size:4.5rem;}}
+        .hero-section p {margin-top:1.5rem;max-width:42rem;margin-left:auto;margin-right:auto;font-size:1.125rem;line-height:1.75rem;color:var(--gray-400);}
+        .cta-button {display:inline-flex;align-items:center;justify-content:center;margin-top:2.5rem;background-color:var(--orange-600);color:var(--white);padding:1rem 2rem;border-radius:9999px;font-weight:700;transition:background-color 0.2s ease-in-out;box-shadow:0 0 25px rgba(234,88,12,0.3);}
+        .cta-button:hover {background-color:var(--orange-500);}
+
+        /* Journey Section Styles */
+        #journey-section {padding-top:5rem;padding-bottom:5rem;}
+        #journey-section .section-title {font-size:2.25rem;line-height:2.5rem;font-weight:800;}
+        #journey-section .section-subtitle {margin-top:1rem;max-width:48rem;margin-left:auto;margin-right:auto;color:var(--gray-400);}
+        .journey-container {margin-top:3rem;position:relative;overflow:hidden;}
+        .journey-view {
+            width:100%;
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease;
+        }
+        .journey-view.hidden {
+            position:absolute;
+            top:0;
+            left:0;
+            opacity:0;
+            pointer-events:none;
+        }
+        .slide-out-to-left {transform: translateX(-100%); opacity:0;}
+        .slide-in-from-right {transform: translateX(100%);}
+
+        /* Card Styles */
+        .card-grid {display:grid;gap:1.5rem;grid-template-columns:repeat(1,1fr);}
+        @media(min-width:768px){.card-grid{grid-template-columns:repeat(2,1fr);}}
+        @media(min-width:1024px){.card-grid-main{grid-template-columns:repeat(4,1fr);}}
+        @media(min-width:1024px){.card-grid-sub{grid-template-columns:repeat(3,1fr);}}
+
+        .stage-card {
+            background-color:var(--dark-card);
+            border:1px solid #333;
+            border-radius:1rem;
+            padding:2rem 1.5rem;
+            text-align:left;
+            transition:transform 0.3s ease, border-color 0.3s ease;
+            position:relative;
+            overflow:hidden;
+        }
+        .stage-card:focus-visible {outline:2px solid var(--orange-500); outline-offset:2px;}
+        .stage-card svg {width:2.5rem;height:2.5rem;margin-bottom:1rem;color:var(--orange-500);}
+        .stage-card h3 {font-size:1.25rem;font-weight:700;margin-bottom:0.5rem;}
+        .stage-card p {color:var(--gray-400); font-size: 0.95rem; line-height: 1.6;}
+
+        /* Card Glow Effect */
+        .stage-card::before {
+            content:'';
+            position:absolute;
+            top:0; left:0; right:0; bottom:0;
+            background:radial-gradient(400px circle at var(--x) var(--y), rgba(249, 115, 22, 0.2), transparent 80%);
+            opacity:0;
+            transition:opacity 0.4s ease;
+        }
+        .stage-card:hover {transform:translateY(-4px); border-color: #444;}
+        .stage-card:hover::before {opacity:1;}
+        
+        /* Step 2 View Styles */
+        .step-2-header {text-align:left; margin-bottom: 2rem;}
+        .back-button {display:inline-flex;align-items:center;gap:0.5rem;color:var(--gray-400);margin-bottom:1rem;font-weight:500;}
+        .back-button:hover {color:var(--white);}
+        .back-button svg {width:1.25rem;height:1.25rem;}
+        #progress-indicator {color: var(--gray-400); font-weight: 500;}
+
+        /* Testimonials Section */
+        #home-testimonials {background-color:rgba(17,24,39,0.5); padding:4rem 0;}
+        #home-testimonials h2 {font-size:2.25rem;font-weight:800;}
+        .testimonials-grid {margin-top:3rem;display:grid;grid-template-columns:repeat(1,1fr);gap:2rem;}
+        @media(min-width:768px){.testimonials-grid{grid-template-columns:repeat(2,1fr);}}
+        .testimonial-card {background-color:var(--gray-800);border:1px solid var(--gray-700);padding:2rem;border-radius:1rem;text-align:left;}
+        .testimonial-card p:first-child {color:var(--gray-300);font-style:italic;}
+        .testimonial-card p:last-child {margin-top:1rem;font-weight:600;color:var(--orange-500);}
+    </style>
 </head>
-<body class="bg-black text-white">
+<body>
 
-  <div id="header-placeholder"></div>
+    <main>
+        <section class="hero-section">
+            <div class="container text-center">
+                <h1>Your Career Struggles End Here.</h1>
+                <p>Applying to more jobs is like treating symptoms without a diagnosis. We help you pinpoint the real problem in your career journey, then provide the precise solution to move you forward.</p>
+                <a href="#journey-section" class="cta-button">Find Your Career Stage</a>
+            </div>
+        </section>
 
-  <main>
-    <section class="hero-bg-gradient">
-      <div class="max-w-7xl mx-auto px-4 pt-24 pb-20 sm:pt-32 sm:pb-24 text-center relative">
-        <div class="relative z-10">
-          <h1 class="text-5xl md:text-7xl font-extrabold leading-tight text-white">
-            Your Career Struggles End Here.
-          </h1>
-          <p class="mt-6 max-w-2xl mx-auto text-lg text-gray-400">
-            Applying to more jobs is like treating symptoms without a diagnosis. We help you pinpoint the real problem in your career journey, then provide the precise solution to move you forward.
-          </p>
-          <div class="mt-10">
-            <a href="#career-stages" class="group inline-flex items-center justify-center bg-orange-600 text-white py-4 px-8 rounded-full hover:bg-orange-700 transition-colors text-lg font-semibold shadow-lg shadow-orange-500/20">
-              Find Your Career Stage
-            </a>
-          </div>
-        </div>
-      </div>
-    </section>
+        <section id="journey-section">
+            <div class="container text-center">
+                <h2 class="section-title">Find your starting point.</h2>
+                <p class="section-subtitle">Every journey starts with a single, clear step. Select where you are in your career to reveal a personalized path forward.</p>
+                
+                <div id="journey-container">
+                    <div id="step-1-view" class="journey-view">
+                        <div id="stage-selection-grid" class="card-grid card-grid-main">
+                            </div>
+                    </div>
 
-    <section id="career-stages" class="py-20">
-      <div class="max-w-6xl mx-auto px-4 text-center">
-        <h2 class="text-4xl font-bold text-white">Find your starting point.</h2>
-        <p class="text-gray-400 mt-4 max-w-3xl mx-auto">
-          Every journey starts with a single, clear step. Select where you are in your career journey to reveal your personalized path forward.
-        </p>
-        
-        <div id="stage-selection-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mt-12">
-          
-          <div class="stage-card cursor-pointer p-6 rounded-2xl h-full flex flex-col justify-center" data-stage="starting-out">
-            <img src="https://cdn-icons-png.flaticon.com/512/3356/3356885.png" class="h-16 w-16 mx-auto mb-4" alt="Starting Out Icon" />
-            <h3 class="text-lg font-semibold text-white">Just Starting Out</h3>
-          </div>
-          
-          <div class="stage-card cursor-pointer p-6 rounded-2xl h-full flex flex-col justify-center" data-stage="skill-up">
-            <img src="https://cdn-icons-png.flaticon.com/512/2951/2951216.png" class="h-16 w-16 mx-auto mb-4" alt="Skill Up Icon" />
-            <h3 class="text-lg font-semibold text-white">Skill Up & Search</h3>
-          </div>
-          
-          <div class="stage-card cursor-pointer p-6 rounded-2xl h-full flex flex-col justify-center" data-stage="interview-loop">
-            <img src="https://cdn-icons-png.flaticon.com/512/3176/3176295.png" class="h-16 w-16 mx-auto mb-4" alt="Interview Loop Icon" />
-            <h3 class="text-lg font-semibold text-white">In the Interview Loop</h3>
-          </div>
-          
-          <div class="stage-card cursor-pointer p-6 rounded-2xl h-full flex flex-col justify-center" data-stage="stuck">
-            <img src="https://cdn-icons-png.flaticon.com/512/1000/1000965.png" class="h-16 w-16 mx-auto mb-4" alt="Stuck Icon" />
-            <h3 class="text-lg font-semibold text-white">Stuck or Unmotivated</h3>
-          </div>
-        </div>
+                    <div id="step-2-view" class="journey-view hidden">
+                        <div class="step-2-header">
+                            <button id="back-button" class="back-button">
+                                <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" /></svg>
+                                Back to All Stages
+                            </button>
+                            <h2 id="step-2-title" class="section-title"></h2>
+                            <p id="step-2-description" class="section-subtitle" style="margin-left: 0;"></p>
+                            <p id="progress-indicator" class="mt-4"></p>
+                        </div>
+                        <div id="sub-stage-grid" class="card-grid card-grid-sub">
+                            </div>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-        <div id="stage-details-container" class="stage-details"></div>
-      </div>
-    </section>
+        <section id="home-testimonials">
+            <div class="container text-center">
+                <h2>What Our Users Are Saying</h2>
+                <div class="testimonials-grid">
+                    <div class="testimonial-card">
+                        <p>"The resume templates and interview questions were a game-changer. I felt so much more prepared and confident."</p>
+                        <p>- David L., Job Seeker</p>
+                    </div>
+                    <div class="testimonial-card">
+                        <p>"Ketan's guidance was instrumental in helping me transition from a service-based role to a product company. His insights were invaluable."</p>
+                        <p>- Michael J., Product Manager</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
 
-    <section id="home-testimonials" class="bg-gray-900/50 py-16">
-      <div class="max-w-6xl mx-auto px-4 text-center">
-        <h2 class="text-4xl font-bold text-white">What Our Users Are Saying</h2>
-        <div class="grid md:grid-cols-2 gap-8 mt-12">
-          <div class="p-8 bg-gray-800 rounded-2xl text-left border border-gray-700">
-            <p class="text-gray-300 italic">
-              "The resume templates and interview questions were a game-changer. I felt so much more prepared and confident."
-            </p>
-            <p class="mt-4 font-semibold text-orange-500">- David L., Job Seeker</p>
-          </div>
-          <div class="p-8 bg-gray-800 rounded-2xl text-left border border-gray-700">
-            <p class="text-gray-300 italic">
-              "Ketan's guidance was instrumental in helping me transition from a service-based role to a product company. His insights were invaluable."
-            </p>
-            <p class="mt-4 font-semibold text-orange-500">- Michael J., Product Manager</p>
-          </div>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <div id="footer-placeholder"></div>
-
-  <script>
+    <script>
     document.addEventListener('DOMContentLoaded', () => {
-        const stageCategories = document.querySelectorAll('[data-stage]');
-        const stageDetailsContainer = document.getElementById('stage-details-container');
-        
+
+        // --- DATA ---
+        // Storing data separately from logic makes it easy to update.
+        // Icons are embedded as SVGs for performance and style control.
         const stagesMap = {
             'starting-out': {
                 title: "Just Starting Out",
-                description: "You're at the beginning of your career journey.",
+                description: "You're at the very beginning, trying to find your footing and choose a direction that excites you. Let's build your foundation.",
+                icon: `<svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" /></svg>`,
                 substages: [
-                    { name: "Explore Roles", icon: "https://cdn-icons-png.flaticon.com/512/3356/3356885.png" },
-                    { name: "Finalize a Role", icon: "https://cdn-icons-png.flaticon.com/512/2951/2951216.png" },
-                    { name: "Prepare a Roadmap", icon: "https://cdn-icons-png.flaticon.com/512/3176/3176295.png" }
+                    { name: "Explore Roles", subDescription: "Discover different career paths that match your interests and skills." },
+                    { name: "Finalize a Role", subDescription: "Commit to a specific path and understand what it takes to succeed." },
+                    { name: "Prepare a Roadmap", subDescription: "Create a step-by-step plan for the skills and experience you'll need." }
                 ]
             },
             'skill-up': {
                 title: "Skill Up & Search",
-                description: "You know your path, but need to build your profile.",
+                description: "You know your target role, but need the skills and a powerful resume to get noticed by recruiters.",
+                icon: `<svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 10.5L12 3m0 0l7.5 7.5M12 3v18" /></svg>`,
                 substages: [
-                    { name: "Figure out Resources", icon: "https://cdn-icons-png.flaticon.com/512/2951/2951216.png" },
-                    { name: "Practical Exposure", icon: "https://cdn-icons-png.flaticon.com/512/3176/3176295.png" },
-                    { name: "Resume Building", icon: "https://cdn-icons-png.flaticon.com/512/3356/3356885.png" }
+                    { name: "Find Learning Resources", subDescription: "Identify the best courses, books, and projects to build your expertise." },
+                    { name: "Gain Practical Exposure", subDescription: "Apply your knowledge through internships, projects, or freelance work." },
+                    { name: "Build a Killer Resume", subDescription: "Craft a resume that highlights your new skills and gets past ATS filters." }
                 ]
             },
             'interview-loop': {
                 title: "In the Interview Loop",
-                description: "You're getting interviews but need to land the offer.",
+                description: "You're landing interviews but not the offers. It's time to master the art of the interview process.",
+                icon: `<svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m-7.28-2.72a3 3 0 01-4.682-2.72a9.094 9.094 0 013.741-.479m-4.26 9.574a9.094 9.094 0 003.741.479a3 3 0 004.682 2.72m-7.28 2.72a3 3 0 014.682 2.72a9.094 9.094 0 01-3.741.479m-4.26-9.574a9.094 9.094 0 01-3.741-.479a3 3 0 014.682-2.72m7.28-2.72a3 3 0 00-4.682-2.72a9.094 9.094 0 00-3.741-.479M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>`,
                 substages: [
-                    { name: "Job Application Strategy", icon: "https://cdn-icons-png.flaticon.com/512/3176/3176295.png" },
-                    { name: "Interview Rounds", icon: "https://cdn-icons-png.flaticon.com/512/3356/3356885.png" },
-                    { name: "Rejections", icon: "https://cdn-icons-png.flaticon.com/512/2951/2951216.png" }
+                    { name: "Application Strategy", subDescription: "Optimize how and where you apply to maximize your interview chances." },
+                    { name: "Master Interview Rounds", subDescription: "Prepare for technical, behavioral, and situational interview questions." },
+                    { name: "Handle Rejections", subDescription: "Learn from feedback and stay motivated after a 'no'." }
                 ]
             },
             'stuck': {
                 title: "Stuck or Unmotivated",
-                description: "You're feeling stuck, burnt out, or need a fresh perspective.",
+                description: "Your career has stalled, or your motivation has faded. Let's find a new perspective and get you moving again.",
+                icon: `<svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m0-10.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.75c0 5.592 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.57-.598-3.75h-.152c-3.196 0-6.1-1.249-8.25-3.286zm0 13.036h.008v.008H12v-.008z" /></svg>`,
                 substages: [
-                    { name: "Motivation", icon: "https://cdn-icons-png.flaticon.com/512/1000/1000965.png" },
-                    { name: "Feedback Loop", icon: "https://cdn-icons-png.flaticon.com/512/2951/2951216.png" }
+                    { name: "Rediscover Motivation", subDescription: "Use proven techniques to reignite your professional passion and set new goals." },
+                    { name: "Create a Feedback Loop", subDescription: "Build a system for getting constructive feedback to break through plateaus." },
                 ]
             }
         };
 
-        let currentSelectedCategory = null;
+        // --- DOM Elements ---
+        const step1View = document.getElementById('step-1-view');
+        const step2View = document.getElementById('step-2-view');
+        const stageSelectionGrid = document.getElementById('stage-selection-grid');
+        const backButton = document.getElementById('back-button');
+        const progressIndicator = document.getElementById('progress-indicator');
 
-        stageCategories.forEach(category => {
-            category.addEventListener('click', () => {
-                const stageKey = category.dataset.stage;
-                const stage = stagesMap[stageKey];
-                
-                // Toggle logic
-                if (currentSelectedCategory === category) {
-                    category.classList.remove('selected');
-                    stageDetailsContainer.classList.remove('visible');
-                    setTimeout(() => { stageDetailsContainer.innerHTML = ''; }, 400); // Clear after transition
-                    currentSelectedCategory = null;
-                    return;
-                }
-                
-                // Reset state for all categories
-                if (currentSelectedCategory) {
-                    currentSelectedCategory.classList.remove('selected');
-                }
-                stageDetailsContainer.classList.remove('visible');
-                
-                // Set new state
-                category.classList.add('selected');
-                currentSelectedCategory = category;
-                
-                let substagesHtml = stage.substages.map(sub => `
-                    <div class="stage-card cursor-pointer p-6 rounded-2xl text-center h-full flex flex-col justify-center">
-                        <img src="${sub.icon}" class="h-16 w-16 mx-auto mb-4" alt="${sub.name} Icon" />
-                        <h3 class="text-lg font-semibold text-white">${sub.name}</h3>
-                    </div>
-                `).join('');
-
-                stageDetailsContainer.innerHTML = `
-                    <div class="bg-gray-900/50 p-8 rounded-2xl border border-orange-500/50 text-left transition-all duration-300">
-                      <h3 class="text-2xl font-bold text-white">${stage.title}</h3>
-                      <p class="mt-2 text-gray-400 max-w-3xl">${stage.description}</p>
-                      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-6">
-                        ${substagesHtml}
-                      </div>
-                    </div>
+        // --- Functions ---
+        
+        /**
+         * Populates the main selection grid with career stages.
+         */
+        function populateStep1View() {
+            stageSelectionGrid.innerHTML = ''; // Clear existing content
+            for (const key in stagesMap) {
+                const stage = stagesMap[key];
+                const card = document.createElement('button');
+                card.className = 'stage-card';
+                card.dataset.stage = key;
+                card.innerHTML = `
+                    ${stage.icon}
+                    <h3>${stage.title}</h3>
+                    <p>${stage.description}</p>
                 `;
-                
-                // Show the container after a slight delay
-                setTimeout(() => {
-                    stageDetailsContainer.classList.add('visible');
-                }, 10);
+                card.addEventListener('click', () => navigateToStep2(key));
+                stageSelectionGrid.appendChild(card);
+            }
+        }
+
+        /**
+         * Populates the detail view (Step 2) based on the selected stage.
+         * @param {string} stageKey - The key of the selected stage (e.g., 'stuck').
+         */
+        function populateStep2View(stageKey) {
+            const stage = stagesMap[stageKey];
+            document.getElementById('step-2-title').textContent = stage.title;
+            document.getElementById('step-2-description').textContent = "Here is your personalized path forward. Choose an area to focus on.";
+            progressIndicator.textContent = 'Step 2 of 2';
+            
+            const subStageGrid = document.getElementById('sub-stage-grid');
+            subStageGrid.innerHTML = ''; // Clear previous sub-stages
+            
+            stage.substages.forEach(sub => {
+                const card = document.createElement('button');
+                card.className = 'stage-card';
+                card.innerHTML = `
+                    ${stagesMap[stageKey].icon}
+                    <h3>${sub.name}</h3>
+                    <p>${sub.subDescription}</p>
+                `;
+                subStageGrid.appendChild(card);
+            });
+        }
+
+        /**
+         * Handles the animation and logic to move from Step 1 to Step 2.
+         * @param {string} stageKey - The key of the stage to navigate to.
+         */
+        function navigateToStep2(stageKey) {
+            populateStep2View(stageKey);
+            
+            step1View.classList.add('slide-out-to-left');
+            
+            step2View.classList.remove('hidden', 'slide-in-from-right');
+            step2View.style.transform = 'translateX(100%)'; // Start off-screen
+            
+            requestAnimationFrame(() => {
+                step2View.style.transform = 'translateX(0)';
+            });
+        }
+
+        /**
+         * Handles the animation and logic to move back from Step 2 to Step 1.
+         */
+        function navigateToStep1() {
+            step1View.classList.remove('slide-out-to-left');
+            step2View.style.transform = 'translateX(100%)';
+            
+            // Add hidden class after the transition ends
+            step2View.addEventListener('transitionend', () => {
+                step2View.classList.add('hidden');
+            }, { once: true });
+        }
+        
+        // --- Event Listeners & Initialization ---
+        
+        backButton.addEventListener('click', navigateToStep1);
+        populateStep1View();
+
+        // Card glow effect
+        document.querySelectorAll('.stage-card').forEach(card => {
+            card.addEventListener('mousemove', e => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                card.style.setProperty('--x', `${x}px`);
+                card.style.setProperty('--y', `${y}px`);
             });
         });
     });
-  </script>
-
+    </script>
 </body>
 </html>
