@@ -77,7 +77,7 @@
         <h1 class="text-2xl font-bold text-white">OneStopCareers</h1>
         <div class="flex space-x-6">
             <button class="desktop-tab-btn nav-btn whitespace-nowrap py-2 px-4 border-b-2 font-medium text-sm text-gray-500 border-transparent hover:text-orange-500 hover:border-orange-500 transition-colors" data-page="home">Home</button>
-            <button class="desktop-tab-btn nav-btn whitespace-nowrap py-2 px-4 border-b-2 font-medium text-sm text-gray-500 border-transparent hover:text-orange-500 hover:border-orange-500 transition-colors" data-page="jobs-referrals">Jobs/Referrals</button>
+            <button class="desktop-tab-btn nav-btn whitespace-nowrap py-2 px-4 border-b-2 font-medium text-sm text-gray-500 border-transparent hover:text-orange-500 hover:border-orange-500 transition-colors" data-page="jobs-referrals">Jobs</button>
             <button class="desktop-tab-btn nav-btn whitespace-nowrap py-2 px-4 border-b-2 font-medium text-sm text-gray-500 border-transparent hover:text-orange-500 hover:border-orange-500 transition-colors" data-page="resources">Resources</button>
             <button class="desktop-tab-btn nav-btn whitespace-nowrap py-2 px-4 border-b-2 font-medium text-sm text-gray-500 border-transparent hover:text-orange-500 hover:border-orange-500 transition-colors" data-page="mentor">Mentor</button>
         </div>
@@ -100,7 +100,7 @@
                 <header id="mobile-header" class="p-4 sticky top-0 bg-black/80 backdrop-blur-sm z-20 md:hidden">
                     <div class="flex gap-4 items-center">
                         <div class="relative flex-grow">
-                            <input type="text" id="mobile-search-input" placeholder="Search jobs or referrals..." class="w-full bg-gray-800 border border-gray-700 rounded-full px-4 py-2.5 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all">
+                            <input type="text" id="mobile-search-input" placeholder="Search jobs..." class="w-full bg-gray-800 border border-gray-700 rounded-full px-4 py-2.5 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all">
                         </div>
                         <button id="mobile-filter-toggle" class="p-2.5 bg-gray-800 border border-gray-700 rounded-full text-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500">
                             <i class="fas fa-sliders-h h-5 w-5"></i>
@@ -131,15 +131,6 @@
                     <div id="loading-jobs" class="text-center py-12 hidden"><svg class="animate-spin h-10 w-10 text-orange-500 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg></div>
                     <div id="no-jobs-results" class="hidden text-center py-12"><h3 class="text-2xl font-semibold text-white">No Matching Jobs Found</h3></div>
                     <div class="text-center mt-8"><button id="load-more-jobs-btn" class="hidden bg-gradient-to-br from-orange-500 to-orange-600 text-white font-semibold py-3 px-8 rounded-full shadow-lg">See More Jobs</button></div>
-                </section>
-
-                <!-- Referrals Section -->
-                <section id="referrals-section">
-                    <h2 class="text-2xl font-bold text-white mb-6">Referrals from our Network</h2>
-                    <div id="referral-listings-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
-                    <div id="loading-referrals" class="text-center py-12 hidden"><svg class="animate-spin h-10 w-10 text-orange-500 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg></div>
-                    <div id="no-referrals-results" class="hidden text-center py-12"><h3 class="text-2xl font-semibold text-white">No Matching Referrals Found</h3></div>
-                    <div class="text-center mt-8"><button id="load-more-referrals-btn" class="hidden bg-gradient-to-br from-orange-500 to-orange-600 text-white font-semibold py-3 px-8 rounded-full shadow-lg">See More Referrals</button></div>
                 </section>
             </div>
 
@@ -203,21 +194,16 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             // --- CONFIGURATION & DATA MOCKS ---
-            const JOBS_JSON_URL = 'https://raw.githubusercontent.com/ketangoel16/onestopcareers-data/main/jobs.json';
-            const REFERRALS_JSON_URL = 'https://raw.githubusercontent.com/ketangoel16/onestopcareers-data/main/referrals.json';
+            const JOBS_JSON_URL = 'https://ketangoel16-creator.github.io/onestopcareers-data/jobs.json';
             const CARDS_PER_PAGE = 6;
 
             // --- ELEMENT SELECTORS ---
             const appPages = document.querySelectorAll('.app-page');
             const jobGrid = document.getElementById('job-listings-grid');
-            const referralGrid = document.getElementById('referral-listings-grid');
             const resourceGrid = document.getElementById('resources-grid');
             const loadingJobsSpinner = document.getElementById('loading-jobs');
-            const loadingReferralsSpinner = document.getElementById('loading-referrals');
             const noJobsResultsMessage = document.getElementById('no-jobs-results');
-            const noReferralsResultsMessage = document.getElementById('no-referrals-results');
             const loadMoreJobsBtn = document.getElementById('load-more-jobs-btn');
-            const loadMoreReferralsBtn = document.getElementById('load-more-referrals-btn');
             const modalOverlay = document.getElementById('modal-overlay');
 
             // Search and Filter Elements
@@ -238,11 +224,8 @@
             const mobileNavTabs = document.querySelectorAll('.nav-btn');
 
             let allJobs = [];
-            let allReferrals = [];
             let filteredJobs = [];
-            let filteredReferrals = [];
             let jobsCurrentPage = 1;
-            let referralsCurrentPage = 1;
 
             const isMobile = window.matchMedia("(max-width: 767px)").matches;
 
@@ -314,46 +297,23 @@
             async function fetchAllData() {
                 try {
                     loadingJobsSpinner.classList.remove('hidden');
-                    loadingReferralsSpinner.classList.remove('hidden');
                     
-                    let jobsData = { jobs: [] };
-                    let referralsData = { referrals: [] };
-                    
-                    try {
-                        const jobsResponse = await retryFetch(JOBS_JSON_URL);
-                        jobsData = await jobsResponse.json();
-                        console.log("Fetched jobs data:", jobsData);
-                    } catch (error) {
-                        console.error("Failed to fetch jobs data after multiple retries:", error);
-                        jobGrid.innerHTML = `<p class="text-center text-red-400 col-span-full">Could not load job listings. Please check your network connection.</p>`;
-                    }
-                    
-                    try {
-                        const referralsResponse = await retryFetch(REFERRALS_JSON_URL);
-                        referralsData = await referralsResponse.json();
-                        console.log("Fetched referrals data:", referralsData);
-                    } catch (error) {
-                        console.error("Failed to fetch referrals data after multiple retries:", error);
-                        referralGrid.innerHTML = `<p class="text-center text-red-400 col-span-full">Could not load referral listings. Please check your network connection.</p>`;
-                    }
+                    const jobsResponse = await retryFetch(JOBS_JSON_URL);
+                    const jobsData = await jobsResponse.json();
                     
                     allJobs = (jobsData && Array.isArray(jobsData.jobs)) ? jobsData.jobs : [];
-                    allReferrals = (referralsData && Array.isArray(referralsData.referrals)) ? referralsData.referrals : [];
                     
                     filteredJobs = [...allJobs];
-                    filteredReferrals = [...allReferrals];
 
-                    populateFilters(allJobs, allReferrals);
+                    populateFilters(allJobs);
                     displayJobs();
-                    displayReferrals();
                     renderResources();
 
                 } catch (error) {
-                    // This top-level catch will now only run if something truly unexpected happens
-                    console.error("An unexpected error occurred during data fetching:", error);
+                    console.error("Failed to fetch job data after multiple retries:", error);
+                    jobGrid.innerHTML = `<p class="text-center text-red-400 col-span-full">Could not load job listings. Please check your network connection.</p>`;
                 } finally {
                     loadingJobsSpinner.classList.add('hidden');
-                    loadingReferralsSpinner.classList.add('hidden');
                 }
             }
 
@@ -392,37 +352,6 @@
                 loadMoreJobsBtn.classList.toggle('hidden', filteredJobs.length <= end);
             };
 
-            const displayReferrals = () => {
-                const start = (referralsCurrentPage - 1) * CARDS_PER_PAGE;
-                const end = start + CARDS_PER_PAGE;
-                const referralsToDisplay = filteredReferrals.slice(start, end);
-
-                if (referralsCurrentPage === 1) referralGrid.innerHTML = '';
-                
-                if (referralsToDisplay.length > 0) {
-                    referralsToDisplay.forEach(referral => {
-                        const referralCard = document.createElement('div');
-                        referralCard.className = 'referral-card bg-gray-900 border border-gray-800 rounded-xl p-4 flex flex-col space-y-3 hover:border-orange-500 transition-colors';
-                        
-                        referralCard.innerHTML = `
-                            <div class="flex items-center space-x-3">
-                                <img src="${referral['Referred Company Logo']}" alt="${referral['Referred Company']} Logo" class="w-12 h-12 rounded-lg object-cover bg-gray-800" onerror="this.replaceWith(createDefaultLogo('${referral['Referred Company']}'))">
-                                <div>
-                                    <h3 class="text-sm font-semibold text-white">${referral['Referred Role']}</h3>
-                                    <p class="text-xs text-gray-400">at ${referral['Referred Company']}</p>
-                                </div>
-                            </div>
-                            <p class="text-sm text-gray-400">Referred by <span class="font-medium text-white">${referral['Referrer Name']}</span></p>
-                            <button class="w-full text-center bg-gray-700 hover:bg-gray-600 text-white font-semibold py-2 rounded-lg text-sm transition-colors">Request Referral</button>
-                        `;
-                        referralGrid.appendChild(referralCard);
-                    });
-                }
-                
-                noReferralsResultsMessage.classList.toggle('hidden', filteredReferrals.length > 0 || referralsToDisplay.length > 0);
-                loadMoreReferralsBtn.classList.toggle('hidden', filteredReferrals.length <= end);
-            };
-
             const renderResources = () => {
                 const resourcesData = [
                     { title: 'Resume Builder', icon: '<i class="fas fa-file-alt"></i>', description: 'Craft the perfect resume with our AI-powered builder.' },
@@ -442,9 +371,9 @@
                 });
             };
 
-            const populateFilters = (jobs, referrals) => {
-                const allRoles = [...new Set(jobs.map(j => j['Job Title']).concat(referrals.map(r => r['Referred Role'])).filter(Boolean))].sort();
-                const allLocations = [...new Set(jobs.map(j => j.Location).concat(referrals.map(r => r['Referred Location'])).filter(Boolean))].sort();
+            const populateFilters = (jobs) => {
+                const allRoles = [...new Set(jobs.map(j => j['Job Title']).filter(Boolean))].sort();
+                const allLocations = [...new Set(jobs.map(j => j.Location).filter(Boolean))].sort();
 
                 // Mobile Filters
                 mobileRoleFiltersContainer.innerHTML = '';
@@ -471,7 +400,6 @@
 
             const applyFiltersAndRender = () => {
                 jobsCurrentPage = 1;
-                referralsCurrentPage = 1;
                 const searchTerm = (isMobile ? mobileSearchInput.value : desktopSearchInput.value).toLowerCase();
                 
                 let selectedRole = '';
@@ -493,14 +421,7 @@
                     (selectedRole === '' || job['Job Title'] === selectedRole)
                 );
                 
-                filteredReferrals = allReferrals.filter(referral =>
-                    (searchTerm === '' || referral['Referred Role'].toLowerCase().includes(searchTerm) || referral['Referred Company'].toLowerCase().includes(searchTerm)) &&
-                    (selectedLocation === '' || referral['Referred Location'] === selectedLocation) &&
-                    (selectedRole === '' || referral['Referred Role'] === selectedRole)
-                );
-
                 displayJobs();
-                displayReferrals();
             };
 
             const switchPage = (pageId) => {
@@ -563,7 +484,6 @@
             });
             
             loadMoreJobsBtn.addEventListener('click', () => { jobsCurrentPage++; displayJobs(); });
-            loadMoreReferralsBtn.addEventListener('click', () => { referralsCurrentPage++; displayReferrals(); });
             modalOverlay.addEventListener('click', (e) => { if (e.target === modalOverlay) closeModal(); });
 
 
