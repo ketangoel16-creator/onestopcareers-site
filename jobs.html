@@ -264,28 +264,28 @@
 
   <!-- Pre-loaded data -->
   <script id="preloaded-jobs" type="application/json">
-    [
-      { "id": 1, "Job Title": "Senior Frontend Developer", "Company": "Innovate Inc.", "Location": "San Francisco, CA", "Description": "Join our team to build next-gen web applications using React and TypeScript. 5+ years of experience required.", "Link": "#" },
-      { "id": 2, "Job Title": "Product Manager", "Company": "Solutions Co.", "Location": "New York, NY", "Description": "Define product vision, strategy, and roadmap. Work closely with engineering, design, and marketing teams.", "Link": "#" }
-    ]
-  </script>
-  <script id="preloaded-referrals" type="application/json">
-    [
-      {"Name": "Alex Johnson", "Designation": "Engineering Manager", "Company name": "Innovate Inc.", "LinkedIn ID url": "#"},
-      {"Name": "Brenda Smith", "Designation": "Senior Recruiter", "Company name": "Solutions Co.", "LinkedIn ID url": "#"}
-    ]
+  {
+    "jobs": []
+  }
   </script>
 
-  <!-- Scripts -->
-  <script src="main.js"></script>
   <script>
-    // --- DOM Elements ---
+    // Change this URL to your GitHub JSON URL here
+    const JOBS_API_URL = 'https://ketangoel16-creator.github.io/onestopcareers-data/jobs.json';
+
+    let jobs = [];
+    let filteredJobs = [];
+    let currentJobIndex = 0;
+    const jobsPerPage = 8;
+
     const jobBoard = document.getElementById('job-board');
-    const jobSearch = document.getElementById('job-search');
+    const jobSearchInput = document.getElementById('job-search');
     const companyFilterBtn = document.getElementById('company-filter-btn');
     const locationFilterBtn = document.getElementById('location-filter-btn');
     const seeMoreJobsBtn = document.getElementById('see-more-jobs-btn');
     const seeMoreJobsContainer = document.getElementById('see-more-jobs-container');
+    const jobBoardLoading = document.getElementById('job-board-loading');
+
     const jobModal = document.getElementById('job-modal');
     const modalCloseBtn = jobModal.querySelector('.close-btn');
     const modalTitle = document.getElementById('modal-title');
@@ -293,364 +293,178 @@
     const modalDescription = document.getElementById('modal-description');
     const modalApplyBtn = document.getElementById('modal-apply-btn');
     const modalShareBtn = document.getElementById('modal-share-btn');
-    const toast = document.getElementById('toast');
-    const referralGrid = document.getElementById('referral-grid');
-    const referralSearch = document.getElementById('referral-search');
-    const referralCompanyFilterBtn = document.getElementById('referral-company-filter-btn');
-    const seeMoreReferralsBtn = document.getElementById('see-more-referrals-btn');
-    const seeMoreReferralsContainer = document.getElementById('see-more-referrals-container');
+
+    // Filter modal elements
     const filterModal = document.getElementById('filter-modal');
     const filterModalTitle = document.getElementById('filter-modal-title');
+    const filterModalClose = document.getElementById('filter-modal-close');
     const filterModalSearch = document.getElementById('filter-modal-search');
     const filterModalList = document.getElementById('filter-modal-list');
-    const filterModalClose = document.getElementById('filter-modal-close');
-    
-    let autoRefreshToggle, autoRefreshToggleMobile;
-    let autoRefreshIntervalId = null;
-    let autoScrollInterval = null;
 
-    // --- State Variables ---
-    let jobsPerPage = 8;
-    let currentJobPage = 1;
-    let allJobs = [];
-    let displayedJobs = [];
-    let currentCompanyFilter = 'All';
-    let currentLocationFilter = 'All';
+    // Toast
+    const toast = document.getElementById('toast');
 
-    let referralsPerPage = 6;
-    let currentReferralPage = 1;
-    let allReferrals = [];
-    let displayedReferrals = [];
-    let currentReferralCompanyFilter = 'All';
-
-    // --- Config ---
-    const CACHE_DURATION = 6 * 60 * 60 * 1000;
-    const REFRESH_INTERVAL = 60 * 1000;
-    const JOBS_API_URL = 'https://script.google.com/macros/s/AKfycbzxRN194Nx7sio2lGw7yiWBjL63h1eRstGJMCVrrrxzn1pKq2NThKz_GUKtrdQA2Q/exec';
-    const REFERRALS_API_URL = 'https://script.google.com/macros/s/AKfycbxkrDnF3ABiwsf2M8dD7hKtCGwQ4XSRdQebmJOqL8jsSpdQtCwrb6xH7KeHxKUoK0IB/exec';
-
-    // --- Modal & Toast Logic ---
-    const openJobModal = (job) => {
-      modalTitle.textContent = job['Job Title'];
-      modalCompanyLocation.textContent = `${job['Company']} - ${job['Location']}`;
-      modalDescription.textContent = job['Description'];
-      modalApplyBtn.href = job['Link'];
-      modalShareBtn.dataset.jobId = job.id;
-      jobModal.style.display = 'block';
-    };
-    const closeModal = (modal) => {
-        modal.style.display = 'none';
-    };
-    modalCloseBtn.addEventListener('click', () => closeModal(jobModal));
-    filterModalClose.addEventListener('click', () => closeModal(filterModal));
-    window.addEventListener('click', (event) => {
-      if (event.target === jobModal) closeModal(jobModal);
-      if (event.target === filterModal) closeModal(filterModal);
-    });
-    const showToast = (message) => {
-        toast.textContent = message;
-        toast.classList.add('show');
-        setTimeout(() => { toast.classList.remove('show'); }, 3000);
-    };
-    modalShareBtn.addEventListener('click', (e) => {
-        const jobId = e.currentTarget.dataset.jobId;
-        const url = `${window.location.origin}${window.location.pathname}?jobId=${jobId}`;
-        const tempTextArea = document.createElement('textarea');
-        tempTextArea.value = url;
-        document.body.appendChild(tempTextArea);
-        tempTextArea.select();
-        document.execCommand('copy');
-        document.body.removeChild(tempTextArea);
-        showToast('Job link copied to clipboard!');
-    });
-
-    // --- Job Rendering ---
-    const renderJobs = (jobs, page = 1, append = false) => {
-      if (!append) jobBoard.innerHTML = '';
-      const start = (page - 1) * jobsPerPage;
-      const end = start + jobsPerPage;
-      const paginatedJobs = jobs.slice(start, end);
-
-      if (paginatedJobs.length === 0 && !append) {
-        jobBoard.innerHTML = '<p class="text-gray-400 text-center col-span-full">No jobs found.</p>';
-      } else {
-        paginatedJobs.forEach(job => {
-          const companyInitial = (job.Company || 'C').charAt(0).toUpperCase();
-          const placeholderLogo = `https://placehold.co/128x128/1C1C1C/FFFFFF?text=${companyInitial}`;
-          const logoUrl = job['Company Logo URL'] || placeholderLogo;
-
-          const jobCard = document.createElement('div');
-          jobCard.className = 'job-card bg-[#1C1C1C] p-6 rounded-xl border border-gray-800 hover:border-orange-500/50 transition-colors duration-300 flex flex-col items-center text-center w-72';
-          jobCard.dataset.jobId = job.id;
-          
-          jobCard.innerHTML = `
-            <img src="${logoUrl}" alt="${job.Company} Logo" class="w-24 h-24 rounded-full mb-4 border-4 border-gray-700 object-cover" onerror="this.onerror=null;this.src='${placeholderLogo}';">
-            <div class="flex-grow flex flex-col justify-center">
-                <h4 class="text-lg font-bold text-white"></h4>
-                <p class="text-sm text-gray-400 font-medium mb-4"></p>
-            </div>
-            <a href="#" target="_blank" class="group mt-auto inline-flex items-center justify-center bg-orange-600 text-white py-2 px-6 rounded-full hover:bg-orange-700 transition-colors text-sm font-semibold">
-                Apply Now
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-2 transform transition-transform duration-200 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                </svg>
-            </a>
-          `;
-          jobCard.querySelector('h4').textContent = job['Job Title'] || 'N/A';
-          jobCard.querySelector('p').textContent = `${job['Company'] || 'N/A'} - ${job['Location'] || 'N/A'}`;
-          jobCard.querySelector('a').href = job['Link'] || '#';
-          
-          jobCard.addEventListener('click', (e) => {
-            if (e.target.tagName.toLowerCase() !== 'a') {
-              const jobToOpen = allJobs.find(j => j.id == job.id);
-              if (jobToOpen) openJobModal(jobToOpen);
-            }
-          });
-          jobBoard.appendChild(jobCard);
-        });
+    async function fetchJobs() {
+      jobBoardLoading.style.display = 'grid';
+      jobBoard.style.display = 'none';
+      seeMoreJobsContainer.style.display = 'none';
+      try {
+        const response = await fetch(JOBS_API_URL);
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+        jobs = data.jobs || [];
+        filteredJobs = [...jobs];
+        currentJobIndex = 0;
+        renderJobs();
+        populateFilterButtons();
+      } catch (error) {
+        jobBoard.innerHTML = `<p class="text-red-500 text-center col-span-full">Failed to load jobs: ${error.message}</p>`;
+      } finally {
+        jobBoardLoading.style.display = 'none';
+        jobBoard.style.display = 'grid';
       }
+    }
 
-      seeMoreJobsContainer.style.display = end < jobs.length ? 'block' : 'none';
-    };
-    
-    // --- Referral Rendering ---
-     const renderReferrals = (referrals, page = 1, append = false) => {
-        if (!append) referralGrid.innerHTML = '';
-        const start = (page - 1) * referralsPerPage;
-        const end = start + referralsPerPage;
-        const paginatedReferrals = referrals.slice(start, end);
+    function renderJobs() {
+      const jobsToShow = filteredJobs.slice(0, currentJobIndex + jobsPerPage);
+      jobBoard.innerHTML = jobsToShow.map(job => {
+        return `
+          <article class="bg-[#1C1C1C] border border-gray-800 rounded-xl p-5 shadow-md w-full max-w-sm cursor-pointer hover:border-orange-600 transition" data-job-id="${job.id}">
+            <h3 class="text-lg font-bold text-orange-400">${job.title}</h3>
+            <p class="text-gray-400 font-semibold">${job.company} &bull; ${job.location}</p>
+            <p class="mt-2 text-gray-300 truncate" title="${job.description}">${job.description}</p>
+          </article>
+        `;
+      }).join('');
+      if (jobsToShow.length < filteredJobs.length) {
+        seeMoreJobsContainer.style.display = 'block';
+      } else {
+        seeMoreJobsContainer.style.display = 'none';
+      }
+    }
 
-        if (paginatedReferrals.length > 0) {
-            paginatedReferrals.forEach(prof => {
-                const card = document.createElement('a');
-                const referralLink = prof['LinkedIn ID url'] || prof['LinkedIn URL'] || prof['Link'] || '#';
-                card.href = referralLink;
-                card.target = '_blank';
-                card.className = 'block p-6 bg-[#1C1C1C] rounded-xl border border-gray-800 hover:border-orange-500/50 transition-all duration-300';
-                card.innerHTML = `
-                  <div class="flex items-center space-x-4">
-                    <div class="flex-shrink-0 h-12 w-12 flex items-center justify-center bg-orange-900/50 rounded-full">
-                        <svg class="w-7 h-7 text-orange-500" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                            <path d="M21.75 9.142c0-2.28-1.995-4.142-4.436-4.142H6.686C4.245 5 2.25 6.862 2.25 9.142v4.714c0 2.28 1.995 4.142 4.436 4.142h1.65v2.7l3.28-2.7h4.45c2.441 0 4.436-1.862 4.436-4.142V9.142zM7.5 12.428h9M7.5 10.286h9"></path>
-                        </svg>
-                    </div>
-                    <div>
-                      <h4 class="text-lg font-semibold text-white"></h4>
-                      <p class="text-gray-400"></p>
-                      <p class="text-sm text-orange-500 font-semibold">Message for Referral</p>
-                    </div>
-                  </div>
-                `;
-                card.querySelector('h4').textContent = prof['Name'] || 'N/A';
-                card.querySelector('p').textContent = `${prof['Designation']} at ${prof['Company name'] || 'N/A'}`;
-                referralGrid.appendChild(card);
-            });
-        } else if (!append) {
-            referralGrid.innerHTML = '<p class="text-gray-400 text-center col-span-3">No professionals found.</p>';
-        }
+    function populateFilterButtons() {
+      const companies = [...new Set(jobs.map(j => j.company))].sort();
+      const locations = [...new Set(jobs.map(j => j.location))].sort();
+      companyFilterBtn.textContent = `All Companies`;
+      locationFilterBtn.textContent = `All Locations`;
+      companyFilterBtn.dataset.options = JSON.stringify(['All Companies', ...companies]);
+      locationFilterBtn.dataset.options = JSON.stringify(['All Locations', ...locations]);
+    }
 
-        seeMoreReferralsContainer.style.display = end < referrals.length ? 'block' : 'none';
-    };
+    function filterJobs() {
+      const searchTerm = jobSearchInput.value.toLowerCase();
+      const selectedCompany = companyFilterBtn.textContent === 'All Companies' ? null : companyFilterBtn.textContent;
+      const selectedLocation = locationFilterBtn.textContent === 'All Locations' ? null : locationFilterBtn.textContent;
+      filteredJobs = jobs.filter(job => {
+        const matchesSearch = job.title.toLowerCase().includes(searchTerm) || job.company.toLowerCase().includes(searchTerm);
+        const matchesCompany = selectedCompany ? job.company === selectedCompany : true;
+        const matchesLocation = selectedLocation ? job.location === selectedLocation : true;
+        return matchesSearch && matchesCompany && matchesLocation;
+      });
+      currentJobIndex = 0;
+      renderJobs();
+    }
 
-    // --- Filtering Logic ---
-    const openFilterModal = (title, items, currentFilter, onSelect) => {
-        filterModalTitle.textContent = title;
-        const renderList = (filterItems) => {
-            filterModalList.innerHTML = '';
-            ['All', ...filterItems].forEach(item => {
-                const div = document.createElement('div');
-                div.textContent = item;
-                div.className = `p-2 cursor-pointer rounded-md hover:bg-gray-700 ${item === currentFilter ? 'bg-orange-600' : ''}`;
-                div.onclick = () => {
-                    onSelect(item);
-                    closeModal(filterModal);
-                };
-                filterModalList.appendChild(div);
-            });
-        };
-        renderList(items);
-        filterModalSearch.oninput = (e) => {
-            const searchTerm = e.target.value.toLowerCase();
-            renderList(items.filter(item => item.toLowerCase().includes(searchTerm)));
-        };
-        filterModal.style.display = 'block';
-    };
+    // Event Listeners
+    jobSearchInput.addEventListener('input', filterJobs);
 
-    const filterAndRenderJobs = () => {
-      const searchTerm = jobSearch.value.toLowerCase();
-      displayedJobs = allJobs.filter(j => 
-        ((j['Job Title'] || '').toLowerCase().includes(searchTerm) || (j['Company'] || '').toLowerCase().includes(searchTerm)) &&
-        (currentCompanyFilter === 'All' || j.Company === currentCompanyFilter) &&
-        (currentLocationFilter === 'All' || j.Location === currentLocationFilter)
-      );
-      currentJobPage = 1;
-      renderJobs(displayedJobs, currentJobPage);
-    };
-    
-    const filterAndRenderReferrals = () => {
-        const searchTerm = referralSearch.value.toLowerCase();
-        displayedReferrals = allReferrals.filter(p => 
-            ((p['Name'] || '').toLowerCase().includes(searchTerm) || (p['Designation'] || '').toLowerCase().includes(searchTerm)) &&
-            (currentReferralCompanyFilter === 'All' || p['Company name'] === currentReferralCompanyFilter)
-        );
-        currentReferralPage = 1;
-        renderReferrals(displayedReferrals, currentReferralPage);
-    };
-
-    // --- Data Fetching ---
-    const fetchAndCacheData = async (options) => {
-        const { url, cacheKey, setupFunction, forceRefresh = false } = options;
-        if (!forceRefresh) {
-            const cached = localStorage.getItem(cacheKey);
-            if (cached) {
-                const { timestamp, data } = JSON.parse(cached);
-                if (Date.now() - timestamp < CACHE_DURATION) {
-                    setupFunction(data);
-                    return;
-                }
-            }
-        }
-        try {
-            const response = await fetch(url);
-            const data = await response.json();
-            const dataWithIds = data.map((item, index) => ({ ...item, id: index + 1 }));
-            localStorage.setItem(cacheKey, JSON.stringify({ timestamp: Date.now(), data: dataWithIds }));
-            setupFunction(dataWithIds);
-        } catch (error) {
-            console.error(`Failed to fetch from ${url}:`, error);
-        }
-    };
-
-    const setupJobs = (data) => {
-        allJobs = data;
-        filterAndRenderJobs();
-        handleDeepLink();
-    };
-
-    const setupReferrals = (data) => {
-        allReferrals = data;
-        filterAndRenderReferrals();
-    };
-    
-    // --- App Logic ---
-    const handleToggleChange = (isChecked) => {
-        if(autoRefreshToggle) autoRefreshToggle.checked = isChecked;
-        if(autoRefreshToggleMobile) autoRefreshToggleMobile.checked = isChecked;
-        if (isChecked) {
-            autoRefreshIntervalId = setInterval(() => {
-                fetchAndCacheData({ url: JOBS_API_URL, cacheKey: 'jobs_cache', setupFunction: setupJobs, forceRefresh: true });
-                fetchAndCacheData({ url: REFERRALS_API_URL, cacheKey: 'referrals_cache', setupFunction: setupReferrals, forceRefresh: true });
-            }, REFRESH_INTERVAL);
-        } else if (autoRefreshIntervalId) {
-            clearInterval(autoRefreshIntervalId);
-        }
-    };
-
-    const handleDeepLink = () => {
-        const jobId = new URLSearchParams(window.location.search).get('jobId');
-        if (jobId) {
-            const jobToOpen = allJobs.find(j => j.id == jobId);
-            if (jobToOpen) openJobModal(jobToOpen);
-        }
-    };
-
-    const updateItemsPerPage = () => {
-        if (window.innerWidth < 768) {
-            jobsPerPage = 4;
-            referralsPerPage = 6;
-        } else {
-            jobsPerPage = 8;
-            referralsPerPage = 12;
-        }
-    };
-
-    const startAutoScroll = () => {
-        if (window.innerWidth >= 768) return; // Only run on mobile
-        const carousel = document.querySelector('.toolkit-carousel');
-        if (!carousel) return;
-        stopAutoScroll(); // Clear any existing interval
-        autoScrollInterval = setInterval(() => {
-            const scrollWidth = carousel.scrollWidth;
-            const clientWidth = carousel.clientWidth;
-            if (carousel.scrollLeft + clientWidth >= scrollWidth) {
-                carousel.scrollTo({ left: 0, behavior: 'smooth' });
-            } else {
-                carousel.scrollBy({ left: clientWidth / 2, behavior: 'smooth' });
-            }
-        }, 3000);
-        carousel.addEventListener('touchstart', stopAutoScroll, { passive: true });
-    };
-
-    const stopAutoScroll = () => {
-        clearInterval(autoScrollInterval);
-    };
-
-    // --- Initial Load & Event Listeners ---
-    document.addEventListener('DOMContentLoaded', () => {
-        updateItemsPerPage();
-        try { setupJobs(JSON.parse(document.getElementById('preloaded-jobs').textContent)); } catch (e) {}
-        try { setupReferrals(JSON.parse(document.getElementById('preloaded-referrals').textContent)); } catch (e) {}
-        setTimeout(() => {
-            fetchAndCacheData({ url: JOBS_API_URL, cacheKey: 'jobs_cache', setupFunction: setupJobs });
-            fetchAndCacheData({ url: REFERRALS_API_URL, cacheKey: 'referrals_cache', setupFunction: setupReferrals });
-        }, 500);
-
-        jobSearch.addEventListener('input', filterAndRenderJobs);
-        companyFilterBtn.addEventListener('click', () => {
-            const companies = [...new Set(allJobs.map(j => j.Company).filter(Boolean))].sort();
-            openFilterModal('Filter by Company', companies, currentCompanyFilter, (selection) => {
-                currentCompanyFilter = selection;
-                companyFilterBtn.textContent = selection;
-                filterAndRenderJobs();
-            });
-        });
-        locationFilterBtn.addEventListener('click', () => {
-            const locations = [...new Set(allJobs.map(j => j.Location).filter(Boolean))].sort();
-            openFilterModal('Filter by Location', locations, currentLocationFilter, (selection) => {
-                currentLocationFilter = selection;
-                locationFilterBtn.textContent = selection;
-                filterAndRenderJobs();
-            });
-        });
-        seeMoreJobsBtn.addEventListener('click', () => {
-            currentJobPage++;
-            renderJobs(displayedJobs, currentJobPage, true);
-        });
-
-        referralSearch.addEventListener('input', filterAndRenderReferrals);
-        referralCompanyFilterBtn.addEventListener('click', () => {
-            const companies = [...new Set(allReferrals.map(r => r['Company name']).filter(Boolean))].sort();
-            openFilterModal('Filter by Company', companies, currentReferralCompanyFilter, (selection) => {
-                currentReferralCompanyFilter = selection;
-                referralCompanyFilterBtn.textContent = selection;
-                filterAndRenderReferrals();
-            });
-        });
-        seeMoreReferralsBtn.addEventListener('click', () => {
-            currentReferralPage++;
-            renderReferrals(displayedReferrals, currentReferralPage, true);
-        });
-
-        window.addEventListener('resize', () => { 
-            updateItemsPerPage(); 
-            filterAndRenderJobs();
-            filterAndRenderReferrals();
-            startAutoScroll();
-        });
-
-        startAutoScroll();
+    seeMoreJobsBtn.addEventListener('click', () => {
+      currentJobIndex += jobsPerPage;
+      renderJobs();
     });
 
-    document.addEventListener('headerLoaded', () => {
-        autoRefreshToggle = document.getElementById('auto-refresh-toggle');
-        autoRefreshToggleMobile = document.getElementById('auto-refresh-toggle-mobile');
-        if (new URLSearchParams(window.location.search).get('dev') === 'true') {
-            document.querySelectorAll('.dev-feature').forEach(el => el.classList.remove('hidden'));
-        }
-        if(autoRefreshToggle) autoRefreshToggle.addEventListener('change', (e) => handleToggleChange(e.target.checked));
-        if(autoRefreshToggleMobile) autoRefreshToggleMobile.addEventListener('change', (e) => handleToggleChange(e.target.checked));
+    // Job click opens modal
+    jobBoard.addEventListener('click', (e) => {
+      const article = e.target.closest('article[data-job-id]');
+      if (!article) return;
+      const jobId = article.dataset.jobId;
+      const job = jobs.find(j => j.id == jobId);
+      if (!job) return;
+      modalTitle.textContent = job.title;
+      modalCompanyLocation.textContent = `${job.company} • ${job.location}`;
+      modalDescription.textContent = job.description;
+      modalApplyBtn.href = job.url || '#';
+      jobModal.style.display = 'block';
     });
+
+    modalCloseBtn.addEventListener('click', () => {
+      jobModal.style.display = 'none';
+    });
+
+    window.addEventListener('click', (e) => {
+      if (e.target == jobModal) {
+        jobModal.style.display = 'none';
+      }
+      if (e.target == filterModal) {
+        filterModal.style.display = 'none';
+      }
+    });
+
+    modalShareBtn.addEventListener('click', () => {
+      const url = modalApplyBtn.href;
+      navigator.clipboard.writeText(url).then(() => {
+        showToast();
+      });
+    });
+
+    function showToast() {
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2500);
+    }
+
+    // Filter Modal Logic (for company & location filters)
+    function openFilterModal(title, options, onSelect) {
+      filterModalTitle.textContent = title;
+      filterModalSearch.value = '';
+      filterModalList.innerHTML = '';
+      options.forEach(opt => {
+        const btn = document.createElement('button');
+        btn.textContent = opt;
+        btn.className = 'w-full text-left p-2 rounded hover:bg-gray-700 transition';
+        btn.addEventListener('click', () => {
+          onSelect(opt);
+          filterModal.style.display = 'none';
+        });
+        filterModalList.appendChild(btn);
+      });
+      filterModal.style.display = 'block';
+
+      filterModalSearch.focus();
+
+      filterModalSearch.oninput = () => {
+        const val = filterModalSearch.value.toLowerCase();
+        Array.from(filterModalList.children).forEach(child => {
+          child.style.display = child.textContent.toLowerCase().includes(val) ? '' : 'none';
+        });
+      };
+    }
+
+    companyFilterBtn.addEventListener('click', () => {
+      const options = JSON.parse(companyFilterBtn.dataset.options || '["All Companies"]');
+      openFilterModal('Select Company', options, (selection) => {
+        companyFilterBtn.textContent = selection;
+        filterJobs();
+      });
+    });
+
+    locationFilterBtn.addEventListener('click', () => {
+      const options = JSON.parse(locationFilterBtn.dataset.options || '["All Locations"]');
+      openFilterModal('Select Location', options, (selection) => {
+        locationFilterBtn.textContent = selection;
+        filterJobs();
+      });
+    });
+
+    filterModalClose.addEventListener('click', () => {
+      filterModal.style.display = 'none';
+    });
+
+    // Load jobs on page load
+    window.addEventListener('load', fetchJobs);
+
   </script>
-
 </body>
 </html>
