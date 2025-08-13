@@ -1,0 +1,5 @@
+[build]
+  # The directory to publish the final build files to
+  publish = "_site"
+  # The command Netlify runs to build your site
+  command = "jekyll build"
