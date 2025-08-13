@@ -331,14 +331,36 @@
     // ... (All other functions like renderJobs, filterAndRenderJobs, modals, etc. are unchanged)
 
     // --- Initial Load & Event Listeners ---
-    document.addEventListener('DOMContentLoaded', () => {
+  document.addEventListener('DOMContentLoaded', () => {
+    // This part stays the same
+    if (typeof updateItemsPerPage === 'function') {
         updateItemsPerPage();
-        
-        setupJobs(preloadedJobs);
+    }
+
+    // This is the new part that fetches your live data
+    fetch('https://ketangoel16-creator.github.io/onestopcareers-data/jobs.json')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Network response was not ok");
+            }
+            return response.json();
+        })
+        .then(data => {
+            // This calls your existing setupJobs function with live data
+            setupJobs(data);
+        })
+        .catch(error => {
+            console.error("Error loading jobs from CDN. Falling back to an empty array.", error);
+            setupJobs([]); // On error, it will show no jobs instead of crashing
+        });
+
+    // This part for referrals stays the same
+    if (typeof setupReferrals === 'function' && typeof preloadedReferrals !== 'undefined') {
         setupReferrals(preloadedReferrals);
-        
-        // ... (the rest of the event listeners and functions remain the same)
-    });
+    }
+
+    // ... Assuming all your other event listeners are here, they remain untouched ...
+});
   </script>
 
 </body>
