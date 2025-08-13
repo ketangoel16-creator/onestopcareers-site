@@ -1,197 +1,45 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>OneStopCareers - Your Gateway to Referral-Based Jobs</title>
-    <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&display=swap" rel="stylesheet">
-    
-    <style>
-        /* --- RESET & TAILWIND BASE --- */
-        :root { --orange-500: #f97316; --orange-600: #ea580c; }
-        *,::before,::after {box-sizing:border-box;border-width:0;border-style:solid;border-color:#374151;}
-        html {line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;tab-size:4;font-family: 'Manrope', sans-serif;}
-        body {margin:0;line-height:inherit;background-color:#121212;color:#EAEAEA;}
-        h1,h2,h3,h4,p,button,ul,li,a,span,div,header,footer,nav {margin:0;padding:0;}
-        a {color:inherit;text-decoration:inherit}
-        button {font-family:inherit;font-size:100%;background-color:transparent;background-image:none;cursor:pointer;text-align:left;}
-        svg {display: block; vertical-align: middle;}
-        
-        /* --- COMPILED TAILWIND UTILITIES & CUSTOM STYLES --- */
-        .container {width:100%;max-width:80rem;margin-left:auto;margin-right:auto;padding-left:1rem;padding-right:1rem;}
-        .text-center{text-align:center;} .sticky{position:sticky;} .top-0{top:0;} .z-50{z-index:50;}
-        .bg-black{background-color:#000;} .bg-black\/80{background-color:rgba(0,0,0,0.8);}
-        .backdrop-blur-sm{--tw-backdrop-blur:blur(4px);backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);}
-        .border-b{border-bottom-width:1px;} .border-t{border-top-width:1px;} .border-gray-800{border-color:#1f2937;}
-        .py-4{padding-top:1rem;padding-bottom:1rem;} .py-12{padding-top:3rem;padding-bottom:3rem;}
-        .flex{display:flex;} .items-center{align-items:center;} .justify-between{justify-content:space-between;}
-        .gap-3{gap:0.75rem;} .text-2xl{font-size:1.5rem;line-height:2rem;} .font-extrabold{font-weight:800;}
-        .text-white{color:#fff;} .font-bold{font-weight:700;} .font-medium{font-weight:500;} .text-gray-300{color:#d1d5db;}
-        .hidden{display:none;} .space-x-8>:not([hidden])~:not([hidden]){margin-left:2rem;}
-        .hover\:text-white:hover{color:#fff;} .transition-colors{transition-property:color,background-color,border-color,text-decoration-color,fill,stroke;transition-timing-function:cubic-bezier(0.4,0,0.2,1);transition-duration:150ms;}
-        .relative{position:relative;} .gap-1{gap:0.25rem;} .w-4{width:1rem;} .h-4{height:1rem;}
-        .dropdown-menu{position:absolute;top:100%;margin-top:0.5rem;width:12rem;background-color:#1C1C1C;border-width:1px;border-color:#374151;border-radius:0.5rem;box-shadow:0 10px 15px -3px rgba(0,0,0,0.1),0 4px 6px -2px rgba(0,0,0,0.05);z-index:60;}
-        .block{display:block;} .px-4{padding-left:1rem;padding-right:1rem;} .py-2{padding-top:0.5rem;padding-bottom:0.5rem;} .hover\:bg-gray-800:hover{background-color:#1f2937;}
-        .text-gray-500{color:#6b7280;} .tracking-wider{letter-spacing:0.05em;} .uppercase{text-transform:uppercase;} .mt-4{margin-top:1rem;} .space-y-2>:not([hidden])~:not([hidden]){margin-top:0.5rem;} .text-base{font-size:1rem;line-height:1.5rem;}
-        .mt-8{margin-top:2rem;} .pt-8{padding-top:2rem;} .justify-between{justify-content:space-between;} .space-x-6>:not([hidden])~:not([hidden]){margin-left:1.5rem;} .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border-width:0;}
-        .h-6{height:1.5rem;} .w-6{width:1.5rem;} .fill-currentColor{fill:currentColor;}
+---
+title: Home
+layout: base.html
+---
 
-        /* Journey Component & Other Page Styles */
-        .hero-section {padding: 6rem 0 5rem;}
-        .hero-section h1 {font-size:3rem;line-height:1.1;font-weight:800;}
-        .hero-section p {margin-top:1.5rem;max-width:42rem;margin-left:auto;margin-right:auto;font-size:1.125rem;line-height:1.75rem;color:#9ca3af;}
-        .cta-button {display:inline-flex;align-items:center;justify-content:center;margin-top:2.5rem;background-color:#ea580c;color:#ffffff;padding:1rem 2rem;border-radius:9999px;font-weight:700;transition:background-color 0.2s ease-in-out;box-shadow:0 0 25px rgba(234,88,12,0.3);}
-        .cta-button:hover {background-color:var(--orange-500);}
-        #journey-section {padding:5rem 0;}
-        .section-title {font-size:2.25rem;line-height:2.5rem;font-weight:800;}
-        .section-subtitle {margin-top:1rem;max-width:48rem;margin-left:auto;margin-right:auto;color:#9ca3af;}
-        .journey-container {margin-top:3rem;position:relative;overflow:hidden;}
-        .views-wrapper {display:flex;transition: transform 0.45s cubic-bezier(0.65, 0, 0.35, 1);}
-        .journey-view {width:100%;flex-shrink:0;}
-        .journey-container.step-2-active .views-wrapper {transform: translateX(-100%);}
-        .card-grid {display:grid;gap:1.5rem;grid-template-columns:repeat(1,1fr);}
-        .stage-card {background-color:#1C1C1C;border:1px solid #333;border-radius:1rem;padding:1.5rem;transition:transform 0.3s ease,box-shadow 0.3s ease;}
-        .stage-card:focus-visible, .back-button:focus-visible {outline:2px solid var(--orange-500); outline-offset:2px; border-radius: 1rem;}
-        .stage-card:hover {transform:translateY(-5px);box-shadow:0 10px 25px -5px rgba(0,0,0,0.3);}
-        .stage-card svg {width:2rem;height:2rem;margin-bottom:1rem;color:var(--orange-500);}
-        .stage-card h3 {font-size:1.125rem;font-weight:700;margin-bottom:0.5rem;color:#EAEAEA;}
-        .stage-card p {color:#9ca3af; font-size: 0.9rem; line-height: 1.6;}
-        .step-2-header {text-align:left; margin-bottom: 2.5rem;}
-        .back-button {display:inline-flex;align-items:center;gap:0.5rem;color:#9ca3af;margin-bottom:1.5rem;font-weight:500;padding:0.25rem;}
-        .back-button:hover {color:#ffffff;}
-        .back-button svg {width:1.25rem;height:1.25rem;}
-        #step-2-description {margin-top: 0.5rem;}
-        #progress-indicator {color: #9ca3af; font-weight: 500; margin-top: 1rem;}
-        #home-testimonials {background-color:rgba(17,24,39,0.5); padding:5rem 0;}
-        .testimonials-grid {margin-top:3rem;display:grid;gap:2rem;}
-        .testimonial-card {background-color:#1f2937;border:1px solid #374151;padding:2rem;border-radius:1rem;text-align:left;}
-        .testimonial-card p:first-child {color:#d1d5db;font-style:italic;}
-        .testimonial-card p:last-child {margin-top:1rem;font-weight:600;color:var(--orange-500);}
-        .rotate-180 {transform: rotate(180deg);}
+<main>
+    <section class="hero-section">
+        <div class="container text-center">
+            <h1>Your Career Struggles End Here.</h1>
+            <p>Applying to more jobs is like treating symptoms without a diagnosis. We help you pinpoint the real problem in your career journey, then provide the precise solution to move you forward.</p>
+            <a href="#journey-section" class="cta-button">Find Your Career Stage</a>
+        </div>
+    </section>
 
-        @media(min-width:768px){
-            .md\:flex{display:flex;} .md\:hidden{display:none;}
-            .md\:order-1{order:1;} .md\:order-2{order:2;}
-            .md\:mt-0{margin-top:0;}
-            .md\:grid-cols-2{grid-template-columns:repeat(2,minmax(0,1fr));}
-            .md\:grid-cols-4{grid-template-columns:repeat(4,minmax(0,1fr));}
-            .card-grid-main{grid-template-columns:repeat(2,1fr);}
-            .hero-section{padding: 8rem 0 6rem;}
-            .hero-section h1{font-size:4.25rem;}
-        }
-        @media(min-width:1024px){
-            .card-grid-main{grid-template-columns:repeat(4,1fr);}
-            .card-grid-sub{grid-template-columns:repeat(3,1fr);}
-        }
-    </style>
-</head>
-<body>
-
-    <div id="header-placeholder"></div>
-
-    <main>
-        <section class="hero-section">
-            <div class="container text-center">
-                <h1>Your Career Struggles End Here.</h1>
-                <p>Applying to more jobs is like treating symptoms without a diagnosis. We help you pinpoint the real problem in your career journey, then provide the precise solution to move you forward.</p>
-                <a href="#journey-section" class="cta-button">Find Your Career Stage</a>
-            </div>
-        </section>
-
-        <section id="journey-section">
-            <div class="container text-center">
-                <h2 class="section-title">Find your starting point.</h2>
-                <p class="section-subtitle">Every journey starts with a single, clear step. Select where you are in your career to reveal a personalized path forward.</p>
-                <div id="journey-container" class="journey-container">
-                    <div class="views-wrapper">
-                        <div id="step-1-view" class="journey-view"><div id="stage-selection-grid" class="card-grid card-grid-main"></div></div>
-                        <div id="step-2-view" class="journey-view">
-                            <div class="step-2-header">
-                                <button id="back-button" class="back-button"><svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" /></svg>Back to All Stages</button>
-                                <h2 id="step-2-title" class="section-title"></h2>
-                                <p id="step-2-description" class="section-subtitle" style="margin-left: 0;"></p>
-                                <p id="progress-indicator"></p>
-                            </div>
-                            <div id="sub-stage-grid" class="card-grid card-grid-sub"></div>
+    <section id="journey-section">
+        <div class="container text-center">
+            <h2 class="section-title">Find your starting point.</h2>
+            <p class="section-subtitle">Every journey starts with a single, clear step. Select where you are in your career to reveal a personalized path forward.</p>
+            <div id="journey-container" class="journey-container">
+                <div class="views-wrapper">
+                    <div id="step-1-view" class="journey-view"><div id="stage-selection-grid" class="card-grid card-grid-main"></div></div>
+                    <div id="step-2-view" class="journey-view">
+                        <div class="step-2-header">
+                            <button id="back-button" class="back-button"><svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" /></svg>Back to All Stages</button>
+                            <h2 id="step-2-title" class="section-title"></h2>
+                            <p id="step-2-description" class="section-subtitle" style="margin-left: 0;"></p>
+                            <p id="progress-indicator"></p>
                         </div>
+                        <div id="sub-stage-grid" class="card-grid card-grid-sub"></div>
                     </div>
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <section id="home-testimonials">
-            <div class="container text-center">
-                <h2 class="section-title">What Our Users Are Saying</h2>
-                <div class="testimonials-grid md:grid-cols-2">
-                    <div class="testimonial-card"><p>"The resume templates and interview questions were a game-changer. I felt so much more prepared and confident."</p><p>- David L., Job Seeker</p></div>
-                    <div class="testimonial-card"><p>"Ketan's guidance was instrumental in helping me transition from a service-based role to a product company. His insights were invaluable."</p><p>- Michael J., Product Manager</p></div>
-                </div>
+    <section id="home-testimonials">
+        <div class="container text-center">
+            <h2 class="section-title">What Our Users Are Saying</h2>
+            <div class="testimonials-grid md:grid-cols-2">
+                <div class="testimonial-card"><p>"The resume templates and interview questions were a game-changer. I felt so much more prepared and confident."</p><p>- David L., Job Seeker</p></div>
+                <div class="testimonial-card"><p>"Ketan's guidance was instrumental in helping me transition from a service-based role to a product company. His insights were invaluable."</p><p>- Michael J., Product Manager</p></div>
             </div>
-        </section>
-    </main>
-    
-    <div id="footer-placeholder"></div>
-
-    <script src="main.js"></script>
-    
-    <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const journeyContainer = document.getElementById('journey-container');
-        if (!journeyContainer) return; // Only run if the component exists on the page
-
-        const stagesMap = {
-            'starting-out': { title: "Just Starting Out", description: "You're at the very beginning, trying to find your footing and choose a direction that excites you. Let's build your foundation.", icon: `<svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" /></svg>`, substages: [ { name: "Explore Roles", subDescription: "Discover different career paths that match your interests and skills." }, { name: "Finalize a Role", subDescription: "Commit to a specific path and understand what it takes to succeed." }, { name: "Prepare a Roadmap", subDescription: "Create a step-by-step plan for the skills and experience you'll need." } ] },
-            'skill-up': { title: "Skill Up & Search", description: "You know your target role, but need the skills and a powerful resume to get noticed by recruiters.", icon: `<svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 10.5L12 3m0 0l7.5 7.5M12 3v18" /></svg>`, substages: [ { name: "Find Learning Resources", subDescription: "Identify the best courses, books, and projects to build your expertise." }, { name: "Gain Practical Exposure", subDescription: "Apply your knowledge through internships, projects, or freelance work." }, { name: "Build a Killer Resume", subDescription: "Craft a resume that highlights your new skills and gets past ATS filters." } ] },
-            'interview-loop': { title: "In the Interview Loop", description: "You're landing interviews but not the offers. It's time to master the art of the interview process.", icon: `<svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m-7.28-2.72a3 3 0 01-4.682-2.72a9.094 9.094 0 013.741-.479m-4.26 9.574a9.094 9.094 0 003.741.479a3 3 0 004.682 2.72m-7.28 2.72a3 3 0 014.682 2.72a9.094 9.094 0 01-3.741.479m-4.26-9.574a9.094 9.094 0 01-3.741-.479a3 3 0 014.682-2.72m7.28-2.72a3 3 0 00-4.682-2.72a9.094 9.094 0 00-3.741-.479M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>`, substages: [ { name: "Application Strategy", subDescription: "Optimize how and where you apply to maximize your interview chances." }, { name: "Master Interview Rounds", subDescription: "Prepare for technical, behavioral, and situational interview questions." }, { name: "Handle Rejections", subDescription: "Learn from feedback and stay motivated after a 'no'." } ] },
-            'stuck': { title: "Stuck or Unmotivated", description: "Your career has stalled, or your motivation has faded. Let's find a new perspective and get you moving again.", icon: `<svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m0-10.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.75c0 5.592 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.57-.598-3.75h-.152c-3.196 0-6.1-1.249-8.25-3.286zm0 13.036h.008v.008H12v-.008z" /></svg>`, substages: [ { name: "Rediscover Motivation", subDescription: "Use proven techniques to reignite your professional passion and set new goals." }, { name: "Create a Feedback Loop", subDescription: "Build a system for getting constructive feedback to break through plateaus." }, ] }
-        };
-        const stageSelectionGrid = document.getElementById('stage-selection-grid');
-        const backButton = document.getElementById('back-button');
-
-        function populateStep1View() {
-            stageSelectionGrid.innerHTML = '';
-            for (const key in stagesMap) {
-                const stage = stagesMap[key];
-                const card = document.createElement('button');
-                card.className = 'stage-card';
-                card.dataset.stage = key;
-                card.innerHTML = `${stage.icon}<h3>${stage.title}</h3><p>${stage.description}</p>`;
-                card.addEventListener('click', () => navigateToStep2(key));
-                stageSelectionGrid.appendChild(card);
-            }
-        }
-
-        function populateStep2View(stageKey) {
-            const stage = stagesMap[stageKey];
-            document.getElementById('step-2-title').textContent = stage.title;
-            document.getElementById('step-2-description').textContent = "Here is your personalized path forward. Choose an area to focus on.";
-            document.getElementById('progress-indicator').textContent = 'Step 2 of 2';
-            const subStageGrid = document.getElementById('sub-stage-grid');
-            subStageGrid.innerHTML = '';
-            stage.substages.forEach(sub => {
-                const card = document.createElement('button');
-                card.className = 'stage-card';
-                card.innerHTML = `${stage.icon}<h3>${sub.name}</h3><p>${sub.subDescription}</p>`;
-                card.addEventListener('click', () => { /* Add action for sub-stages here */ });
-                subStageGrid.appendChild(card);
-            });
-        }
-        
-        function navigateToStep2(stageKey) {
-            populateStep2View(stageKey);
-            journeyContainer.classList.add('step-2-active');
-        }
-
-        function navigateToStep1() {
-            journeyContainer.classList.remove('step-2-active');
-        }
-        
-        backButton.addEventListener('click', navigateToStep1);
-        populateStep1View();
-    });
-    </script>
-</body>
-</html>
+        </div>
+    </section>
+</main>
