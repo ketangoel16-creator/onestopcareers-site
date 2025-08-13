@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Job Opportunities | OneStopCareers</title>
     
     <!-- Tailwind CSS for modern styling -->
@@ -13,72 +13,58 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <style>
         /* Use Inter as the default font */
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #000; /* Ensure body background is black */
+            background-color: #000;
         }
-        /* Simple scrollbar styling for the dark theme */
+
+        /* Custom scrollbar styling for the dark theme */
         ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #111827; }
+        ::-webkit-scrollbar-track { background: #000; }
         ::-webkit-scrollbar-thumb { background: #374151; border-radius: 10px; }
         ::-webkit-scrollbar-thumb:hover { background: #4b5563; }
 
-        /* Animation for job item load-in */
-        .job-item {
-            opacity: 0;
-            transform: translateY(20px);
-            transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+        /* --- App Shell & Page Transitions --- */
+        .app-page {
+            display: none;
+            animation: fadeIn 0.4s ease-in-out;
         }
-        .job-item.visible {
-            opacity: 1;
-            transform: translateY(0);
+        .app-page.active {
+            display: block;
         }
-
-        /* Modal styles */
-        .modal-overlay {
-            transition: opacity 0.3s ease;
-        }
-        .modal-content {
-            transition: transform 0.3s ease, opacity 0.3s ease;
-            transform: translateY(20px) scale(0.95);
-        }
-        .modal-overlay.open .modal-content {
-            transform: translateY(0) scale(1);
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
         
-        /* Mobile Horizontal Carousel Styles */
-        @media (max-width: 767px) {
-            #job-listings-grid {
-                display: flex;
-                overflow-x: auto;
-                scroll-snap-type: x mandatory;
-                padding-bottom: 1rem; /* Space for scrollbar */
-                -ms-overflow-style: none;  /* IE and Edge */
-                scrollbar-width: none;  /* Firefox */
-                transition: opacity 0.3s ease-in-out, max-height 0.5s ease-in-out;
-            }
-            #job-listings-grid.filtering {
-                opacity: 0;
-                max-height: 0;
-                padding-bottom: 0;
-                overflow: hidden;
-            }
-            #job-listings-grid::-webkit-scrollbar {
-                display: none; /* Chrome, Safari, Opera */
-            }
-            .job-item {
-                flex: 0 0 75%; /* Each item takes up 75% of the viewport width */
-                scroll-snap-align: start;
-            }
-            #desktop-filters {
+        /* Mobile filter screen transition */
+        #mobile-filter-screen {
+            transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+        #mobile-filter-screen.open {
+            transform: translateX(0);
+        }
+
+        /* Mobile filter pills */
+        .filter-pill.active {
+            background-color: #f97316;
+            color: #fff;
+        }
+
+        /* Desktop specific styles */
+        @media (min-width: 768px) {
+            #mobile-nav {
                 display: none;
             }
         }
-        
-        @media (min-width: 768px) {
-            #mobile-filters {
+        /* Mobile specific styles */
+        @media (max-width: 767px) {
+            #desktop-nav {
                 display: none;
             }
         }
@@ -86,116 +72,179 @@
 </head>
 <body class="bg-black text-gray-300">
 
-    <!-- Header Placeholder -->
-    <header id="header-placeholder"></header>
+    <!-- Desktop Header -->
+    <header id="desktop-nav" class="hidden md:flex justify-between items-center p-4 md:px-8 bg-black/80 backdrop-blur-sm sticky top-0 z-20 border-b border-gray-800">
+        <h1 class="text-2xl font-bold text-white">OneStopCareers</h1>
+        <div class="flex space-x-6">
+            <button class="desktop-tab-btn nav-btn whitespace-nowrap py-2 px-4 border-b-2 font-medium text-sm text-gray-500 border-transparent hover:text-orange-500 hover:border-orange-500 transition-colors" data-page="home">Home</button>
+            <button class="desktop-tab-btn nav-btn whitespace-nowrap py-2 px-4 border-b-2 font-medium text-sm text-gray-500 border-transparent hover:text-orange-500 hover:border-orange-500 transition-colors" data-page="jobs-referrals">Jobs/Referrals</button>
+            <button class="desktop-tab-btn nav-btn whitespace-nowrap py-2 px-4 border-b-2 font-medium text-sm text-gray-500 border-transparent hover:text-orange-500 hover:border-orange-500 transition-colors" data-page="resources">Resources</button>
+            <button class="desktop-tab-btn nav-btn whitespace-nowrap py-2 px-4 border-b-2 font-medium text-sm text-gray-500 border-transparent hover:text-orange-500 hover:border-orange-500 transition-colors" data-page="mentor">Mentor</button>
+        </div>
+        <div class="w-80"></div>
+    </header>
 
-    <!-- Main Content for the Jobs Page -->
-    <main class="container mx-auto px-4 py-12 md:py-16">
-        
-        <!-- Hero Section -->
-        <section class="text-center mb-12 md:mb-16">
-            <h1 class="text-4xl md:text-5xl font-bold text-white mb-4">Find Your Next Opportunity</h1>
-            <p class="text-lg text-gray-400 max-w-3xl mx-auto">
-                Browse through curated job openings from top companies. Your career journey continues here.
-            </p>
-        </section>
-
-        <!-- Desktop Filters Section -->
-        <section id="desktop-filters" class="bg-gray-900/70 backdrop-blur-sm p-4 sm:p-6 rounded-xl mb-8 sticky top-4 z-10 border border-gray-800 shadow-lg">
-             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <input type="text" id="search-input" placeholder="Search by job title or company..." class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2.5 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all">
-                <select id="location-filter" class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all">
-                    <option value="">All Locations</option>
-                </select>
-                <button id="reset-filters" class="w-full bg-gray-700 hover:bg-gray-600 text-white font-semibold py-2.5 px-4 rounded-lg transition-colors duration-300">Reset</button>
+    <!-- Main Content Container -->
+    <main class="container mx-auto px-4 md:py-8">
+        <!-- App Pages Container -->
+        <div id="app-pages-container">
+            <!-- Home Page -->
+            <div id="home-page" class="app-page active text-center py-24">
+                <h2 class="text-4xl font-bold text-white mb-4">Welcome to OneStopCareers</h2>
+                <p class="text-lg text-gray-400 max-w-2xl mx-auto">Your one-stop destination for job opportunities, career resources, and professional mentorship.</p>
             </div>
-        </section>
 
-        <!-- Mobile Search and Filter UI -->
-        <section id="mobile-filters" class="mb-8">
-            <div class="flex gap-4 items-center">
-                <input type="text" id="mobile-search-input" placeholder="Search jobs..." class="flex-grow bg-gray-800 border border-gray-700 rounded-full px-4 py-2.5 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all">
-                <button id="mobile-filter-toggle" class="p-2.5 bg-gray-800 border border-gray-700 rounded-full text-gray-400">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2a1 1 0 01-.293.707L16 11.414V16a1 1 0 01-.293.707l-2 2A1 1 0 0113 18v-2.586l-6.707-6.707A1 1 0 016 8V4z" /></svg>
-                </button>
-            </div>
-            <div id="mobile-role-filters" class="mt-4 flex flex-wrap gap-2 hidden">
-                <!-- Mobile role filter pills will be injected here -->
-            </div>
-        </section>
+            <!-- Jobs/Referrals Page -->
+            <div id="jobs-referrals-page" class="app-page">
+                <!-- Mobile Header on this page only -->
+                <header id="mobile-header" class="p-4 sticky top-0 bg-black/80 backdrop-blur-sm z-20 md:hidden">
+                    <div class="flex gap-4 items-center">
+                        <div class="relative flex-grow">
+                            <input type="text" id="mobile-search-input" placeholder="Search jobs or referrals..." class="w-full bg-gray-800 border border-gray-700 rounded-full px-4 py-2.5 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all">
+                        </div>
+                        <button id="mobile-filter-toggle" class="p-2.5 bg-gray-800 border border-gray-700 rounded-full text-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500">
+                            <i class="fas fa-sliders-h h-5 w-5"></i>
+                        </button>
+                    </div>
+                </header>
+                
+                <!-- Desktop Filter Bar -->
+                <div id="desktop-filter-bar" class="hidden md:flex justify-between items-center bg-gray-900/70 backdrop-blur-sm p-4 rounded-xl mb-8 sticky top-20 z-10 border border-gray-800 shadow-lg">
+                    <div class="relative w-1/2">
+                        <input type="text" id="desktop-search-filter-input" placeholder="Search..." class="w-full bg-gray-800 border border-gray-700 rounded-full px-4 py-2.5 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all">
+                    </div>
+                    <div class="flex gap-4">
+                        <select id="desktop-location-filter" class="w-40 bg-gray-800 border border-gray-700 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:ring-2 focus:ring-orange-500">
+                            <option value="">All Locations</option>
+                        </select>
+                        <select id="desktop-role-filter" class="w-40 bg-gray-800 border border-gray-700 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:ring-2 focus:ring-orange-500">
+                            <option value="">All Roles</option>
+                        </select>
+                        <button id="desktop-reset-filters" class="bg-gray-700 hover:bg-gray-600 text-white font-semibold py-2.5 px-4 rounded-lg">Reset</button>
+                    </div>
+                </div>
 
-        <!-- Jobs Section -->
-        <section id="jobs-section" class="mb-16">
-            <h2 class="text-2xl font-bold text-white mb-6">Featured Jobs</h2>
-            <div id="loading-spinner" class="text-center py-12">
-                <svg class="animate-spin h-10 w-10 text-orange-500 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
-            </div>
-            <div id="no-results" class="hidden text-center py-12"><h3 class="text-2xl font-semibold text-white">No Matching Jobs Found</h3><p class="text-gray-400 mt-2">Try adjusting your filters.</p></div>
-            <div id="job-listings-grid" class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-y-12 gap-x-6"></div>
-            <div id="load-more-container" class="text-center mt-12 hidden md:block"><button id="load-more-btn" class="hidden bg-gradient-to-br from-orange-500 to-orange-600 text-white font-semibold py-3 px-8 rounded-lg hover:from-orange-600 hover:to-orange-700 transition-all duration-300 shadow-lg shadow-orange-500/20">Load More</button></div>
-        </section>
+                <!-- Jobs Section -->
+                <section id="jobs-section" class="mb-12">
+                    <h2 class="text-2xl font-bold text-white mb-6">Latest Job Opportunities</h2>
+                    <div id="job-listings-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+                    <div id="loading-jobs" class="text-center py-12 hidden"><svg class="animate-spin h-10 w-10 text-orange-500 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg></div>
+                    <div id="no-jobs-results" class="hidden text-center py-12"><h3 class="text-2xl font-semibold text-white">No Matching Jobs Found</h3></div>
+                    <div class="text-center mt-8"><button id="load-more-jobs-btn" class="hidden bg-gradient-to-br from-orange-500 to-orange-600 text-white font-semibold py-3 px-8 rounded-full shadow-lg">See More Jobs</button></div>
+                </section>
 
-        <!-- Career Toolkit Section (Placeholder) -->
-        <section id="toolkit-section" class="mb-16">
-            <h2 class="text-2xl font-bold text-white mb-6">Career Toolkit</h2>
-            <div class="text-center py-16 bg-gray-900 rounded-xl border border-gray-800">
-                <h3 class="text-3xl font-bold text-white">Coming Soon</h3>
-                <p class="text-gray-400 mt-4">Resources, resume builders, and interview prep.</p>
+                <!-- Referrals Section -->
+                <section id="referrals-section">
+                    <h2 class="text-2xl font-bold text-white mb-6">Referrals from our Network</h2>
+                    <div id="referral-listings-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+                    <div id="loading-referrals" class="text-center py-12 hidden"><svg class="animate-spin h-10 w-10 text-orange-500 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg></div>
+                    <div id="no-referrals-results" class="hidden text-center py-12"><h3 class="text-2xl font-semibold text-white">No Matching Referrals Found</h3></div>
+                    <div class="text-center mt-8"><button id="load-more-referrals-btn" class="hidden bg-gradient-to-br from-orange-500 to-orange-600 text-white font-semibold py-3 px-8 rounded-full shadow-lg">See More Referrals</button></div>
+                </section>
             </div>
-        </section>
 
-        <!-- Referrals Section (Placeholder) -->
-        <section id="referrals-section">
-            <h2 class="text-2xl font-bold text-white mb-6">Referrals</h2>
-            <div class="text-center py-16 bg-gray-900 rounded-xl border border-gray-800">
-                <h3 class="text-3xl font-bold text-white">Coming Soon</h3>
-                <p class="text-gray-400 mt-4">A network to connect with insiders for referrals.</p>
+            <!-- Resources Page -->
+            <div id="resources-page" class="app-page">
+                <section id="resources-section">
+                    <h2 class="text-2xl font-bold text-white mb-6">Career Resources</h2>
+                    <div id="resources-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+                </section>
             </div>
-        </section>
-
+            
+            <!-- Mentor Page -->
+            <div id="mentor-page" class="app-page">
+                <div class="text-center py-16 bg-gray-900 rounded-xl border border-gray-800">
+                    <h3 class="text-3xl font-bold text-white">Mentor Connect</h3>
+                    <p class="text-gray-400 mt-4">Connect with experienced professionals for guidance. Coming soon!</p>
+                </div>
+            </div>
+        </div>
     </main>
-    
-    <!-- Apply Now & Deep Link Modal -->
-    <div id="job-modal-overlay" class="modal-overlay fixed inset-0 bg-black bg-opacity-70 z-50 flex items-center justify-center p-4 hidden opacity-0">
-        <div id="job-modal-content" class="modal-content bg-gray-900 border border-gray-800 rounded-2xl shadow-xl w-full max-w-lg mx-auto p-6 md:p-8">
-            <!-- Content will be injected by JS -->
+
+    <!-- Mobile Filter Screen -->
+    <div id="mobile-filter-screen" class="fixed inset-0 bg-black z-40 p-4 transform translate-x-full overflow-y-auto">
+        <div class="flex justify-between items-center mb-6 sticky top-0 bg-black pb-4 z-10">
+            <h2 class="text-xl font-bold text-white">Filters</h2>
+            <button id="close-filter-btn" class="p-2 text-gray-400"><i class="fas fa-times h-6 w-6"></i></button>
+        </div>
+        <div class="space-y-6">
+            <div>
+                <h3 class="text-lg font-semibold text-white mb-3">Job Title</h3>
+                <div id="mobile-role-filters" class="flex flex-wrap gap-2"></div>
+            </div>
+            <div>
+                <h3 class="text-lg font-semibold text-white mb-3">Location</h3>
+                <div id="mobile-location-filters" class="flex flex-wrap gap-2"></div>
+            </div>
+        </div>
+        <div class="sticky bottom-0 bg-black py-4 z-10 mt-6">
+             <button id="apply-filters-btn" class="w-full bg-orange-500 text-white font-semibold py-3 rounded-full hover:bg-orange-600 transition-colors">Show Results</button>
         </div>
     </div>
 
-    <!-- Footer Placeholder -->
-    <footer id="footer-placeholder"></footer>
-
-    <!-- Your Main JavaScript File -->
-    <script src="main.js" type="module"></script>
+    <!-- Modals and Bottom Nav -->
+    <div id="modal-overlay" class="fixed inset-0 bg-black bg-opacity-70 z-50 flex items-center justify-center p-4 hidden opacity-0 transition-opacity duration-300"></div>
+    <nav id="mobile-nav" class="fixed bottom-0 left-0 right-0 bg-black/80 backdrop-blur-sm border-t border-gray-800 z-30 flex justify-around md:hidden">
+        <button data-page="home" class="nav-btn flex-1 flex flex-col items-center justify-center py-3 text-gray-500 hover:text-orange-500 transition-colors">
+            <i class="fas fa-home h-6 w-6"></i><span class="text-xs mt-1">Home</span>
+        </button>
+        <button data-page="jobs-referrals" class="nav-btn flex-1 flex flex-col items-center justify-center py-3 text-orange-500 transition-colors">
+            <i class="fas fa-briefcase h-6 w-6"></i><span class="text-xs mt-1">Jobs</span>
+        </button>
+        <button data-page="resources" class="nav-btn flex-1 flex flex-col items-center justify-center py-3 text-gray-500 hover:text-orange-500 transition-colors">
+            <i class="fas fa-tools h-6 w-6"></i><span class="text-xs mt-1">Resources</span>
+        </button>
+        <button data-page="mentor" class="nav-1 flex-1 flex flex-col items-center justify-center py-3 text-gray-500 hover:text-orange-500 transition-colors">
+            <i class="fas fa-user-tie h-6 w-6"></i><span class="text-xs mt-1">Mentor</span>
+        </button>
+    </nav>
 
     <!-- Page-Specific JavaScript -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // --- CONFIGURATION ---
-            const JOBS_JSON_URL = 'https://ketangoel16-creator.github.io/onestopcareers-data/jobs.json';
-            const JOBS_PER_PAGE = 10;
+            // --- CONFIGURATION & DATA MOCKS ---
+            const JOBS_JSON_URL = 'https://raw.githubusercontent.com/ketangoel16/onestopcareers-data/main/jobs.json';
+            const REFERRALS_JSON_URL = 'https://raw.githubusercontent.com/ketangoel16/onestopcareers-data/main/referrals.json';
+            const CARDS_PER_PAGE = 6;
 
             // --- ELEMENT SELECTORS ---
+            const appPages = document.querySelectorAll('.app-page');
             const jobGrid = document.getElementById('job-listings-grid');
-            const loadingSpinner = document.getElementById('loading-spinner');
-            const noResultsMessage = document.getElementById('no-results');
-            const loadMoreBtn = document.getElementById('load-more-btn');
-            const modalOverlay = document.getElementById('job-modal-overlay');
-            const modalContent = document.getElementById('job-modal-content');
-            
-            // Desktop Filters
-            const desktopSearchInput = document.getElementById('search-input');
-            const desktopLocationFilter = document.getElementById('location-filter');
-            const desktopResetBtn = document.getElementById('reset-filters');
-            
-            // Mobile Filters
+            const referralGrid = document.getElementById('referral-listings-grid');
+            const resourceGrid = document.getElementById('resources-grid');
+            const loadingJobsSpinner = document.getElementById('loading-jobs');
+            const loadingReferralsSpinner = document.getElementById('loading-referrals');
+            const noJobsResultsMessage = document.getElementById('no-jobs-results');
+            const noReferralsResultsMessage = document.getElementById('no-referrals-results');
+            const loadMoreJobsBtn = document.getElementById('load-more-jobs-btn');
+            const loadMoreReferralsBtn = document.getElementById('load-more-referrals-btn');
+            const modalOverlay = document.getElementById('modal-overlay');
+
+            // Search and Filter Elements
+            const desktopSearchInput = document.getElementById('desktop-search-filter-input');
+            const desktopLocationFilter = document.getElementById('desktop-location-filter');
+            const desktopRoleFilter = document.getElementById('desktop-role-filter');
+            const desktopResetBtn = document.getElementById('desktop-reset-filters');
             const mobileSearchInput = document.getElementById('mobile-search-input');
             const mobileFilterToggle = document.getElementById('mobile-filter-toggle');
+            const mobileFilterScreen = document.getElementById('mobile-filter-screen');
+            const closeFilterBtn = document.getElementById('close-filter-btn');
+            const applyFiltersBtn = document.getElementById('apply-filters-btn');
             const mobileRoleFiltersContainer = document.getElementById('mobile-role-filters');
+            const mobileLocationFiltersContainer = document.getElementById('mobile-location-filters');
+            
+            // Navigation Elements
+            const desktopNavTabs = document.querySelectorAll('.desktop-tab-btn');
+            const mobileNavTabs = document.querySelectorAll('.nav-btn');
 
             let allJobs = [];
+            let allReferrals = [];
             let filteredJobs = [];
-            let currentPage = 1;
+            let filteredReferrals = [];
+            let jobsCurrentPage = 1;
+            let referralsCurrentPage = 1;
+
+            const isMobile = window.matchMedia("(max-width: 767px)").matches;
 
             // --- HELPER FUNCTIONS ---
             const formatDateAgo = (dateString) => {
@@ -215,261 +264,312 @@
             const createDefaultLogo = (companyName) => {
                 const firstLetter = (companyName || '?').charAt(0).toUpperCase();
                 const logoDiv = document.createElement('div');
-                logoDiv.className = "w-full h-full flex items-center justify-center bg-gray-800 text-gray-400 text-5xl font-bold";
+                logoDiv.className = "w-12 h-12 flex items-center justify-center bg-gray-800 text-gray-400 text-lg font-bold rounded-lg";
                 logoDiv.textContent = firstLetter;
                 return logoDiv;
             };
-            
-            // --- MODAL LOGIC ---
-            function openModal(content) {
-                modalContent.innerHTML = content;
+
+            const showModal = (content) => {
+                modalOverlay.innerHTML = `<div class="modal-content bg-gray-900 border border-gray-800 rounded-2xl shadow-xl w-full max-w-lg mx-auto p-6 md:p-8">${content}</div>`;
                 modalOverlay.classList.remove('hidden');
-                setTimeout(() => { modalOverlay.classList.add('open', 'opacity-100'); }, 10);
-            }
+                setTimeout(() => { modalOverlay.classList.add('opacity-100'); }, 10);
+            };
 
-            function closeModal() {
-                modalOverlay.classList.remove('open', 'opacity-100');
-                setTimeout(() => {
-                    modalOverlay.classList.add('hidden');
-                    if (new URLSearchParams(window.location.search).has('id')) {
-                        history.pushState(null, '', window.location.pathname);
-                    }
-                }, 300);
-            }
+            const closeModal = () => {
+                modalOverlay.classList.remove('opacity-100');
+                setTimeout(() => { modalOverlay.classList.add('hidden'); }, 300);
+            };
 
-            function showApplyModal(job) {
-                const content = `<div class="text-center"><div class="h-20 w-20 rounded-full bg-gray-800 mx-auto mb-4 overflow-hidden flex items-center justify-center"><img src="${job['Company Logo URL']}" alt="${job.Company} Logo" class="w-full h-full object-cover"></div><h3 class="text-2xl font-bold text-white">${job['Job Title']}</h3><p class="text-gray-400 mb-6">at ${job.Company}</p><p class="bg-gray-800 border border-gray-700 text-orange-400 text-sm rounded-lg p-3 mb-6">✨ **Pro Tip:** Tailor your resume to include keywords from the job description. Good luck!</p><div class="flex flex-col sm:flex-row gap-3"><button id="proceed-btn" class="w-full bg-gradient-to-br from-orange-500 to-orange-600 text-white font-semibold py-3 px-5 rounded-lg hover:from-orange-600 hover:to-orange-700 transition-all">Proceed to Application</button><button id="cancel-btn" class="w-full bg-gray-700 text-white font-semibold py-3 px-5 rounded-lg hover:bg-gray-600 transition-colors">Cancel</button></div></div>`;
-                openModal(content);
+            const showApplyModal = (job) => {
+                const content = `<div class="text-center"><div class="h-16 w-16 rounded-full bg-gray-800 mx-auto mb-4 overflow-hidden flex items-center justify-center"><img src="${job['Company Logo URL']}" alt="${job.Company} Logo" class="w-full h-full object-cover"></div><h3 class="text-2xl font-bold text-white">${job['Job Title']}</h3><p class="text-gray-400 mb-6">at ${job.Company}</p><p class="bg-gray-800 border border-gray-700 text-orange-400 text-sm rounded-lg p-3 mb-6">✨ **Pro Tip:** Tailor your resume to include keywords from the job description. Good luck!</p><div class="flex flex-col sm:flex-row gap-3"><button id="proceed-btn" class="w-full bg-gradient-to-br from-orange-500 to-orange-600 text-white font-semibold py-3 px-5 rounded-lg hover:from-orange-600 hover:to-orange-700 transition-all">Proceed to Application</button><button id="cancel-btn" class="w-full bg-gray-700 text-white font-semibold py-3 px-5 rounded-lg hover:bg-gray-600 transition-colors">Cancel</button></div></div>`;
+                showModal(content);
                 document.getElementById('proceed-btn').addEventListener('click', () => { window.open(job.Link, '_blank'); closeModal(); });
                 document.getElementById('cancel-btn').addEventListener('click', closeModal);
-                const modalImg = modalContent.querySelector('img');
+                const modalImg = modalOverlay.querySelector('img');
                 if (modalImg) { modalImg.onerror = () => { modalImg.replaceWith(createDefaultLogo(job.Company)); }; }
-            }
-            
-            function showDeepLinkModal(job) {
-                const postedDate = formatDateAgo(job['Date Posted']);
-                const content = `<div class="relative"><button id="close-deeplink-btn" class="absolute -top-2 -right-2 text-gray-500 hover:text-white"><svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button><div class="flex items-center gap-4 mb-4"><div class="w-20 h-20 rounded-full overflow-hidden flex-shrink-0 bg-gray-800 flex items-center justify-center"><img src="${job['Company Logo URL']}" alt="${job.Company} Logo" class="w-full h-full object-cover"></div><div><p class="text-gray-400">${job.Company}</p><h3 class="text-2xl font-bold text-white">${job['Job Title']}</h3><p class="text-sm text-gray-500">📍 ${job.Location} &nbsp;&bull;&nbsp; ${postedDate}</p></div></div><p class="text-gray-400 mb-6 max-h-48 overflow-y-auto">${job.Description}</p><button id="deeplink-apply-btn" class="w-full bg-gradient-to-br from-orange-500 to-orange-600 text-white font-semibold py-3 px-5 rounded-lg hover:from-orange-600 hover:to-orange-700 transition-all">Apply on Company Site</button></div>`;
-                openModal(content);
-                document.getElementById('close-deeplink-btn').addEventListener('click', closeModal);
-                document.getElementById('deeplink-apply-btn').addEventListener('click', () => window.open(job.Link, '_blank'));
-                const modalImg = modalContent.querySelector('img');
-                if (modalImg) { modalImg.onerror = () => { modalImg.replaceWith(createDefaultLogo(job.Company)); }; }
-            }
+            };
 
-            modalOverlay.addEventListener('click', (e) => { if (e.target === modalOverlay) closeModal(); });
-
-            // --- DATA FETCHING ---
-            async function fetchJobs() {
-                try {
-                    const response = await fetch(JOBS_JSON_URL);
-                    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-                    const data = await response.json();
-                    
-                    allJobs = (data && Array.isArray(data.jobs)) ? data.jobs : (Array.isArray(data) ? data : []);
-                    
-                    if (allJobs.length > 0) {
-                        filteredJobs = [...allJobs];
-                        populateDesktopFilters(allJobs);
-                        populateMobileRoleFilters(allJobs);
-                        displayJobs();
-                        handleDeepLink();
-                    } else {
-                        noResultsMessage.classList.remove('hidden');
+            // Enhanced fetch function with retry logic
+            async function retryFetch(url, options = {}, retries = 3, backoff = 300) {
+                for (let i = 0; i < retries; i++) {
+                    try {
+                        const response = await fetch(url, options);
+                        if (response.ok) {
+                            return response;
+                        } else {
+                            throw new Error(`HTTP Error: ${response.status}`);
+                        }
+                    } catch (error) {
+                        console.error(`Fetch attempt ${i + 1} failed:`, error);
+                        if (i < retries - 1) {
+                            await new Promise(resolve => setTimeout(resolve, backoff * (2 ** i)));
+                        } else {
+                            throw error;
+                        }
                     }
-                } catch (error) {
-                    console.error("Failed to fetch jobs:", error);
-                    jobGrid.innerHTML = `<p class="text-center text-red-400 col-span-full">Could not load job listings.</p>`;
-                } finally {
-                    loadingSpinner.classList.add('hidden');
                 }
             }
 
-            // --- RENDERING ---
-            function displayJobs() {
-                // On mobile, we show all jobs for horizontal scroll. On desktop, we paginate.
-                const jobsToDisplay = window.innerWidth < 768 ? filteredJobs : filteredJobs.slice(0, currentPage * JOBS_PER_PAGE);
-                jobGrid.innerHTML = '';
-                noResultsMessage.classList.toggle('hidden', filteredJobs.length > 0);
+            // --- DATA FETCHING & RENDERING ---
+            async function fetchAllData() {
+                try {
+                    loadingJobsSpinner.classList.remove('hidden');
+                    loadingReferralsSpinner.classList.remove('hidden');
+                    
+                    let jobsData = { jobs: [] };
+                    let referralsData = { referrals: [] };
+                    
+                    try {
+                        const jobsResponse = await retryFetch(JOBS_JSON_URL);
+                        jobsData = await jobsResponse.json();
+                        console.log("Fetched jobs data:", jobsData);
+                    } catch (error) {
+                        console.error("Failed to fetch jobs data after multiple retries:", error);
+                        jobGrid.innerHTML = `<p class="text-center text-red-400 col-span-full">Could not load job listings. Please check your network connection.</p>`;
+                    }
+                    
+                    try {
+                        const referralsResponse = await retryFetch(REFERRALS_JSON_URL);
+                        referralsData = await referralsResponse.json();
+                        console.log("Fetched referrals data:", referralsData);
+                    } catch (error) {
+                        console.error("Failed to fetch referrals data after multiple retries:", error);
+                        referralGrid.innerHTML = `<p class="text-center text-red-400 col-span-full">Could not load referral listings. Please check your network connection.</p>`;
+                    }
+                    
+                    allJobs = (jobsData && Array.isArray(jobsData.jobs)) ? jobsData.jobs : [];
+                    allReferrals = (referralsData && Array.isArray(referralsData.referrals)) ? referralsData.referrals : [];
+                    
+                    filteredJobs = [...allJobs];
+                    filteredReferrals = [...allReferrals];
 
-                jobsToDisplay.forEach((job) => {
-                    const item = document.createElement('div');
-                    item.className = 'job-item group flex flex-col items-center text-center p-4 transition-transform duration-300 hover:-translate-y-1';
-                    item.dataset.jobId = job.ID;
-                    
-                    const postedDate = formatDateAgo(job['Date Posted']);
-                    const deepLinkUrl = `${window.location.pathname}?id=${job.ID}`;
-                    
-                    item.innerHTML = `
-                        <div class="flex-grow w-full flex flex-col items-center">
-                            <div class="relative w-32 h-32 mb-4">
-                                <div class="w-full h-full rounded-full bg-gray-800 flex items-center justify-center overflow-hidden shadow-lg transition-transform duration-300 group-hover:scale-110">
-                                    <img data-company-name="${job.Company}" src="${job['Company Logo URL']}" alt="${job.Company} Logo" class="job-logo w-full h-full object-cover">
+                    populateFilters(allJobs, allReferrals);
+                    displayJobs();
+                    displayReferrals();
+                    renderResources();
+
+                } catch (error) {
+                    // This top-level catch will now only run if something truly unexpected happens
+                    console.error("An unexpected error occurred during data fetching:", error);
+                } finally {
+                    loadingJobsSpinner.classList.add('hidden');
+                    loadingReferralsSpinner.classList.add('hidden');
+                }
+            }
+
+            const displayJobs = () => {
+                const start = (jobsCurrentPage - 1) * CARDS_PER_PAGE;
+                const end = start + CARDS_PER_PAGE;
+                const jobsToDisplay = filteredJobs.slice(start, end);
+                
+                if (jobsCurrentPage === 1) jobGrid.innerHTML = '';
+                
+                if (jobsToDisplay.length > 0) {
+                    jobsToDisplay.forEach(job => {
+                        const jobCard = document.createElement('div');
+                        jobCard.className = 'job-card bg-gray-900 border border-gray-800 rounded-xl p-4 flex flex-col space-y-3 hover:border-orange-500 transition-colors cursor-pointer';
+                        jobCard.dataset.jobId = job.ID;
+
+                        jobCard.innerHTML = `
+                            <div class="flex items-start justify-between">
+                                <div class="flex items-center space-x-3">
+                                    <img src="${job['Company Logo URL']}" alt="${job.Company} Logo" class="w-12 h-12 rounded-lg object-cover bg-gray-800" onerror="this.replaceWith(createDefaultLogo('${job.Company}'))">
+                                    <div>
+                                        <h3 class="text-sm font-semibold text-white truncate w-32 md:w-full">${job['Job Title']}</h3>
+                                        <p class="text-xs text-gray-400">${job.Company}</p>
+                                    </div>
+                                </div>
+                                <span class="text-xs text-gray-500 flex-shrink-0">${formatDateAgo(job['Date Posted'])}</span>
+                            </div>
+                            <p class="text-xs text-gray-500">📍 ${job.Location}</p>
+                            <button class="apply-btn w-full text-center bg-gray-700 hover:bg-gray-600 text-white font-semibold py-2 rounded-lg text-sm transition-colors">Apply</button>
+                        `;
+                        jobGrid.appendChild(jobCard);
+                    });
+                }
+                
+                noJobsResultsMessage.classList.toggle('hidden', filteredJobs.length > 0 || jobsToDisplay.length > 0);
+                loadMoreJobsBtn.classList.toggle('hidden', filteredJobs.length <= end);
+            };
+
+            const displayReferrals = () => {
+                const start = (referralsCurrentPage - 1) * CARDS_PER_PAGE;
+                const end = start + CARDS_PER_PAGE;
+                const referralsToDisplay = filteredReferrals.slice(start, end);
+
+                if (referralsCurrentPage === 1) referralGrid.innerHTML = '';
+                
+                if (referralsToDisplay.length > 0) {
+                    referralsToDisplay.forEach(referral => {
+                        const referralCard = document.createElement('div');
+                        referralCard.className = 'referral-card bg-gray-900 border border-gray-800 rounded-xl p-4 flex flex-col space-y-3 hover:border-orange-500 transition-colors';
+                        
+                        referralCard.innerHTML = `
+                            <div class="flex items-center space-x-3">
+                                <img src="${referral['Referred Company Logo']}" alt="${referral['Referred Company']} Logo" class="w-12 h-12 rounded-lg object-cover bg-gray-800" onerror="this.replaceWith(createDefaultLogo('${referral['Referred Company']}'))">
+                                <div>
+                                    <h3 class="text-sm font-semibold text-white">${referral['Referred Role']}</h3>
+                                    <p class="text-xs text-gray-400">at ${referral['Referred Company']}</p>
                                 </div>
                             </div>
-                            <h3 class="text-lg font-semibold text-white leading-tight">${job['Job Title']}</h3>
-                            <p class="text-gray-400 text-sm">${job.Company}</p>
-                            <p class="text-gray-500 text-xs mt-1">📍 ${job.Location}</p>
-                        </div>
-                        
-                        <div class="job-actions mt-4 w-full flex flex-col items-center gap-2">
-                            <button class="apply-btn w-full bg-gradient-to-br from-orange-500 to-orange-600 text-white font-semibold py-2 px-4 rounded-lg text-sm">Apply</button>
-                            <div class="flex items-center justify-center gap-4 w-full mt-2">
-                                <span class="text-xs text-gray-600">${postedDate}</span>
-                                <a href="${deepLinkUrl}" class="share-btn text-gray-600 hover:text-orange-400" title="Share Job">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12s-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6.002l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.368a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z"></path></svg>
-                                </a>
-                            </div>
-                        </div>
-                    `;
-                    jobGrid.appendChild(item);
-                });
-                
-                document.querySelectorAll('.job-logo').forEach(img => {
-                    img.onerror = () => { img.replaceWith(createDefaultLogo(img.dataset.companyName)); };
-                });
-
-                document.querySelectorAll('.job-item:not(.visible)').forEach((card, index) => {
-                    setTimeout(() => { card.classList.add('visible'); }, index * 100);
-                });
-
-                loadMoreBtn.classList.toggle('hidden', filteredJobs.length <= jobsToDisplay.length || window.innerWidth < 768);
-            }
-            
-            // --- DEEP LINKING ---
-            function handleDeepLink() {
-                const urlParams = new URLSearchParams(window.location.search);
-                const jobId = urlParams.get('id');
-                if (jobId) {
-                    const job = allJobs.find(j => String(j.ID) === String(jobId));
-                    if (job) showDeepLinkModal(job);
+                            <p class="text-sm text-gray-400">Referred by <span class="font-medium text-white">${referral['Referrer Name']}</span></p>
+                            <button class="w-full text-center bg-gray-700 hover:bg-gray-600 text-white font-semibold py-2 rounded-lg text-sm transition-colors">Request Referral</button>
+                        `;
+                        referralGrid.appendChild(referralCard);
+                    });
                 }
-            }
+                
+                noReferralsResultsMessage.classList.toggle('hidden', filteredReferrals.length > 0 || referralsToDisplay.length > 0);
+                loadMoreReferralsBtn.classList.toggle('hidden', filteredReferrals.length <= end);
+            };
 
-            // --- FILTERING LOGIC ---
-            function populateDesktopFilters(jobs) {
-                const locations = [...new Set(jobs.map(job => job.Location).filter(Boolean))].sort();
-                desktopLocationFilter.innerHTML = '<option value="">All Locations</option>';
-                locations.forEach(location => {
-                    const option = document.createElement('option');
-                    option.value = location;
-                    option.textContent = location;
-                    desktopLocationFilter.appendChild(option);
+            const renderResources = () => {
+                const resourcesData = [
+                    { title: 'Resume Builder', icon: '<i class="fas fa-file-alt"></i>', description: 'Craft the perfect resume with our AI-powered builder.' },
+                    { title: 'Interview Prep', icon: '<i class="fas fa-user-friends"></i>', description: 'Practice common questions and get instant feedback.' },
+                    { title: 'Salary Insights', icon: '<i class="fas fa-money-bill-wave"></i>', description: 'Know your worth with our real-time salary data.' },
+                    { title: 'Cover Letter Genie', icon: '<i class="fas fa-envelope"></i>', description: 'Generate personalized cover letters that stand out.' },
+                    { title: 'Networking Guide', icon: '<i class="fas fa-hands-helping"></i>', description: 'Strategies and tips for building your professional network.' },
+                    { title: 'Skill Assessments', icon: '<i class="fas fa-tasks"></i>', description: 'Test your skills and identify areas for growth.' }
+                ];
+
+                resourceGrid.innerHTML = '';
+                resourcesData.forEach(item => {
+                    const card = document.createElement('div');
+                    card.className = 'resource-card bg-white/5 backdrop-blur-lg border border-white/10 rounded-xl p-6 flex flex-col items-start gap-4 transition-all duration-300 hover:border-orange-500/50 hover:-translate-y-1';
+                    card.innerHTML = `<div class="p-3 bg-white/10 rounded-lg text-orange-500 text-xl">${item.icon}</div><h3 class="text-lg font-bold text-white">${item.title}</h3><p class="text-sm text-gray-400 flex-grow">${item.description}</p><a href="#" class="text-sm font-medium text-orange-500 hover:text-orange-400 flex items-center gap-1">Learn More <i class="fas fa-arrow-right"></i></a>`;
+                    resourceGrid.appendChild(card);
                 });
-            }
-            
-            function populateMobileRoleFilters(jobs) {
-                const roles = [...new Set(jobs.map(job => job['Job Title']).filter(Boolean))].sort();
-                mobileRoleFiltersContainer.innerHTML = '';
-                // Add an "All Roles" button first
-                const allRolesPill = document.createElement('button');
-                allRolesPill.className = 'mobile-role-pill active px-3 py-1 bg-orange-500 text-white rounded-full text-sm';
-                allRolesPill.textContent = 'All Roles';
-                allRolesPill.dataset.role = ''; // Empty value for all roles
-                mobileRoleFiltersContainer.appendChild(allRolesPill);
+            };
 
-                roles.forEach(role => {
+            const populateFilters = (jobs, referrals) => {
+                const allRoles = [...new Set(jobs.map(j => j['Job Title']).concat(referrals.map(r => r['Referred Role'])).filter(Boolean))].sort();
+                const allLocations = [...new Set(jobs.map(j => j.Location).concat(referrals.map(r => r['Referred Location'])).filter(Boolean))].sort();
+
+                // Mobile Filters
+                mobileRoleFiltersContainer.innerHTML = '';
+                allRoles.forEach(role => {
                     const pill = document.createElement('button');
-                    pill.className = 'mobile-role-pill px-3 py-1 bg-gray-800 text-gray-300 rounded-full text-sm';
+                    pill.className = 'filter-pill p-2 text-xs bg-gray-800 text-gray-300 rounded-full';
                     pill.textContent = role;
                     pill.dataset.role = role;
                     mobileRoleFiltersContainer.appendChild(pill);
                 });
-            }
-
-            function applyFiltersAndRender() {
-                currentPage = 1;
-                const isMobile = window.innerWidth < 768;
-                
-                // Use different inputs based on screen size
-                const searchTerm = isMobile ? mobileSearchInput.value.toLowerCase() : desktopSearchInput.value.toLowerCase();
-                const selectedLocation = isMobile ? '' : desktopLocationFilter.value; // Location filter is desktop only for now
-                const selectedRole = isMobile ? (document.querySelector('.mobile-role-pill.active')?.dataset.role || '') : '';
-
-                filteredJobs = allJobs.filter(job => {
-                    const matchesSearch = searchTerm === '' || job['Job Title'].toLowerCase().includes(searchTerm) || job.Company.toLowerCase().includes(searchTerm);
-                    const matchesLocation = selectedLocation === '' || job.Location === selectedLocation;
-                    const matchesRole = selectedRole === '' || job['Job Title'] === selectedRole;
-                    return matchesSearch && matchesLocation && matchesRole;
+                mobileLocationFiltersContainer.innerHTML = '';
+                allLocations.forEach(location => {
+                    const pill = document.createElement('button');
+                    pill.className = 'filter-pill p-2 text-xs bg-gray-800 text-gray-300 rounded-full';
+                    pill.textContent = location;
+                    pill.dataset.location = location;
+                    mobileLocationFiltersContainer.appendChild(pill);
                 });
-                displayJobs();
-            }
-            
-            // --- EVENT LISTENERS ---
-            jobGrid.addEventListener('click', (e) => {
-                const item = e.target.closest('.job-item');
-                if (!item) return;
-                const jobId = item.dataset.jobId;
-                const job = allJobs.find(j => String(j.ID) === String(jobId));
-                if (!job) return;
 
-                if (e.target.closest('.apply-btn')) {
-                    showApplyModal(job);
-                } else if (e.target.closest('.share-btn')) {
-                    e.preventDefault();
-                    const shareButton = e.target.closest('.share-btn');
-                    const url = shareButton.href;
-                    
-                    try {
-                        const dummy = document.createElement('input');
-                        document.body.appendChild(dummy);
-                        dummy.value = url;
-                        dummy.select();
-                        document.execCommand('copy');
-                        document.body.removeChild(dummy);
+                // Desktop Filters
+                desktopRoleFilter.innerHTML = '<option value="">All Roles</option>' + allRoles.map(r => `<option value="${r}">${r}</option>`).join('');
+                desktopLocationFilter.innerHTML = '<option value="">All Locations</option>' + allLocations.map(l => `<option value="${l}">${l}</option>`).join('');
+            };
 
-                        const originalContent = shareButton.innerHTML;
-                        shareButton.innerHTML = `<svg class="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>`;
-                        setTimeout(() => { shareButton.innerHTML = originalContent; }, 2000);
-                    } catch (err) {
-                        console.error('Failed to copy link', err);
-                        alert('Failed to copy link.');
-                    }
-                }
-            });
-            
-            // Desktop filter listeners
-            desktopSearchInput.addEventListener('input', applyFiltersAndRender);
-            desktopLocationFilter.addEventListener('change', applyFiltersAndRender);
-            desktopResetBtn.addEventListener('click', () => { desktopSearchInput.value = ''; desktopLocationFilter.value = ''; applyFiltersAndRender(); });
-            
-            // Mobile filter listeners
-            mobileSearchInput.addEventListener('input', applyFiltersAndRender);
-            mobileFilterToggle.addEventListener('click', () => {
-                const isHidden = mobileRoleFiltersContainer.classList.contains('hidden');
+            const applyFiltersAndRender = () => {
+                jobsCurrentPage = 1;
+                referralsCurrentPage = 1;
+                const searchTerm = (isMobile ? mobileSearchInput.value : desktopSearchInput.value).toLowerCase();
                 
-                // Smart UX: Hide jobs when filters are opened
-                jobGrid.classList.toggle('filtering', isHidden);
+                let selectedRole = '';
+                let selectedLocation = '';
                 
-                if (isHidden) {
-                    mobileRoleFiltersContainer.classList.remove('hidden');
+                if (isMobile) {
+                    const activeRolePill = document.querySelector('.filter-pill[data-role].active');
+                    const activeLocationPill = document.querySelector('.filter-pill[data-location].active');
+                    if (activeRolePill) selectedRole = activeRolePill.dataset.role;
+                    if (activeLocationPill) selectedLocation = activeLocationPill.dataset.location;
                 } else {
-                    mobileRoleFiltersContainer.classList.add('hidden');
+                    selectedRole = desktopRoleFilter.value;
+                    selectedLocation = desktopLocationFilter.value;
                 }
+                
+                filteredJobs = allJobs.filter(job =>
+                    (searchTerm === '' || job['Job Title'].toLowerCase().includes(searchTerm) || job.Company.toLowerCase().includes(searchTerm)) &&
+                    (selectedLocation === '' || job.Location === selectedLocation) &&
+                    (selectedRole === '' || job['Job Title'] === selectedRole)
+                );
+                
+                filteredReferrals = allReferrals.filter(referral =>
+                    (searchTerm === '' || referral['Referred Role'].toLowerCase().includes(searchTerm) || referral['Referred Company'].toLowerCase().includes(searchTerm)) &&
+                    (selectedLocation === '' || referral['Referred Location'] === selectedLocation) &&
+                    (selectedRole === '' || referral['Referred Role'] === selectedRole)
+                );
+
+                displayJobs();
+                displayReferrals();
+            };
+
+            const switchPage = (pageId) => {
+                appPages.forEach(page => page.classList.remove('active'));
+                document.getElementById(`${pageId}-page`).classList.add('active');
+
+                if (isMobile) {
+                    // Mobile-specific logic
+                    mobileNavTabs.forEach(btn => btn.classList.remove('text-orange-500'));
+                    document.querySelector(`[data-page="${pageId}"]`).classList.add('text-orange-500');
+                    if(pageId === 'jobs-referrals') {
+                         document.getElementById('mobile-header').style.display = 'block';
+                    } else {
+                         document.getElementById('mobile-header').style.display = 'none';
+                    }
+                } else {
+                    // Desktop-specific logic
+                    desktopNavTabs.forEach(btn => btn.classList.remove('text-orange-500', 'border-orange-500'));
+                    document.querySelector(`[data-page="${pageId}"]`).classList.add('text-orange-500', 'border-orange-500');
+                }
+                // Update title based on page
+                const title = pageId.split('-').map(s => s.charAt(0).toUpperCase() + s.slice(1)).join(' ');
+                document.title = `${title} | OneStopCareers`;
+            };
+
+            // --- EVENT LISTENERS ---
+            if (isMobile) {
+                mobileNavTabs.forEach(tab => tab.addEventListener('click', () => switchPage(tab.dataset.page)));
+                mobileSearchInput.addEventListener('input', applyFiltersAndRender);
+                mobileFilterToggle.addEventListener('click', () => mobileFilterScreen.classList.add('open'));
+                closeFilterBtn.addEventListener('click', () => mobileFilterScreen.classList.remove('open'));
+                applyFiltersBtn.addEventListener('click', () => { applyFiltersAndRender(); mobileFilterScreen.classList.remove('open'); });
+                mobileRoleFiltersContainer.addEventListener('click', (e) => {
+                    document.querySelectorAll('.filter-pill[data-role]').forEach(p => p.classList.remove('active'));
+                    if (e.target.classList.contains('filter-pill')) e.target.classList.add('active');
+                });
+                mobileLocationFiltersContainer.addEventListener('click', (e) => {
+                    document.querySelectorAll('.filter-pill[data-location]').forEach(p => p.classList.remove('active'));
+                    if (e.target.classList.contains('filter-pill')) e.target.classList.add('active');
+                });
+            } else {
+                desktopNavTabs.forEach(tab => tab.addEventListener('click', () => switchPage(tab.dataset.page)));
+                desktopSearchInput.addEventListener('input', applyFiltersAndRender);
+                desktopLocationFilter.addEventListener('change', applyFiltersAndRender);
+                desktopRoleFilter.addEventListener('change', applyFiltersAndRender);
+                desktopResetBtn.addEventListener('click', () => {
+                    desktopSearchInput.value = '';
+                    desktopLocationFilter.value = '';
+                    desktopRoleFilter.value = '';
+                    applyFiltersAndRender();
+                });
+            }
+
+            // General event listeners
+            jobGrid.addEventListener('click', (e) => {
+                const card = e.target.closest('.job-card');
+                if (!card) return;
+                const job = allJobs.find(j => String(j.ID) === card.dataset.jobId);
+                if (job && e.target.closest('.apply-btn')) showApplyModal(job);
             });
             
-            mobileRoleFiltersContainer.addEventListener('click', (e) => {
-                if (e.target.classList.contains('mobile-role-pill')) {
-                    // Update active state
-                    mobileRoleFiltersContainer.querySelectorAll('.mobile-role-pill').forEach(pill => {
-                        pill.classList.remove('active', 'bg-orange-500', 'text-white');
-                        pill.classList.add('bg-gray-800', 'text-gray-300');
-                    });
-                    e.target.classList.add('active', 'bg-orange-500', 'text-white');
-                    e.target.classList.remove('bg-gray-800', 'text-gray-300');
-                    
-                    // Apply filter and hide the filter UI
-                    applyFiltersAndRender();
-                    setTimeout(() => {
-                        mobileRoleFiltersContainer.classList.add('hidden');
-                        jobGrid.classList.remove('filtering');
-                    }, 300); // Give a moment for the user to see their selection
-                }
-            });
+            loadMoreJobsBtn.addEventListener('click', () => { jobsCurrentPage++; displayJobs(); });
+            loadMoreReferralsBtn.addEventListener('click', () => { referralsCurrentPage++; displayReferrals(); });
+            modalOverlay.addEventListener('click', (e) => { if (e.target === modalOverlay) closeModal(); });
 
-            loadMoreBtn.addEventListener('click', () => { currentPage++; displayJobs(); });
 
             // --- INITIALIZATION ---
-            fetchJobs();
+            fetchAllData();
+            switchPage('home'); // Start on the home page
         });
     </script>
 </body>
