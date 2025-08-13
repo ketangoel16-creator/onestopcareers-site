@@ -8,22 +8,12 @@
   <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"/>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&display=swap');
-    body {
-      font-family: 'Manrope', sans-serif;
-      background-color: #121212;
-      color: #EAEAEA;
-    }
-    /* Modal Styles */
+    body { font-family: 'Manrope', sans-serif; background-color: #121212; color: #EAEAEA; }
     .modal { display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; }
-    .modal-content { background-color: #1C1C1C; padding: 24px; border-radius: 12px; width: 90%; max-width: 400px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5); border: 1px solid #333; }
+    .modal-content { background-color: #1C1C1C; padding: 24px; border-radius: 12px; width: 90%; max-width: 400px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); border: 1px solid #333; }
     .close-btn { color: #aaa; float: right; font-size: 28px; font-weight: bold; }
     .close-btn:hover, .close-btn:focus { color: #fff; text-decoration: none; cursor: pointer; }
-    /* Toast Notification */
-    .toast { visibility: hidden; min-width: 250px; margin-left: -125px; background-color: #333; color: #fff; text-align: center; border-radius: 8px; padding: 16px; position: fixed; z-index: 101; left: 50%; bottom: 30px; opacity: 0; transition: visibility 0s, opacity 0.5s linear; }
-    .toast.show { visibility: visible; opacity: 1; }
-    /* Responsive Grid for Content */
     .content-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; }
-    /* Horizontal Carousel Styling */
     .toolkit-carousel { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 1.5rem; padding-bottom: 1rem; }
     .toolkit-carousel::-webkit-scrollbar { height: 8px; }
     .toolkit-carousel::-webkit-scrollbar-thumb { background: #4a5568; border-radius: 10px; }
@@ -32,48 +22,36 @@
 </head>
 <body class="bg-[#121212] text-white">
 
-<div id="header-placeholder"></div>
-
 <main>
     <section id="jobs" class="max-w-7xl mx-auto px-4 py-16">
     <div class="text-center">
       <h1 class="text-4xl md:text-5xl font-extrabold text-white mb-2">Find Your Next Role</h1>
       <p class="text-gray-400 mb-8">Explore curated opportunities from top-tier companies.</p>
     </div>
-
-        <div class="flex flex-col md:flex-row items-center justify-center gap-4 mb-8">
-      <input type="text" id="job-search" placeholder="Search by title, company..." class="w-full md:w-1/3 p-3 rounded-lg border border-gray-700 bg-[#1C1C1C] text-white shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500" />
-      <button id="company-filter-btn" class="w-full md:w-auto p-3 rounded-lg border border-gray-700 bg-[#1C1C1C] text-white shadow-sm text-left min-w-[150px]">All Companies</button>
-      <button id="location-filter-btn" class="w-full md:w-auto p-3 rounded-lg border border-gray-700 bg-[#1C1C1C] text-white shadow-sm text-left min-w-[150px]">All Locations</button>
+        <div class="flex flex-col md:flex-row items-center justify-center gap-4 mb-8">
+      <input type="text" id="job-search" placeholder="Search by title, company..." class="w-full md:w-1/3 p-3 rounded-lg border border-gray-700 bg-[#1C1C1C] text-white focus:outline-none focus:ring-2 focus:ring-orange-500" />
+      <button id="company-filter-btn" class="w-full md:w-auto p-3 rounded-lg border border-gray-700 bg-[#1C1C1C] text-white text-left min-w-[150px]">All Companies</button>
+      <button id="location-filter-btn" class="w-full md:w-auto p-3 rounded-lg border border-gray-700 bg-[#1C1C1C] text-white text-left min-w-[150px]">All Locations</button>
     </div>
-
-    <div id="job-board-loading" class="content-grid justify-items-center"> </div>
+    
+    <div id="job-board-loading" class="content-grid justify-items-center"></div>
     <div id="job-board" class="content-grid justify-items-center" style="display: none;"></div>
     <p id="no-jobs-found" class="text-center text-gray-400 mt-8" style="display: none;">No jobs found matching your criteria.</p>
+    <div id="see-more-jobs-container" class="text-center mt-12" style="display: none;">
+      <button id="see-more-jobs-btn" class="bg-gray-800 text-gray-300 px-6 py-3 rounded-lg hover:bg-gray-700">See More Jobs</button>
+    </div>
   </section>
 
     <section id="toolkit" class="max-w-7xl mx-auto px-4 py-16">
     <div class="flex justify-between items-center mb-8">
-      <div>
-        <h2 class="text-3xl font-extrabold text-white">Your Career Toolkit</h2>
-        <p class="text-gray-400">Resources to help you get hired.</p>
-      </div>
+      <div><h2 class="text-3xl font-extrabold text-white">Your Career Toolkit</h2><p class="text-gray-400">Resources to help you get hired.</p></div>
       <a href="#" class="text-sm text-gray-400 hover:text-white">See all</a>
     </div>
-        <div class="toolkit-carousel">
-      <div class="toolkit-carousel-item bg-[#1C1C1C] p-6 rounded-xl border border-gray-800">
-        <h3 class="text-lg font-bold">Resume Templates</h3><p class="text-gray-400">ATS-friendly designs</p>
-      </div>
-      <div class="toolkit-carousel-item bg-[#1C1C1C] p-6 rounded-xl border border-gray-800">
-        <h3 class="text-lg font-bold">Interview Prep</h3><p class="text-gray-400">STAR method & frameworks</p>
-      </div>
-      <div class="toolkit-carousel-item bg-[#1C1C1C] p-6 rounded-xl border border-gray-800">
-        <h3 class="text-lg font-bold">Salary Guides</h3><p class="text-gray-400">Negotiate your worth</p>
-      </div>
-      <div class="toolkit-carousel-item bg-gradient-to-br from-green-500 to-teal-600 p-6 rounded-xl flex flex-col justify-between">
-        <div><h3 class="text-lg font-bold text-white">Join our 50K+ WhatsApp Community</h3><p class="text-green-100 text-sm">Daily job alerts & mentorship</p></div>
-        <a href="#" class="mt-4 inline-block bg-white text-green-700 font-bold px-4 py-2 rounded-lg text-center w-28">Join Now</a>
-      </div>
+    <div class="toolkit-carousel">
+      <div class="toolkit-carousel-item bg-[#1C1C1C] p-6 rounded-xl border border-gray-800"><h3 class="text-lg font-bold">Resume Templates</h3><p class="text-gray-400">ATS-friendly designs</p></div>
+      <div class="toolkit-carousel-item bg-[#1C1C1C] p-6 rounded-xl border border-gray-800"><h3 class="text-lg font-bold">Interview Prep</h3><p class="text-gray-400">STAR method & frameworks</p></div>
+      <div class="toolkit-carousel-item bg-[#1C1C1C] p-6 rounded-xl border border-gray-800"><h3 class="text-lg font-bold">Salary Guides</h3><p class="text-gray-400">Negotiate your worth</p></div>
+      <div class="toolkit-carousel-item bg-gradient-to-br from-green-500 to-teal-600 p-6 rounded-xl flex flex-col justify-between"><div><h3 class="text-lg font-bold text-white">Join our 50K+ WhatsApp Community</h3><p class="text-green-100 text-sm">Daily job alerts & mentorship</p></div><a href="#" class="mt-4 inline-block bg-white text-green-700 font-bold px-4 py-2 rounded-lg text-center w-28">Join Now</a></div>
     </div>
   </section>
 
@@ -82,30 +60,25 @@
       <h2 class="text-3xl font-extrabold text-white">Referral Network</h2>
       <p class="text-gray-400">Professionals ready to help with referrals.</p>
     </div>
-        <div class="mb-8 max-w-md">
-      <input type="text" id="referral-search" placeholder="Search by name, company..." class="w-full p-3 rounded-lg border border-gray-700 bg-[#1C1C1C] text-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+    <div class="mb-8 max-w-md">
+      <input type="text" id="referral-search" placeholder="Search by name, company..." class="w-full p-3 rounded-lg border border-gray-700 bg-[#1C1C1C] text-white focus:outline-none focus:ring-2 focus:ring-blue-500" />
     </div>
-    <div id="referral-board-loading" class="content-grid"> </div>
+    <div id="referral-board-loading" class="content-grid"></div>
     <div id="referral-board" class="content-grid" style="display: none;"></div>
     <p id="no-referrals-found" class="text-center text-gray-400 mt-8" style="display: none;">No professionals found matching your search.</p>
+    <div id="see-more-referrals-container" class="text-center mt-12" style="display: none;">
+      <button id="see-more-referrals-btn" class="bg-gray-800 text-gray-300 px-6 py-3 rounded-lg hover:bg-gray-700">See More Referrals</button>
+    </div>
   </section>
 </main>
 
-<div id="footer-placeholder"></div>
-
 <div id="filter-modal" class="modal">
   <div class="modal-content">
-    <div class="flex justify-between items-center mb-4">
-      <h3 id="filter-modal-title" class="text-xl font-bold">Filter</h3>
-      <span id="close-modal-btn" class="close-btn">&times;</span>
-    </div>
+    <div class="flex justify-between items-center mb-4"><h3 id="filter-modal-title" class="text-xl font-bold">Filter</h3><span id="close-modal-btn" class="close-btn">&times;</span></div>
     <div id="filter-options" class="space-y-2 max-h-60 overflow-y-auto"></div>
-    <div class="mt-6 flex justify-end gap-4">
-      <button id="apply-filter-btn" class="bg-orange-600 text-white px-4 py-2 rounded-lg hover:bg-orange-700">Apply</button>
-    </div>
+    <div class="mt-6 flex justify-end gap-4"><button id="apply-filter-btn" class="bg-orange-600 text-white px-4 py-2 rounded-lg hover:bg-orange-700">Apply</button></div>
   </div>
 </div>
-<div id="toast" class="toast">Link copied to clipboard!</div>
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
@@ -113,17 +86,14 @@ document.addEventListener('DOMContentLoaded', () => {
   const jobBoard = document.getElementById('job-board');
   const jobBoardLoading = document.getElementById('job-board-loading');
   const noJobsFound = document.getElementById('no-jobs-found');
-  const referralBoard = document.getElementById('referral-board');
-  const referralBoardLoading = document.getElementById('referral-board-loading');
+  const seeMoreJobsBtn = document.getElementById('see-more-jobs-btn');
+  const referralBoard = document.getElementById('referral-board');
   const noReferralsFound = document.getElementById('no-referrals-found');
-
-  // Filter & Search Elements
-  const jobSearchInput = document.getElementById('job-search');
-  const companyFilterBtn = document.getElementById('company-filter-btn');
-  const locationFilterBtn = document.getElementById('location-filter-btn');
+  const seeMoreReferralsBtn = document.getElementById('see-more-referrals-btn');
+  const jobSearchInput = document.getElementById('job-search');
+  const companyFilterBtn = document.getElementById('company-filter-btn');
+  const locationFilterBtn = document.getElementById('location-filter-btn');
   const referralSearchInput = document.getElementById('referral-search');
-
-  // Modal Elements
   const filterModal = document.getElementById('filter-modal');
   const filterModalTitle = document.getElementById('filter-modal-title');
   const filterOptionsContainer = document.getElementById('filter-options');
@@ -131,179 +101,130 @@ document.addEventListener('DOMContentLoaded', () => {
   const applyFilterBtn = document.getElementById('apply-filter-btn');
 
   // State
-  let allJobs = [];
-  let allReferrals = [];
+  let allJobs = [], filteredJobs = [], allReferrals = [], filteredReferrals = [];
+  let jobsPerPage = 8, referralsPerPage = 8, currentJobPage = 1, currentReferralPage = 1;
   let activeJobFilters = { search: '', company: 'All', location: 'All' };
-  let currentFilterType = '';
+  let currentModalFilterType = '';
 
-  // Preloaded Data (Fallbacks)
-  const preloadedJobs = [
-    { id: 1, "Job Title": "Senior Frontend Developer", Company: "Innovate Inc.", Location: "San Francisco, CA", Link: "#" },
-    { id: 2, "Job Title": "Product Manager", Company: "Solutions Co.", Location: "New York, NY", Link: "#" },
-    { id: 3, "Job Title": "Data Scientist", Company: "DataWorks", Location: "Remote", Link: "#" },
-    { id: 4, "Job Title": "Backend Engineer", Company: "Innovate Inc.", Location: "Remote", Link: "#" },
-    { id: 5, "Job Title": "UX/UI Designer", Company: "Creative Minds", Location: "Austin, TX", Link: "#" }
-  ];
-  const preloadedReferrals = [
-    { id: 1, name: "Alex Johnson", title: "Engineering Manager", company: "Innovate Inc.", linkedin: "#" },
-    { id: 2, name: "Brenda Smith", title: "Senior Recruiter", company: "Solutions Co.", linkedin: "#" },
-    { id: 3, name: "Chandan Patel", title: "Staff Engineer", company: "DataWorks", linkedin: "#" }
-  ];
+  const preloadedJobs = Array.from({ length: 25 }, (_, i) => ({ id: i + 1, "Job Title": i % 3 === 0 ? `React Developer ${i}`: `Business Analyst ${i}`, Company: i % 2 === 0 ? "Innovate Inc." : "Solutions Co.", Location: i % 4 === 0 ? "Remote" : "New York, NY", Link: "#" }));
+  const preloadedReferrals = Array.from({ length: 25 }, (_, i) => ({ id: i + 1, name: `Alex Johnson ${i}`, title: "Engineer", company: i % 2 === 0 ? "DataWorks" : "Innovate Inc.", linkedin: "#" }));
 
-  // --- RENDER FUNCTIONS ---
-  const renderJobs = (jobs) => {
-    jobBoard.innerHTML = '';
-    if (jobs.length === 0) {
-        noJobsFound.style.display = 'block';
-    } else {
-        noJobsFound.style.display = 'none';
-    }
-    jobs.forEach(job => {
-        const jobCard = document.createElement('div');
-        jobCard.className = 'bg-[#1C1C1C] p-6 rounded-xl border border-gray-800 text-center flex flex-col';
-        jobCard.innerHTML = `<div class="flex-grow"><h3 class="text-lg font-bold mb-2">${job["Job Title"]}</h3><p class="text-sm text-gray-400 mb-1">${job.Company}</p><p class="text-sm text-gray-500 mb-4">${job.Location}</p></div><a href="${job.Link}" class="mt-auto inline-block bg-orange-600 px-4 py-2 rounded text-white hover:bg-orange-700 transition">Apply</a>`;
-        jobBoard.appendChild(jobCard);
-    });
-  };
-
-  const renderReferrals = (referrals) => {
-    referralBoard.innerHTML = '';
-    if (referrals.length === 0) {
-        noReferralsFound.style.display = 'block';
-    } else {
-        noReferralsFound.style.display = 'none';
-    }
-    referrals.forEach(ref => {
-        const referralCard = document.createElement('div');
-        referralCard.className = 'bg-[#1C1C1C] p-6 rounded-xl border border-gray-800';
-        const initials = ref.name.split(' ').map(n => n[0]).join('');
-        referralCard.innerHTML = `<div class="flex items-center mb-4"><div class="w-12 h-12 rounded-full bg-gray-700 flex items-center justify-center mr-4 font-bold text-lg">${initials}</div><div><h3 class="font-bold text-white">${ref.name}</h3><p class="text-sm text-gray-400">${ref.title} - ${ref.company}</p></div></div><div class="flex gap-4 mt-6"><a href="${ref.linkedin}" target="_blank" class="w-full text-center bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors">Connect on LinkedIn</a><button class="w-full bg-gray-700 hover:bg-gray-600 text-gray-300 font-semibold py-2 px-4 rounded-lg transition-colors">Request Referral</button></div>`;
-        referralBoard.appendChild(referralCard);
-    });
-  };
-
-  // --- FILTERING LOGIC ---
-  const applyJobFilters = () => {
-    let filteredJobs = [...allJobs];
-    const searchTerm = activeJobFilters.search.toLowerCase();
-    
-    // Search filter
-    if (searchTerm) {
-        filteredJobs = filteredJobs.filter(job => 
-            job['Job Title'].toLowerCase().includes(searchTerm) || 
-            job.Company.toLowerCase().includes(searchTerm)
-        );
-    }
-    // Company filter
-    if (activeJobFilters.company !== 'All') {
-        filteredJobs = filteredJobs.filter(job => job.Company === activeJobFilters.company);
-    }
-    // Location filter
-    if (activeJobFilters.location !== 'All') {
-        filteredJobs = filteredJobs.filter(job => job.Location === activeJobFilters.location);
-    }
-    renderJobs(filteredJobs);
+  const updateDisplayLimits = () => {
+    const isMobile = window.innerWidth < 768;
+    jobsPerPage = referralsPerPage = isMobile ? 4 : 8;
   };
   
-  const applyReferralFilter = () => {
-    const searchTerm = referralSearchInput.value.toLowerCase();
-    if (!searchTerm) {
-        renderReferrals(allReferrals);
-        return;
+  const createCard = (item, type) => {
+    const card = document.createElement('div');
+    card.className = 'bg-[#1C1C1C] p-6 rounded-xl border border-gray-800';
+    if (type === 'job') {
+      card.classList.add('text-center', 'flex', 'flex-col');
+      card.innerHTML = `<div class="flex-grow"><h3 class="text-lg font-bold mb-2">${item["Job Title"]}</h3><p class="text-sm text-gray-400 mb-1">${item.Company}</p><p class="text-sm text-gray-500 mb-4">${item.Location}</p></div><a href="${item.Link}" class="mt-auto inline-block bg-orange-600 px-4 py-2 rounded text-white hover:bg-orange-700 transition">Apply</a>`;
+    } else {
+      const initials = item.name.split(' ').map(n => n[0]).join('');
+      card.innerHTML = `<div class="flex items-center mb-4"><div class="w-12 h-12 rounded-full bg-gray-700 flex items-center justify-center mr-4 font-bold text-lg">${initials}</div><div><h3 class="font-bold text-white">${item.name}</h3><p class="text-sm text-gray-400">${item.title} - ${item.company}</p></div></div><div class="flex gap-4 mt-6"><a href="${item.linkedin}" target="_blank" class="w-full text-center bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg">Connect</a><button class="w-full bg-gray-700 hover:bg-gray-600 text-gray-300 font-semibold py-2 px-4 rounded-lg">Request</button></div>`;
     }
-    const filteredReferrals = allReferrals.filter(ref => 
-        ref.name.toLowerCase().includes(searchTerm) ||
-        ref.company.toLowerCase().includes(searchTerm)
-    );
-    renderReferrals(filteredReferrals);
+    return card;
   };
 
-  // --- MODAL LOGIC ---
-  const openFilterModal = (type) => {
-    currentFilterType = type;
-    const title = `Filter by ${type.charAt(0).toUpperCase() + type.slice(1)}`;
-    filterModalTitle.textContent = title;
+  const applyAndRenderJobs = () => {
+    let tempJobs = [...allJobs];
+    if (activeJobFilters.search) {
+        const searchTerm = activeJobFilters.search.toLowerCase();
+        tempJobs = tempJobs.filter(j => j["Job Title"].toLowerCase().includes(searchTerm) || j.Company.toLowerCase().includes(searchTerm));
+    }
+    if (activeJobFilters.company !== 'All') tempJobs = tempJobs.filter(j => j.Company === activeJobFilters.company);
+    if (activeJobFilters.location !== 'All') tempJobs = tempJobs.filter(j => j.Location === activeJobFilters.location);
+    filteredJobs = tempJobs;
+    currentJobPage = 1;
+    jobBoard.innerHTML = '';
+    const jobsToShow = filteredJobs.slice(0, jobsPerPage);
+    jobsToShow.forEach(job => jobBoard.appendChild(createCard(job, 'job')));
+    noJobsFound.style.display = filteredJobs.length === 0 ? 'block' : 'none';
+    document.getElementById('see-more-jobs-container').style.display = filteredJobs.length > jobsPerPage ? 'block' : 'none';
+  };
 
-    const options = ['All', ...new Set(allJobs.map(job => type === 'company' ? job.Company : job.Location))];
-    filterOptionsContainer.innerHTML = '';
-    options.forEach(option => {
-        const isChecked = (type === 'company' && option === activeJobFilters.company) || (type === 'location' && option === activeJobFilters.location);
-        filterOptionsContainer.innerHTML += `
-            <label class="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-700 cursor-pointer">
-                <input type="radio" name="filter-option" value="${option}" class="form-radio h-4 w-4 text-orange-600 bg-gray-800 border-gray-600" ${isChecked ? 'checked' : ''}>
-                <span class="text-white">${option}</span>
-            </label>`;
-    });
+  const applyAndRenderReferrals = () => {
+    const searchTerm = referralSearchInput.value.toLowerCase();
+    filteredReferrals = allReferrals.filter(r => !searchTerm || r.name.toLowerCase().includes(searchTerm) || r.company.toLowerCase().includes(searchTerm));
+    currentReferralPage = 1;
+    referralBoard.innerHTML = '';
+    const referralsToShow = filteredReferrals.slice(0, referralsPerPage);
+    referralsToShow.forEach(ref => referralBoard.appendChild(createCard(ref, 'referral')));
+    noReferralsFound.style.display = filteredReferrals.length === 0 ? 'block' : 'none';
+    document.getElementById('see-more-referrals-container').style.display = filteredReferrals.length > referralsPerPage ? 'block' : 'none';
+  };
+  
+  const loadMore = (type) => {
+    if (type === 'job') {
+      currentJobPage++;
+      const start = (currentJobPage - 1) * jobsPerPage;
+      const end = start + jobsPerPage;
+      filteredJobs.slice(start, end).forEach(job => jobBoard.appendChild(createCard(job, 'job')));
+      if (end >= filteredJobs.length) document.getElementById('see-more-jobs-container').style.display = 'none';
+    } else {
+      currentReferralPage++;
+      const start = (currentReferralPage - 1) * referralsPerPage;
+      const end = start + referralsPerPage;
+      filteredReferrals.slice(start, end).forEach(ref => referralBoard.appendChild(createCard(ref, 'referral')));
+      if (end >= filteredReferrals.length) document.getElementById('see-more-referrals-container').style.display = 'none';
+    }
+  };
+
+  const openFilterModal = (type) => {
+    currentModalFilterType = type;
+    filterModalTitle.textContent = `Filter by ${type.charAt(0).toUpperCase() + type.slice(1)}`;
+    const key = type === 'company' ? 'Company' : 'Location';
+    const options = ['All', ...new Set(allJobs.map(job => job[key]))];
+    const currentSelection = activeJobFilters[type];
+    filterOptionsContainer.innerHTML = options.map(option => `
+      <label class="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-700 cursor-pointer">
+        <input type="radio" name="filter-option" value="${option}" class="form-radio h-4 w-4 text-orange-600 bg-gray-800 border-gray-600" ${option === currentSelection ? 'checked' : ''}>
+        <span class="text-white">${option}</span>
+      </label>`).join('');
     filterModal.style.display = 'flex';
   };
-
-  const closeFilterModal = () => {
-    filterModal.style.display = 'none';
-  };
-
-  applyFilterBtn.addEventListener('click', () => {
-    const selectedOption = document.querySelector('input[name="filter-option"]:checked');
-    if (selectedOption) {
-        if (currentFilterType === 'company') {
-            activeJobFilters.company = selectedOption.value;
-            companyFilterBtn.textContent = selectedOption.value;
-        } else if (currentFilterType === 'location') {
-            activeJobFilters.location = selectedOption.value;
-            locationFilterBtn.textContent = selectedOption.value;
+  
+  const init = () => {
+    updateDisplayLimits();
+    // Set up listeners
+    jobSearchInput.addEventListener('input', () => { activeJobFilters.search = jobSearchInput.value; applyAndRenderJobs(); });
+    referralSearchInput.addEventListener('input', applyAndRenderReferrals);
+    companyFilterBtn.addEventListener('click', () => openFilterModal('company'));
+    locationFilterBtn.addEventListener('click', () => openFilterModal('location'));
+    seeMoreJobsBtn.addEventListener('click', () => loadMore('job'));
+    seeMoreReferralsBtn.addEventListener('click', () => loadMore('referral'));
+    closeModalBtn.addEventListener('click', () => filterModal.style.display = 'none');
+    applyFilterBtn.addEventListener('click', () => {
+        const selected = document.querySelector('input[name="filter-option"]:checked');
+        if (selected) {
+            activeJobFilters[currentModalFilterType] = selected.value;
+            (currentModalFilterType === 'company' ? companyFilterBtn : locationFilterBtn).textContent = selected.value;
         }
-    }
-    applyJobFilters();
-    closeFilterModal();
-  });
-  
-  closeModalBtn.addEventListener('click', closeFilterModal);
-  window.addEventListener('click', (e) => {
-      if (e.target === filterModal) closeFilterModal();
-  });
+        applyAndRenderJobs();
+        filterModal.style.display = 'none';
+    });
+    window.addEventListener('resize', () => { updateDisplayLimits(); applyAndRenderJobs(); applyAndRenderReferrals(); });
 
-
-  // --- INITIALIZATION & EVENT LISTENERS ---
-  const setupPage = (dataSource, setupFunction, loadingElement, renderFunction, preloadedData) => {
-    loadingElement.style.display = 'grid'; // Show loader
-    fetch(dataSource)
-      .then(response => {
-        if (!response.ok) throw new Error(`Network response for ${dataSource} was not ok`);
-        return response.json();
-      })
-      .then(data => {
-        loadingElement.style.display = 'none';
-        setupFunction(data);
-      })
-      .catch(error => {
-        console.error(`Error loading from ${dataSource}. Falling back to preloaded data.`, error);
-        loadingElement.style.display = 'none';
-        setupFunction(preloadedData);
-      });
+    // Fetch and render initial data
+    Promise.all([
+        fetch('https://ketangoel16-creator.github.io/onestopcareers-data/jobs.json').then(res => res.ok ? res.json() : preloadedJobs),
+        fetch('https://ketangoel16-creator.github.io/onestopcareers-data/referrals.json').then(res => res.ok ? res.json() : preloadedReferrals)
+    ]).then(([jobs, referrals]) => {
+        allJobs = jobs;
+        allReferrals = referrals;
+        document.getElementById('job-board-loading').style.display = 'none';
+        jobBoard.style.display = 'grid';
+        document.getElementById('referral-board-loading').style.display = 'none';
+        referralBoard.style.display = 'grid';
+        applyAndRenderJobs();
+        applyAndRenderReferrals();
+    }).catch(console.error);
   };
 
-  setupPage(
-    'https://ketangoel16-creator.github.io/onestopcareers-data/jobs.json', 
-    (data) => { allJobs = data; jobBoard.style.display = 'grid'; renderJobs(allJobs); },
-    jobBoardLoading, renderJobs, preloadedJobs
-  );
-
-  setupPage(
-    'https://ketangoel16-creator.github.io/onestopcareers-data/referrals.json', 
-    (data) => { allReferrals = data; referralBoard.style.display = 'grid'; renderReferrals(allReferrals); },
-    referralBoardLoading, renderReferrals, preloadedReferrals
-  );
-  
-  // Event Listeners for search and filters
-  jobSearchInput.addEventListener('input', () => {
-    activeJobFilters.search = jobSearchInput.value;
-    applyJobFilters();
-  });
-
-  referralSearchInput.addEventListener('input', applyReferralFilter);
-
-  companyFilterBtn.addEventListener('click', () => openFilterModal('company'));
-  locationFilterBtn.addEventListener('click', () => openFilterModal('location'));
+  init();
 });
 </script>
+
 </body>
 </html>
