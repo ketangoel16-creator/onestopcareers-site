@@ -62,7 +62,7 @@
                 flex: 0 0 80%;
                 scroll-snap-align: start;
             }
-            #desktop-nav-tabs, #desktop-page-title {
+            #desktop-nav-tabs, #desktop-page-title, #desktop-search-container {
                 display: none;
             }
             /* Mobile Filter Screen */
@@ -169,13 +169,13 @@
             
             <!-- Jobs Page -->
             <div id="jobs-page" class="app-page active">
-                <section id="desktop-filters" class="bg-gray-900/70 backdrop-blur-sm p-4 sm:p-6 rounded-xl mb-8 sticky top-4 z-10 border border-gray-800 shadow-lg">
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <input type="text" id="desktop-search-input" placeholder="Search by job title or company..." class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2.5 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-orange-500">
-                        <select id="location-filter" class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:ring-2 focus:ring-orange-500">
-                            <option value="">All Locations</option>
-                        </select>
-                        <button id="desktop-reset-filters" class="w-full bg-gray-700 hover:bg-gray-600 text-white font-semibold py-2.5 px-4 rounded-lg">Reset</button>
+                <!-- Combined desktop search and filter UI -->
+                <section id="desktop-search-container" class="bg-gray-900/70 backdrop-blur-sm p-4 sm:p-6 rounded-xl mb-8 sticky top-4 z-10 border border-gray-800 shadow-lg hidden md:block">
+                    <div class="flex gap-4 items-center">
+                        <input type="text" id="desktop-search-input" placeholder="Search jobs..." class="flex-grow bg-gray-800 border border-gray-700 rounded-full px-4 py-2.5 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all">
+                        <button id="desktop-filter-toggle" class="p-2.5 bg-gray-800 border border-gray-700 rounded-full text-gray-400">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2a1 1 0 01-.293.707L16 11.414V16a1 1 0 01-.293.707l-2 2A1 1 0 0113 18v-2.586l-6.707-6.707A1 1 0 016 8V4z" /></svg>
+                        </button>
                     </div>
                 </section>
                 
@@ -196,8 +196,11 @@
                 <!-- Referrals Section is now after the jobs section -->
                 <section id="referrals-section" class="mb-12">
                     <h2 class="text-2xl font-bold text-white mb-6">Referrals from our Network</h2>
-                    <div id="referrals-carousel-mobile" class="md:hidden horizontal-carousel-wrapper space-x-4 pr-4"></div>
-                    <div id="referrals-grid-desktop" class="hidden md:grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+                    <div id="referrals-carousel-mobile" class="horizontal-carousel-wrapper space-x-4 pr-4 md:hidden"></div>
+                    <div id="referrals-grid-desktop" class="md:grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 hidden"></div>
+                    <div id="referral-load-more-container" class="text-center mt-12 hidden">
+                        <button id="referral-load-more-btn" class="bg-gradient-to-br from-orange-500 to-orange-600 text-white font-semibold py-3 px-8 rounded-lg transition-all hover:scale-105">See More Referrals</button>
+                    </div>
                 </section>
             </div>
 
@@ -227,8 +230,25 @@
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
             </button>
         </div>
-        <div id="mobile-role-filters" class="flex flex-col gap-2"></div>
+        <div id="mobile-search-filter-options">
+            <!-- New search bar for the filter screen -->
+            <div class="mb-4">
+                <label for="filter-search" class="block text-sm font-medium text-gray-400 mb-2">Search</label>
+                <input type="text" id="filter-search" placeholder="Search by job title..." class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2.5 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-orange-500">
+            </div>
+            <!-- Location filter -->
+            <div class="mb-4">
+                <label for="filter-location" class="block text-sm font-medium text-gray-400 mb-2">Location</label>
+                <select id="filter-location" class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:ring-2 focus:ring-orange-500">
+                    <option value="">All Locations</option>
+                </select>
+            </div>
+            <!-- Dynamic role filters -->
+            <h3 class="text-sm font-medium text-gray-400 mb-2">Roles</h3>
+            <div id="mobile-role-filters" class="flex flex-col gap-2"></div>
+        </div>
         <button id="apply-filters-btn" class="w-full mt-6 bg-orange-500 text-white font-semibold py-3 rounded-lg">Show Results</button>
+        <button id="clear-filters-btn" class="w-full mt-2 bg-gray-700 text-white font-semibold py-3 rounded-lg">Clear All</button>
     </div>
 
     <!-- Modals and Bottom Nav -->
@@ -242,12 +262,13 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             // --- STATE MANAGEMENT ---
-            // Centralized state object to manage the entire application's data and UI state.
             const state = {
                 allJobs: [],
-                allReferrals: [], // New state to store referral data
+                allReferrals: [], 
                 filteredJobs: [],
+                filteredReferrals: [],
                 currentPage: 1,
+                currentReferralPage: 1,
                 activePage: 'jobs',
                 isMobile: window.matchMedia("(max-width: 767px)").matches,
                 filters: {
@@ -264,7 +285,9 @@
             // --- CONFIGURATION & ELEMENTS ---
             const JOBS_JSON_URL = 'https://ketangoel16-creator.github.io/onestopcareers-data/jobs.json';
             const REFERRALS_JSON_URL = 'https://ketangoel16-creator.github.io/onestopcareers-data/referrals.json';
-            const JOBS_PER_PAGE = 8; // Reduced to 8 jobs per page
+            const JOBS_PER_PAGE_DESKTOP = 10;
+            const JOBS_PER_PAGE_MOBILE = 6;
+            const REFERRALS_PER_PAGE_WEB = 9;
 
             const jobGrid = document.getElementById('job-listings-grid');
             const loadingSpinner = document.getElementById('loading-spinner');
@@ -274,16 +297,21 @@
             const toolkitCarousel = document.getElementById('toolkit-carousel');
             const referralsCarouselMobile = document.getElementById('referrals-carousel-mobile');
             const referralsGridDesktop = document.getElementById('referrals-grid-desktop');
+            const referralLoadMoreBtn = document.getElementById('referral-load-more-btn');
 
             const desktopSearchInput = document.getElementById('desktop-search-input');
-            const desktopLocationFilter = document.getElementById('location-filter');
-            const desktopResetBtn = document.getElementById('desktop-reset-filters');
+            const desktopFilterToggle = document.getElementById('desktop-filter-toggle');
             
             const mobileSearchInput = document.getElementById('mobile-search-input');
             const mobileFilterToggle = document.getElementById('mobile-filter-toggle');
             const mobileFilterScreen = document.getElementById('mobile-filter-screen');
             const closeFilterBtn = document.getElementById('close-filter-btn');
             const applyFiltersBtn = document.getElementById('apply-filters-btn');
+            const clearFiltersBtn = document.getElementById('clear-filters-btn');
+            
+            // Filter screen elements
+            const filterSearchInput = document.getElementById('filter-search');
+            const filterLocationSelect = document.getElementById('filter-location');
             const mobileRoleFiltersContainer = document.getElementById('mobile-role-filters');
             
             const bottomNav = document.getElementById('bottom-nav');
@@ -315,23 +343,18 @@
             };
 
             // --- MAIN RENDER FUNCTION ---
-            // This function updates the entire UI based on the current state.
             function render() {
-                // Render Page Content
                 appPages.forEach(page => page.classList.toggle('active', page.id === `${state.activePage}-page`));
 
-                // Render Job Listings and Referrals (on the 'jobs' page)
                 if (state.activePage === 'jobs') {
                     renderJobs();
                     renderReferrals();
                 }
 
-                // Render Toolkit Items
                 if (state.activePage === 'resources') {
                     renderCareerToolkit();
                 }
 
-                // Update navigation tabs
                 if (state.isMobile) {
                     bottomNav.querySelectorAll('.nav-btn').forEach(btn => {
                         btn.classList.toggle('text-orange-500', btn.dataset.page === state.activePage);
@@ -354,7 +377,8 @@
             }
             
             function renderJobs() {
-                const jobsToDisplay = state.isMobile ? state.filteredJobs : state.filteredJobs.slice(0, state.currentPage * JOBS_PER_PAGE);
+                const jobsPerPage = state.isMobile ? JOBS_PER_PAGE_MOBILE : JOBS_PER_PAGE_DESKTOP;
+                const jobsToDisplay = state.filteredJobs.slice(0, state.currentPage * jobsPerPage);
                 jobGrid.innerHTML = '';
                 noResultsMessage.style.display = jobsToDisplay.length > 0 ? 'none' : 'block';
 
@@ -385,18 +409,26 @@
                     img.onerror = () => { img.replaceWith(createDefaultLogo(img.dataset.companyName)); };
                 });
 
-                // Update Load More button visibility
-                loadMoreBtn.parentElement.style.display = state.isMobile || state.filteredJobs.length <= (state.currentPage * JOBS_PER_PAGE) ? 'none' : 'block';
+                loadMoreBtn.parentElement.style.display = state.filteredJobs.length > (state.currentPage * jobsPerPage) ? 'block' : 'none';
             }
 
             function renderReferrals() {
-                const referralsToRender = state.allReferrals;
+                const referralsToDisplay = state.isMobile ? state.allReferrals : state.allReferrals.slice(0, state.currentReferralPage * REFERRALS_PER_PAGE_WEB);
                 const container = state.isMobile ? referralsCarouselMobile : referralsGridDesktop;
                 
                 // Clear existing content
                 container.innerHTML = '';
                 
-                referralsToRender.forEach((referral) => {
+                // Show the correct container based on device type
+                if (state.isMobile) {
+                    referralsCarouselMobile.classList.remove('hidden');
+                    referralsGridDesktop.classList.add('hidden');
+                } else {
+                    referralsGridDesktop.classList.remove('hidden');
+                    referralsCarouselMobile.classList.add('hidden');
+                }
+                
+                referralsToDisplay.forEach((referral) => {
                     const card = document.createElement('div');
                     card.className = `referral-card p-6 rounded-2xl border border-gray-800 bg-gray-900/50 backdrop-blur-md transition-all duration-300 hover:border-orange-500/50 hover:scale-[1.02] ${state.isMobile ? 'flex-shrink-0 w-4/5' : ''}`;
                     
@@ -420,6 +452,12 @@
                     `;
                     container.appendChild(card);
                 });
+
+                if (!state.isMobile) {
+                    referralLoadMoreBtn.parentElement.style.display = state.allReferrals.length > (state.currentReferralPage * REFERRALS_PER_PAGE_WEB) ? 'block' : 'none';
+                } else {
+                     referralLoadMoreBtn.parentElement.style.display = 'none';
+                }
             }
 
             function renderCareerToolkit() {
@@ -441,8 +479,8 @@
 
             // --- FILTERING LOGIC ---
             function applyFilters() {
-                const searchTerm = state.isMobile ? mobileSearchInput.value.toLowerCase() : desktopSearchInput.value.toLowerCase();
-                const selectedLocation = state.isMobile ? '' : desktopLocationFilter.value;
+                const searchTerm = state.isMobile ? mobileSearchInput.value.toLowerCase() : filterSearchInput.value.toLowerCase();
+                const selectedLocation = filterLocationSelect.value;
                 const selectedRole = document.querySelector('.mobile-role-pill.active')?.dataset.role || '';
 
                 state.filteredJobs = state.allJobs.filter(job => 
@@ -454,6 +492,13 @@
                 render();
             }
 
+            function clearFilters() {
+                filterSearchInput.value = '';
+                filterLocationSelect.value = '';
+                mobileRoleFiltersContainer.querySelectorAll('.mobile-role-pill').forEach(p => p.classList.remove('active', 'bg-orange-500'));
+                applyFilters();
+            }
+            
             // --- MODAL & FILTER SCREEN LOGIC ---
             function openModal(content) {
                 modalOverlay.innerHTML = `<div class="modal-content bg-gray-900 border border-gray-800 rounded-2xl shadow-xl w-full max-w-lg mx-auto p-6 md:p-8">${content}</div>`;
@@ -495,8 +540,8 @@
             
             function populateFilters() {
                 const locations = [...new Set(state.allJobs.map(job => job.Location).filter(Boolean))].sort();
-                desktopLocationFilter.innerHTML = '<option value="">All Locations</option>';
-                locations.forEach(location => desktopLocationFilter.add(new Option(location, location)));
+                filterLocationSelect.innerHTML = '<option value="">All Locations</option>';
+                locations.forEach(location => filterLocationSelect.add(new Option(location, location)));
 
                 const roles = [...new Set(state.allJobs.map(job => job['Job Title']).filter(Boolean))].sort();
                 mobileRoleFiltersContainer.innerHTML = '';
@@ -577,12 +622,8 @@
             });
             
             desktopSearchInput.addEventListener('input', applyFilters);
-            desktopLocationFilter.addEventListener('change', applyFilters);
-            desktopResetBtn.addEventListener('click', () => { 
-                desktopSearchInput.value = ''; 
-                desktopLocationFilter.value = ''; 
-                applyFilters(); 
-            });
+            
+            desktopFilterToggle.addEventListener('click', openFilterScreen);
             
             mobileSearchInput.addEventListener('input', applyFilters);
             mobileFilterToggle.addEventListener('click', openFilterScreen);
@@ -591,16 +632,31 @@
                 closeFilterScreen();
                 applyFilters();
             });
+            clearFiltersBtn.addEventListener('click', clearFilters);
             
+            // Event listener for the filter screen's search and select elements
+            filterSearchInput.addEventListener('input', () => {
+                // We'll update the state.filters.searchTerm but won't render until "Apply" is clicked
+                state.filters.searchTerm = filterSearchInput.value.toLowerCase();
+            });
+            filterLocationSelect.addEventListener('change', () => {
+                // We'll update the state.filters.location but won't render until "Apply" is clicked
+                state.filters.location = filterLocationSelect.value;
+            });
+
             mobileRoleFiltersContainer.addEventListener('click', (e) => {
                 const pill = e.target.closest('.mobile-role-pill');
                 if (pill) {
                     const isActive = pill.classList.contains('active');
+                    // Deselect all pills first
                     mobileRoleFiltersContainer.querySelectorAll('.mobile-role-pill').forEach(p => p.classList.remove('active', 'bg-orange-500'));
+                    // Select the clicked pill if it wasn't already active
                     if (!isActive) {
                         pill.classList.add('active', 'bg-orange-500');
+                        state.filters.role = pill.dataset.role;
+                    } else {
+                        state.filters.role = '';
                     }
-                    applyFilters();
                 }
             });
 
@@ -609,6 +665,11 @@
                 render(); 
             });
             
+            referralLoadMoreBtn.addEventListener('click', () => {
+                state.currentReferralPage++;
+                renderReferrals();
+            });
+
             // Event delegation for bottom and desktop navigation
             document.getElementById('desktop-nav-tabs').addEventListener('click', (e) => {
                 const navBtn = e.target.closest('.desktop-tab-btn');
