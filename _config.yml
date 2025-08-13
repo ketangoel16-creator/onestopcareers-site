@@ -1,2 +1,3 @@
 # A simple configuration file to enable Jekyll
-# No need to add anything else unless you have specific needs.
+# This file is necessary for Netlify to recognize the site as a Jekyll project.
+# You do not need to add anything else unless you have specific needs.
