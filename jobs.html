@@ -1,106 +1,226 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>OneStopCareers - Job Board</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" />
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&display=swap');
-    body { font-family: 'Manrope', sans-serif; background-color: #121212; color: #EAEAEA; }
-    .modal { display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.7); }
-    .modal-content { background-color: #1C1C1C; margin: 10% auto; padding: 24px; border-radius: 12px; width: 90%; max-width: 600px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5); border: 1px solid #333; }
-    .close-btn { color: #aaa; float: right; font-size: 28px; font-weight: bold; }
-    .close-btn:hover, .close-btn:focus { color: #fff; text-decoration: none; cursor: pointer; }
-    .toast { visibility: hidden; min-width: 250px; margin-left: -125px; background-color: #333; color: #fff; text-align: center; border-radius: 8px; padding: 16px; position: fixed; z-index: 101; left: 50%; bottom: 30px; opacity: 0; transition: visibility 0s, opacity 0.5s linear; }
-    .toast.show { visibility: visible; opacity: 1; }
-    .job-board-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(288px, 1fr)); gap: 2rem; justify-items: center; }
-    .filter-modal { max-height: 70vh; }
-    .toolkit-carousel::-webkit-scrollbar { display: none; }
-    .toolkit-carousel { -ms-overflow-style: none; scrollbar-width: none; }
-    @keyframes shine { 0% { transform: translateX(-100%) skewX(-25deg); } 100% { transform: translateX(200%) skewX(-25deg); } }
-    .toolkit-card::after { content: ''; position: absolute; top: 0; left: 0; width: 50%; height: 100%; background: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.1) 50%, rgba(255, 255, 255, 0) 100%); transform: translateX(-100%) skewX(-25deg); animation: shine 4s infinite 2s; }
-    .sync-status { transition: opacity 0.5s ease-in-out; }
-  </style>
-</head>
-<body class="bg-black text-white">
-
-  <div id="header-placeholder"></div>
-
-  <main>
-    <section id="jobs" class="max-w-7xl mx-auto px-4 py-16">
-        </section>
-
-    <section class="py-16">
-        </section>
-
-    <section id="referrals" class="bg-gray-900/50 py-16">
-        </section>
-  </main>
-
-  <div id="footer-placeholder"></div>
-
-  <div id="job-modal" class="modal"> </div>
-  <div id="filter-modal" class="modal"> </div>
-  <div id="toast" class="toast">Link copied to clipboard!</div>
-
-  <script src="main.js"></script>
-  <script>
-    // --- All your original DOM Elements, State Variables, and Functions are here ---
-    // (This is the full script from your original file, with one change)
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Opportunities | OneStopCareers</title>
     
-    // --- DOM Elements ---
-    const jobBoard = document.getElementById('job-board');
-    const jobBoardLoading = document.getElementById('job-board-loading');
-    const jobSearch = document.getElementById('job-search');
-    const companyFilterBtn = document.getElementById('company-filter-btn');
-    const locationFilterBtn = document.getElementById('location-filter-btn');
-    //... and all the rest of your element selectors
+    <!-- Tailwind CSS for modern styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Use Inter as the default font */
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Simple scrollbar styling for the dark theme */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #111827; /* A very dark gray */
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #374151; /* bg-gray-700 */
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #4b5563; /* bg-gray-600 */
+        }
+    </style>
+</head>
+<body class="bg-black text-gray-300">
 
-    // --- State Variables ---
-    let allJobs = [];
-    let displayedJobs = [];
-    //... and all the rest of your state variables
+    <!-- Header Placeholder -->
+    <header id="header-placeholder"></header>
 
-    // --- Function Definitions ---
-    const updateItemsPerPage = () => { /* ... your function ... */ };
-    const setupJobs = (data) => {
-        allJobs = data.map((item, index) => ({ ...item, id: index + 1 }));
-        jobBoardLoading.style.display = 'none';
-        jobBoard.style.display = 'grid';
-        filterAndRenderJobs();
-        handleDeepLink();
-    };
-    const setupReferrals = (data) => { /* ... your function ... */ };
-    const filterAndRenderJobs = () => { /* ... your function ... */ };
-    const renderJobs = () => { /* ... your function ... */ };
-    //... and ALL OTHER FUNCTIONS from your original file must be here.
-
-    // --- Initial Load & Event Listeners ---
-    document.addEventListener('DOMContentLoaded', () => {
-        updateItemsPerPage();
+    <!-- Main Content for the Jobs Page -->
+    <main class="container mx-auto px-4 py-12 md:py-16">
         
-        // THIS IS THE ONLY MODIFIED PART
-        fetch('https://ketangoel16-creator.github.io/onestopcareers-data/jobs.json')
-          .then(response => {
-              if (!response.ok) throw new Error("Network response was not ok");
-              return response.json();
-          })
-          .then(data => {
-              setupJobs(data);
-          })
-          .catch(error => {
-              console.error("Error loading jobs from CDN. Falling back to empty array.", error);
-              setupJobs([]); // Fallback to an empty array
-          });
+        <!-- Hero Section - Aligned with homepage vision -->
+        <section class="text-center mb-12 md:mb-16">
+            <h1 class="text-4xl md:text-5xl font-bold text-white mb-4">Find Your Next Opportunity</h1>
+            <p class="text-lg text-gray-400 max-w-3xl mx-auto">
+                Browse through curated job openings from top companies. Your career journey continues here.
+            </p>
+        </section>
 
-        // Your original referral setup
-        setupReferrals(preloadedReferrals);
-        
-        // ... and all other event listeners from your original file ...
-    });
-  </script>
+        <!-- Filters Section - Refined for the new theme -->
+        <section class="bg-gray-900/70 backdrop-blur-sm p-4 sm:p-6 rounded-xl mb-8 sticky top-4 z-10 border border-gray-800 shadow-lg">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <!-- Search by Role/Company -->
+                <input type="text" id="search-input" placeholder="Search by job title or company..." class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2.5 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all">
+                
+                <!-- Filter by Location -->
+                <select id="location-filter" class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all">
+                    <option value="">All Locations</option>
+                    <!-- Options will be populated by JS -->
+                </select>
 
+                <!-- Reset Button -->
+                <button id="reset-filters" class="w-full bg-gray-700 hover:bg-gray-600 text-white font-semibold py-2.5 px-4 rounded-lg transition-colors duration-300">Reset</button>
+            </div>
+        </section>
+
+        <!-- Job Listings -->
+        <section>
+            <!-- Loading Spinner -->
+            <div id="loading-spinner" class="text-center py-12">
+                 <svg class="animate-spin h-10 w-10 text-orange-500 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                <p class="mt-4 text-gray-400">Fetching job opportunities...</p>
+            </div>
+            
+            <!-- No Results Message -->
+            <div id="no-results" class="hidden text-center py-12">
+                <h3 class="text-2xl font-semibold text-white">No Matching Jobs Found</h3>
+                <p class="text-gray-400 mt-2">Try adjusting your filters or search terms.</p>
+            </div>
+
+            <!-- Job Grid -->
+            <div id="job-listings-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Job cards will be injected here by JavaScript -->
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer Placeholder -->
+    <footer id="footer-placeholder"></footer>
+
+    <!-- Your Main JavaScript File -->
+    <script src="main.js" type="module"></script>
+
+    <!-- Page-Specific JavaScript -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- CONFIGURATION ---
+            // Fetching live job data from your GitHub Pages JSON file.
+            const JOBS_JSON_URL = 'https://ketangoel16-creator.github.io/onestopcareers-data/jobs.json';
+
+            // --- ELEMENT SELECTORS ---
+            const jobGrid = document.getElementById('job-listings-grid');
+            const searchInput = document.getElementById('search-input');
+            const locationFilter = document.getElementById('location-filter');
+            const resetBtn = document.getElementById('reset-filters');
+            const loadingSpinner = document.getElementById('loading-spinner');
+            const noResultsMessage = document.getElementById('no-results');
+
+            let allJobs = []; // To store the master list of jobs
+
+            // --- DATA FETCHING ---
+            async function fetchJobs() {
+                try {
+                    const response = await fetch(JOBS_JSON_URL);
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    const data = await response.json();
+                    
+                    // The JSON file has a root key "jobs", so we access that.
+                    allJobs = data.jobs || []; 
+                    
+                    if (allJobs.length > 0) {
+                        populateFilters(allJobs);
+                        renderJobs(allJobs);
+                    } else {
+                        noResultsMessage.classList.remove('hidden');
+                        noResultsMessage.innerHTML = `<h3 class="text-2xl font-semibold text-white">No Jobs Available</h3><p class="text-gray-400 mt-2">Please check back later for new opportunities.</p>`;
+                    }
+
+                } catch (error) {
+                    console.error("Failed to fetch jobs:", error);
+                    jobGrid.innerHTML = `<p class="text-center text-red-400 col-span-full">Could not load job listings. Please try again later.</p>`;
+                } finally {
+                    loadingSpinner.classList.add('hidden');
+                }
+            }
+
+            // --- RENDERING ---
+            function renderJobs(jobs) {
+                jobGrid.innerHTML = ''; // Clear existing jobs
+                noResultsMessage.classList.toggle('hidden', jobs.length > 0);
+
+                jobs.forEach(job => {
+                    const card = document.createElement('div');
+                    // Using darker grays for better fit with the black background
+                    card.className = 'bg-gray-900 rounded-xl p-6 flex flex-col gap-4 border border-gray-800 hover:border-orange-500/50 hover:-translate-y-1 transition-all duration-300';
+                    
+                    // Using bracket notation for keys with spaces
+                    card.innerHTML = `
+                        <div class="flex items-center gap-4">
+                            <img src="${job['Company Logo URL'] || 'https://placehold.co/100x100/111827/FFFFFF?text=?'}" alt="${job.Company} Logo" class="h-14 w-14 rounded-lg object-cover bg-gray-800" onerror="this.onerror=null;this.src='https://placehold.co/100x100/111827/FFFFFF?text=?';">
+                            <div>
+                                <p class="text-gray-400 text-sm">${job.Company}</p>
+                                <h3 class="text-lg font-bold text-white">${job['Job Title']}</h3>
+                            </div>
+                        </div>
+                        <div class="flex-grow text-gray-400 text-sm">
+                           <p>${job.Description || 'No description available.'}</p>
+                        </div>
+                        <div class="flex items-center justify-between pt-4 border-t border-gray-800">
+                             <p class="text-xs text-gray-500">📍 ${job.Location}</p>
+                            <a href="${job.Link}" target="_blank" rel="noopener noreferrer" class="bg-orange-500 text-white font-semibold py-2 px-5 rounded-lg hover:bg-orange-600 transition-colors duration-300">
+                                Apply Now
+                            </a>
+                        </div>
+                    `;
+                    jobGrid.appendChild(card);
+                });
+            }
+
+            // --- FILTERING LOGIC ---
+            function populateFilters(jobs) {
+                // Using bracket notation for keys with spaces
+                const locations = [...new Set(jobs.map(job => job.Location).filter(Boolean))].sort();
+
+                locations.forEach(location => {
+                    const option = document.createElement('option');
+                    option.value = location;
+                    option.textContent = location;
+                    locationFilter.appendChild(option);
+                });
+            }
+
+            function filterAndRenderJobs() {
+                const searchTerm = searchInput.value.toLowerCase();
+                const selectedLocation = locationFilter.value;
+
+                const filteredJobs = allJobs.filter(job => {
+                    // Using bracket notation for keys with spaces
+                    const matchesSearch = searchTerm === '' ||
+                        job['Job Title'].toLowerCase().includes(searchTerm) ||
+                        job.Company.toLowerCase().includes(searchTerm);
+                    
+                    const matchesLocation = selectedLocation === '' || job.Location === selectedLocation;
+
+                    return matchesSearch && matchesLocation;
+                });
+
+                renderJobs(filteredJobs);
+            }
+            
+            function resetAllFilters() {
+                searchInput.value = '';
+                locationFilter.value = '';
+                filterAndRenderJobs();
+            }
+
+            // --- EVENT LISTENERS ---
+            searchInput.addEventListener('input', filterAndRenderJobs);
+            locationFilter.addEventListener('change', filterAndRenderJobs);
+            resetBtn.addEventListener('click', resetAllFilters);
+
+            // --- INITIALIZATION ---
+            fetchJobs();
+        });
+    </script>
 </body>
 </html>
