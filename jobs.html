@@ -1,367 +1,476 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>OneStopCareers - Job Board</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" />
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&display=swap');
-    body {
-      font-family: 'Manrope', sans-serif;
-      background-color: #121212;
-      color: #EAEAEA;
-    }
-    .modal {
-      display: none;
-      position: fixed;
-      z-index: 100;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      overflow: auto;
-      background-color: rgba(0,0,0,0.7);
-    }
-    .modal-content {
-      background-color: #1C1C1C;
-      margin: 10% auto;
-      padding: 24px;
-      border-radius: 12px;
-      width: 90%;
-      max-width: 600px;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
-      border: 1px solid #333;
-    }
-    .close-btn {
-      color: #aaa;
-      float: right;
-      font-size: 28px;
-      font-weight: bold;
-    }
-    .close-btn:hover,
-    .close-btn:focus {
-      color: #fff;
-      text-decoration: none;
-      cursor: pointer;
-    }
-    .toast {
-        visibility: hidden;
-        min-width: 250px;
-        margin-left: -125px;
-        background-color: #333;
-        color: #fff;
-        text-align: center;
-        border-radius: 8px;
-        padding: 16px;
-        position: fixed;
-        z-index: 101;
-        left: 50%;
-        bottom: 30px;
-        opacity: 0;
-        transition: visibility 0s, opacity 0.5s linear;
-    }
-    .toast.show {
-        visibility: visible;
-        opacity: 1;
-    }
-    .job-board-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(288px, 1fr));
-        gap: 2rem;
-        justify-items: center;
-    }
-    .filter-modal {
-        max-height: 70vh;
-    }
-    .toolkit-carousel::-webkit-scrollbar {
-        display: none;
-    }
-    .toolkit-carousel {
-        -ms-overflow-style: none;
-        scrollbar-width: none;
-    }
-    @keyframes shine {
-      0% { transform: translateX(-100%) skewX(-25deg); }
-      100% { transform: translateX(200%) skewX(-25deg); }
-    }
-    .toolkit-card::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 50%;
-      height: 100%;
-      background: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.1) 50%, rgba(255, 255, 255, 0) 100%);
-      transform: translateX(-100%) skewX(-25deg);
-      animation: shine 4s infinite 2s;
-    }
-    .sync-status {
-        transition: opacity 0.5s ease-in-out;
-    }
-  </style>
-</head>
-<body class="bg-black text-white">
-
-  <!-- Header Placeholder -->
-  <div id="header-placeholder"></div>
-
-  <!-- Main Content -->
-  <main>
-    <!-- Job Board Section -->
-    <section id="jobs" class="max-w-7xl mx-auto px-4 py-16">
-      <div class="text-center">
-          <h1 class="text-4xl md:text-5xl font-extrabold text-white mb-2">Find Your Next Role</h1>
-          <p class="text-gray-400 mb-8">Explore curated opportunities from top-tier companies.</p>
-      </div>
-      
-      <!-- Job Filters -->
-      <div class="flex flex-col md:flex-row items-center justify-center gap-4 mb-8">
-          <input type="text" id="job-search" placeholder="Search by title, company..." class="w-full md:w-auto p-3 rounded-lg border border-gray-700 bg-[#1C1C1C] text-white shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500" />
-          <button id="company-filter-btn" class="w-full md:w-auto p-3 rounded-lg border border-gray-700 bg-[#1C1C1C] text-white shadow-sm text-left">All Companies</button>
-          <button id="location-filter-btn" class="w-full md:w-auto p-3 rounded-lg border border-gray-700 bg-[#1C1C1C] text-white shadow-sm text-left">All Locations</button>
-      </div>
-
-      <!-- Sync Status Callout -->
-      <div id="sync-status" class="sync-status max-w-md mx-auto text-center mb-4 opacity-0"></div>
-
-      <div id="job-board-loading" class="job-board-grid">
-        <!-- Skeleton loader for jobs -->
-        <div class="bg-[#1C1C1C] p-6 rounded-xl border border-gray-800 flex flex-col items-center text-center w-72 animate-pulse">
-            <div class="w-24 h-24 rounded-full mb-4 bg-gray-700"></div>
-            <div class="h-5 bg-gray-700 rounded w-3/4 mb-2"></div>
-            <div class="h-4 bg-gray-700 rounded w-1/2 mb-4"></div>
-            <div class="h-10 bg-gray-700 rounded-full w-32 mt-auto"></div>
-        </div>
-        <div class="hidden md:block bg-[#1C1C1C] p-6 rounded-xl border border-gray-800 flex flex-col items-center text-center w-72 animate-pulse">
-            <div class="w-24 h-24 rounded-full mb-4 bg-gray-700"></div>
-            <div class="h-5 bg-gray-700 rounded w-3/4 mb-2"></div>
-            <div class="h-4 bg-gray-700 rounded w-1/2 mb-4"></div>
-            <div class="h-10 bg-gray-700 rounded-full w-32 mt-auto"></div>
-        </div>
-        <div class="hidden lg:block bg-[#1C1C1C] p-6 rounded-xl border border-gray-800 flex flex-col items-center text-center w-72 animate-pulse">
-            <div class="w-24 h-24 rounded-full mb-4 bg-gray-700"></div>
-            <div class="h-5 bg-gray-700 rounded w-3/4 mb-2"></div>
-            <div class="h-4 bg-gray-700 rounded w-1/2 mb-4"></div>
-            <div class="h-10 bg-gray-700 rounded-full w-32 mt-auto"></div>
-        </div>
-      </div>
-      <div id="job-board" class="job-board-grid" style="display: none;"></div>
-      <div id="see-more-jobs-container" class="text-center mt-12" style="display: none;">
-        <button id="see-more-jobs-btn" class="bg-gray-800 text-gray-300 px-6 py-3 rounded-lg hover:bg-gray-700">See More Jobs</button>
-      </div>
-    </section>
-
-    <!-- Career Toolkit Section -->
-    <section class="py-16">
-        <div class="max-w-7xl mx-auto px-4">
-            <div class="text-center">
-                <h2 class="text-3xl font-bold text-white">Your Career Toolkit</h2>
-                <p class="text-gray-400 mt-2 mb-8">The resources you need to get ahead.</p>
-            </div>
-            <div class="toolkit-carousel flex md:grid md:grid-cols-4 gap-6 overflow-x-auto snap-x snap-mandatory py-4">
-                <a href="resources.html" class="toolkit-card relative overflow-hidden flex-shrink-0 w-4/5 sm:w-1/2 md:w-auto snap-center block p-6 bg-[#1C1C1C] rounded-xl border border-gray-800 hover:border-orange-500/50 transition-colors duration-300">
-                    <div class="flex items-center space-x-4">
-                        <div class="flex-shrink-0 h-12 w-12 flex items-center justify-center bg-orange-900/50 rounded-full">
-                            <svg class="w-7 h-7 text-orange-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
-                        </div>
-                        <div>
-                            <h3 class="text-lg font-bold text-white">Resume Templates</h3>
-                            <p class="text-gray-400 text-sm">Get ATS-friendly designs.</p>
-                        </div>
-                    </div>
-                </a>
-                <a href="resources.html" class="toolkit-card relative overflow-hidden flex-shrink-0 w-4/5 sm:w-1/2 md:w-auto snap-center block p-6 bg-[#1C1C1C] rounded-xl border border-gray-800 hover:border-orange-500/50 transition-colors duration-300">
-                    <div class="flex items-center space-x-4">
-                        <div class="flex-shrink-0 h-12 w-12 flex items-center justify-center bg-orange-900/50 rounded-full">
-                           <svg class="w-7 h-7 text-orange-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" /></svg>
-                        </div>
-                        <div>
-                            <h3 class="text-lg font-bold text-white">Interview Prep</h3>
-                            <p class="text-gray-400 text-sm">Master the STAR method.</p>
-                        </div>
-                    </div>
-                </a>
-                <a href="resources.html" class="toolkit-card relative overflow-hidden flex-shrink-0 w-4/5 sm:w-1/2 md:w-auto snap-center block p-6 bg-[#1C1C1C] rounded-xl border border-gray-800 hover:border-orange-500/50 transition-colors duration-300">
-                    <div class="flex items-center space-x-4">
-                        <div class="flex-shrink-0 h-12 w-12 flex items-center justify-center bg-orange-900/50 rounded-full">
-                           <svg class="w-7 h-7 text-orange-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
-                        </div>
-                        <div>
-                            <h3 class="text-lg font-bold text-white">Salary Guides</h3>
-                            <p class="text-gray-400 text-sm">Negotiate your worth.</p>
-                        </div>
-                    </div>
-                </a>
-                <a href="resources.html" class="toolkit-card relative overflow-hidden flex-shrink-0 w-4/5 sm:w-1/2 md:w-auto snap-center block p-6 bg-[#1C1C1C] rounded-xl border border-dashed border-gray-700 hover:border-orange-500/50 transition-colors duration-300">
-                    <div class="flex items-center space-x-4">
-                        <div class="flex-shrink-0 h-12 w-12 flex items-center justify-center bg-gray-800 rounded-full">
-                           <svg class="w-7 h-7 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
-                        </div>
-                        <div>
-                            <h3 class="text-lg font-bold text-white">Explore All Resources</h3>
-                            <p class="text-gray-400 text-sm">View our full library.</p>
-                        </div>
-                    </div>
-                </a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Referral Network Section -->
-    <section id="referrals" class="bg-gray-900/50 py-16">
-      <div class="max-w-7xl mx-auto px-4">
-          <div class="text-center">
-              <h2 class="text-4xl md:text-5xl font-extrabold text-white mb-2">Unlock Your Network</h2>
-              <p class="text-gray-400 mb-8">Connect with professionals ready to give referrals.</p>
-          </div>
-          
-          <div class="flex flex-col md:flex-row items-center justify-center gap-4 mb-12">
-              <input type="text" id="referral-search" placeholder="Search by name or title..." class="w-full md:w-auto p-3 rounded-lg border border-gray-700 bg-[#1C1C1C] text-white shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500" />
-              <button id="referral-company-filter-btn" class="w-full md:w-auto p-3 rounded-lg border border-gray-700 bg-[#1C1C1C] text-white shadow-sm text-left">All Companies</button>
-          </div>
-
-          <div id="referral-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
-          <div id="see-more-referrals-container" class="text-center mt-12" style="display: none;">
-              <button id="see-more-referrals-btn" class="bg-gray-800 text-gray-300 px-6 py-3 rounded-lg hover:bg-gray-700">See More Referrals</button>
-          </div>
-      </div>
-    </section>
-  </main>
-
-  <!-- Footer Placeholder -->
-  <div id="footer-placeholder"></div>
-
-  <!-- Modals and Toast -->
-  <div id="job-modal" class="modal"> <!-- ... modal content ... --> </div>
-  <div id="filter-modal" class="modal"> <!-- ... modal content ... --> </div>
-  <div id="toast" class="toast">Link copied to clipboard!</div>
-
-  <!-- Scripts -->
-  <script src="main.js"></script>
-  <script>
-    // --- DOM Elements ---
-    const jobBoard = document.getElementById('job-board');
-    const jobBoardLoading = document.getElementById('job-board-loading');
-    const jobSearch = document.getElementById('job-search');
-    const companyFilterBtn = document.getElementById('company-filter-btn');
-    const locationFilterBtn = document.getElementById('location-filter-btn');
-    const seeMoreJobsBtn = document.getElementById('see-more-jobs-btn');
-    const seeMoreJobsContainer = document.getElementById('see-more-jobs-container');
-    const jobModal = document.getElementById('job-modal');
-    const modalCloseBtn = jobModal.querySelector('.close-btn');
-    const modalTitle = document.getElementById('modal-title');
-    const modalCompanyLocation = document.getElementById('modal-company-location');
-    const modalDescription = document.getElementById('modal-description');
-    const modalApplyBtn = document.getElementById('modal-apply-btn');
-    const modalShareBtn = document.getElementById('modal-share-btn');
-    const toast = document.getElementById('toast');
-    const referralGrid = document.getElementById('referral-grid');
-    const referralSearch = document.getElementById('referral-search');
-    const referralCompanyFilterBtn = document.getElementById('referral-company-filter-btn');
-    const seeMoreReferralsBtn = document.getElementById('see-more-referrals-btn');
-    const seeMoreReferralsContainer = document.getElementById('see-more-referrals-container');
-    const filterModal = document.getElementById('filter-modal');
-    const filterModalTitle = document.getElementById('filter-modal-title');
-    const filterModalSearch = document.getElementById('filter-modal-search');
-    const filterModalList = document.getElementById('filter-modal-list');
-    const filterModalClose = document.getElementById('filter-modal-close');
-    const syncStatus = document.getElementById('sync-status');
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Opportunities | OneStopCareers</title>
     
-    // --- State Variables ---
-    let jobsPerPage = 8;
-    let currentJobPage = 1;
-    let allJobs = [];
-    let displayedJobs = [];
-    let currentCompanyFilter = 'All';
-    let currentLocationFilter = 'All';
-
-    let referralsPerPage = 6;
-    let currentReferralPage = 1;
-    let allReferrals = [];
-    let displayedReferrals = [];
-    let currentReferralCompanyFilter = 'All';
-
-    // --- Pre-loaded Data ---
-    const preloadedJobs = [
-      { "id": 1, "Job Title": "Senior Frontend Developer", "Company": "Innovate Inc.", "Location": "San Francisco, CA", "Description": "Join our team to build next-gen web applications using React and TypeScript. 5+ years of experience required.", "Link": "#" },
-      { "id": 2, "Job Title": "Product Manager", "Company": "Solutions Co.", "Location": "New York, NY", "Description": "Define product vision, strategy, and roadmap. Work closely with engineering, design, and marketing teams.", "Link": "#" },
-      { "id": 3, "Job Title": "Data Scientist", "Company": "Future Analytics", "Location": "Remote", "Description": "Analyze large datasets to extract meaningful insights. Proficiency in Python, SQL, and machine learning frameworks.", "Link": "#" },
-      { "id": 4, "Job Title": "Backend Engineer", "Company": "Innovate Inc.", "Location": "Remote", "Description": "Develop and maintain server-side logic, databases, and APIs for our web applications. Experience with Node.js and PostgreSQL is a plus.", "Link": "#" },
-      { "id": 5, "Job Title": "UX/UI Designer", "Company": "Creative Minds", "Location": "Austin, TX", "Description": "Create intuitive and visually appealing user interfaces. A strong portfolio showcasing your design process is required.", "Link": "#" },
-      { "id": 6, "Job Title": "DevOps Engineer", "Company": "CloudUp", "Location": "Seattle, WA", "Description": "Manage and improve our CI/CD pipelines, cloud infrastructure, and deployment processes. Experience with AWS and Kubernetes is essential.", "Link": "#" },
-      { "id": 7, "Job Title": "Marketing Specialist", "Company": "Solutions Co.", "Location": "Chicago, IL", "Description": "Develop and execute marketing campaigns across various channels, including social media, email, and content marketing.", "Link": "#" },
-      { "id": 8, "Job Title": "QA Engineer", "Company": "Innovate Inc.", "Location": "San Francisco, CA", "Description": "Ensure the quality of our software through manual and automated testing. Strong attention to detail is a must." }
-    ];
-    const preloadedReferrals = [
-      {"Name": "Alex Johnson", "Designation": "Engineering Manager", "Company name": "Innovate Inc.", "LinkedIn ID url": "#"},
-      {"Name": "Brenda Smith", "Designation": "Senior Recruiter", "Company name": "Solutions Co.", "LinkedIn ID url": "#"},
-      {"Name": "Charles Brown", "Designation": "Lead Data Scientist", "Company name": "Future Analytics", "LinkedIn ID url": "#"},
-      {"Name": "Diana Prince", "Designation": "Software Engineer", "Company name": "Innovate Inc.", "LinkedIn ID url": "#"},
-      {"Name": "Edward Nygma", "Designation": "UX Designer", "Company name": "Creative Minds", "LinkedIn ID url": "#"},
-      {"Name": "Fiona Glenanne", "Designation": "DevOps Engineer", "Company name": "CloudUp", "LinkedIn ID url": "#"}
-    ];
+    <!-- Tailwind CSS for modern styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
     
-    // --- Function Definitions ---
-    const updateItemsPerPage = () => {
-        if (window.innerWidth < 768) {
-            jobsPerPage = 4;
-            referralsPerPage = 6;
-        } else {
-            jobsPerPage = 8;
-            referralsPerPage = 12;
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Use Inter as the default font */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #000; /* Ensure body background is black */
         }
-    };
-    
-    const setupJobs = (data) => {
-        allJobs = data.map((item, index) => ({ ...item, id: index + 1 }));
-        jobBoardLoading.style.display = 'none';
-        jobBoard.style.display = 'grid';
-        filterAndRenderJobs();
-        handleDeepLink();
-    };
+        /* Simple scrollbar styling for the dark theme */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #111827; }
+        ::-webkit-scrollbar-thumb { background: #374151; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #4b5563; }
 
-    const setupReferrals = (data) => {
-        allReferrals = data.map((item, index) => ({ ...item, id: index + 1 }));
-        referralGrid.style.display = 'grid';
-        filterAndRenderReferrals();
-    };
-    
-    // ... (All other functions like renderJobs, filterAndRenderJobs, modals, etc. are unchanged)
+        /* Animation for job item load-in */
+        .job-item {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+        }
+        .job-item.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
 
-    // --- Initial Load & Event Listeners ---
-  document.addEventListener('DOMContentLoaded', () => {
-    // This part stays the same
-    if (typeof updateItemsPerPage === 'function') {
-        updateItemsPerPage();
-    }
-
-    // This is the new part that fetches your live data
-    fetch('https://ketangoel16-creator.github.io/onestopcareers-data/jobs.json')
-        .then(response => {
-            if (!response.ok) {
-                throw new Error("Network response was not ok");
+        /* Modal styles */
+        .modal-overlay {
+            transition: opacity 0.3s ease;
+        }
+        .modal-content {
+            transition: transform 0.3s ease, opacity 0.3s ease;
+            transform: translateY(20px) scale(0.95);
+        }
+        .modal-overlay.open .modal-content {
+            transform: translateY(0) scale(1);
+        }
+        
+        /* Mobile Horizontal Carousel Styles */
+        @media (max-width: 767px) {
+            #job-listings-grid {
+                display: flex;
+                overflow-x: auto;
+                scroll-snap-type: x mandatory;
+                padding-bottom: 1rem; /* Space for scrollbar */
+                -ms-overflow-style: none;  /* IE and Edge */
+                scrollbar-width: none;  /* Firefox */
+                transition: opacity 0.3s ease-in-out, max-height 0.5s ease-in-out;
             }
-            return response.json();
-        })
-        .then(data => {
-            // This calls your existing setupJobs function with live data
-            setupJobs(data);
-        })
-        .catch(error => {
-            console.error("Error loading jobs from CDN. Falling back to an empty array.", error);
-            setupJobs([]); // On error, it will show no jobs instead of crashing
+            #job-listings-grid.filtering {
+                opacity: 0;
+                max-height: 0;
+                padding-bottom: 0;
+                overflow: hidden;
+            }
+            #job-listings-grid::-webkit-scrollbar {
+                display: none; /* Chrome, Safari, Opera */
+            }
+            .job-item {
+                flex: 0 0 75%; /* Each item takes up 75% of the viewport width */
+                scroll-snap-align: start;
+            }
+            #desktop-filters {
+                display: none;
+            }
+        }
+        
+        @media (min-width: 768px) {
+            #mobile-filters {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body class="bg-black text-gray-300">
+
+    <!-- Header Placeholder -->
+    <header id="header-placeholder"></header>
+
+    <!-- Main Content for the Jobs Page -->
+    <main class="container mx-auto px-4 py-12 md:py-16">
+        
+        <!-- Hero Section -->
+        <section class="text-center mb-12 md:mb-16">
+            <h1 class="text-4xl md:text-5xl font-bold text-white mb-4">Find Your Next Opportunity</h1>
+            <p class="text-lg text-gray-400 max-w-3xl mx-auto">
+                Browse through curated job openings from top companies. Your career journey continues here.
+            </p>
+        </section>
+
+        <!-- Desktop Filters Section -->
+        <section id="desktop-filters" class="bg-gray-900/70 backdrop-blur-sm p-4 sm:p-6 rounded-xl mb-8 sticky top-4 z-10 border border-gray-800 shadow-lg">
+             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <input type="text" id="search-input" placeholder="Search by job title or company..." class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2.5 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all">
+                <select id="location-filter" class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all">
+                    <option value="">All Locations</option>
+                </select>
+                <button id="reset-filters" class="w-full bg-gray-700 hover:bg-gray-600 text-white font-semibold py-2.5 px-4 rounded-lg transition-colors duration-300">Reset</button>
+            </div>
+        </section>
+
+        <!-- Mobile Search and Filter UI -->
+        <section id="mobile-filters" class="mb-8">
+            <div class="flex gap-4 items-center">
+                <input type="text" id="mobile-search-input" placeholder="Search jobs..." class="flex-grow bg-gray-800 border border-gray-700 rounded-full px-4 py-2.5 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all">
+                <button id="mobile-filter-toggle" class="p-2.5 bg-gray-800 border border-gray-700 rounded-full text-gray-400">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2a1 1 0 01-.293.707L16 11.414V16a1 1 0 01-.293.707l-2 2A1 1 0 0113 18v-2.586l-6.707-6.707A1 1 0 016 8V4z" /></svg>
+                </button>
+            </div>
+            <div id="mobile-role-filters" class="mt-4 flex flex-wrap gap-2 hidden">
+                <!-- Mobile role filter pills will be injected here -->
+            </div>
+        </section>
+
+        <!-- Jobs Section -->
+        <section id="jobs-section" class="mb-16">
+            <h2 class="text-2xl font-bold text-white mb-6">Featured Jobs</h2>
+            <div id="loading-spinner" class="text-center py-12">
+                <svg class="animate-spin h-10 w-10 text-orange-500 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+            </div>
+            <div id="no-results" class="hidden text-center py-12"><h3 class="text-2xl font-semibold text-white">No Matching Jobs Found</h3><p class="text-gray-400 mt-2">Try adjusting your filters.</p></div>
+            <div id="job-listings-grid" class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-y-12 gap-x-6"></div>
+            <div id="load-more-container" class="text-center mt-12 hidden md:block"><button id="load-more-btn" class="hidden bg-gradient-to-br from-orange-500 to-orange-600 text-white font-semibold py-3 px-8 rounded-lg hover:from-orange-600 hover:to-orange-700 transition-all duration-300 shadow-lg shadow-orange-500/20">Load More</button></div>
+        </section>
+
+        <!-- Career Toolkit Section (Placeholder) -->
+        <section id="toolkit-section" class="mb-16">
+            <h2 class="text-2xl font-bold text-white mb-6">Career Toolkit</h2>
+            <div class="text-center py-16 bg-gray-900 rounded-xl border border-gray-800">
+                <h3 class="text-3xl font-bold text-white">Coming Soon</h3>
+                <p class="text-gray-400 mt-4">Resources, resume builders, and interview prep.</p>
+            </div>
+        </section>
+
+        <!-- Referrals Section (Placeholder) -->
+        <section id="referrals-section">
+            <h2 class="text-2xl font-bold text-white mb-6">Referrals</h2>
+            <div class="text-center py-16 bg-gray-900 rounded-xl border border-gray-800">
+                <h3 class="text-3xl font-bold text-white">Coming Soon</h3>
+                <p class="text-gray-400 mt-4">A network to connect with insiders for referrals.</p>
+            </div>
+        </section>
+
+    </main>
+    
+    <!-- Apply Now & Deep Link Modal -->
+    <div id="job-modal-overlay" class="modal-overlay fixed inset-0 bg-black bg-opacity-70 z-50 flex items-center justify-center p-4 hidden opacity-0">
+        <div id="job-modal-content" class="modal-content bg-gray-900 border border-gray-800 rounded-2xl shadow-xl w-full max-w-lg mx-auto p-6 md:p-8">
+            <!-- Content will be injected by JS -->
+        </div>
+    </div>
+
+    <!-- Footer Placeholder -->
+    <footer id="footer-placeholder"></footer>
+
+    <!-- Your Main JavaScript File -->
+    <script src="main.js" type="module"></script>
+
+    <!-- Page-Specific JavaScript -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- CONFIGURATION ---
+            const JOBS_JSON_URL = 'https://ketangoel16-creator.github.io/onestopcareers-data/jobs.json';
+            const JOBS_PER_PAGE = 10;
+
+            // --- ELEMENT SELECTORS ---
+            const jobGrid = document.getElementById('job-listings-grid');
+            const loadingSpinner = document.getElementById('loading-spinner');
+            const noResultsMessage = document.getElementById('no-results');
+            const loadMoreBtn = document.getElementById('load-more-btn');
+            const modalOverlay = document.getElementById('job-modal-overlay');
+            const modalContent = document.getElementById('job-modal-content');
+            
+            // Desktop Filters
+            const desktopSearchInput = document.getElementById('search-input');
+            const desktopLocationFilter = document.getElementById('location-filter');
+            const desktopResetBtn = document.getElementById('reset-filters');
+            
+            // Mobile Filters
+            const mobileSearchInput = document.getElementById('mobile-search-input');
+            const mobileFilterToggle = document.getElementById('mobile-filter-toggle');
+            const mobileRoleFiltersContainer = document.getElementById('mobile-role-filters');
+
+            let allJobs = [];
+            let filteredJobs = [];
+            let currentPage = 1;
+
+            // --- HELPER FUNCTIONS ---
+            const formatDateAgo = (dateString) => {
+                if (!dateString) return '';
+                const date = new Date(dateString);
+                const now = new Date();
+                const seconds = Math.floor((now - date) / 1000);
+                if (seconds < 60) return 'Just now';
+                const minutes = Math.floor(seconds / 60);
+                if (minutes < 60) return `${minutes}m ago`;
+                const hours = Math.floor(minutes / 60);
+                if (hours < 24) return `${hours}h ago`;
+                const days = Math.floor(hours / 24);
+                return `${days}d ago`;
+            };
+
+            const createDefaultLogo = (companyName) => {
+                const firstLetter = (companyName || '?').charAt(0).toUpperCase();
+                const logoDiv = document.createElement('div');
+                logoDiv.className = "w-full h-full flex items-center justify-center bg-gray-800 text-gray-400 text-5xl font-bold";
+                logoDiv.textContent = firstLetter;
+                return logoDiv;
+            };
+            
+            // --- MODAL LOGIC ---
+            function openModal(content) {
+                modalContent.innerHTML = content;
+                modalOverlay.classList.remove('hidden');
+                setTimeout(() => { modalOverlay.classList.add('open', 'opacity-100'); }, 10);
+            }
+
+            function closeModal() {
+                modalOverlay.classList.remove('open', 'opacity-100');
+                setTimeout(() => {
+                    modalOverlay.classList.add('hidden');
+                    if (new URLSearchParams(window.location.search).has('id')) {
+                        history.pushState(null, '', window.location.pathname);
+                    }
+                }, 300);
+            }
+
+            function showApplyModal(job) {
+                const content = `<div class="text-center"><div class="h-20 w-20 rounded-full bg-gray-800 mx-auto mb-4 overflow-hidden flex items-center justify-center"><img src="${job['Company Logo URL']}" alt="${job.Company} Logo" class="w-full h-full object-cover"></div><h3 class="text-2xl font-bold text-white">${job['Job Title']}</h3><p class="text-gray-400 mb-6">at ${job.Company}</p><p class="bg-gray-800 border border-gray-700 text-orange-400 text-sm rounded-lg p-3 mb-6">✨ **Pro Tip:** Tailor your resume to include keywords from the job description. Good luck!</p><div class="flex flex-col sm:flex-row gap-3"><button id="proceed-btn" class="w-full bg-gradient-to-br from-orange-500 to-orange-600 text-white font-semibold py-3 px-5 rounded-lg hover:from-orange-600 hover:to-orange-700 transition-all">Proceed to Application</button><button id="cancel-btn" class="w-full bg-gray-700 text-white font-semibold py-3 px-5 rounded-lg hover:bg-gray-600 transition-colors">Cancel</button></div></div>`;
+                openModal(content);
+                document.getElementById('proceed-btn').addEventListener('click', () => { window.open(job.Link, '_blank'); closeModal(); });
+                document.getElementById('cancel-btn').addEventListener('click', closeModal);
+                const modalImg = modalContent.querySelector('img');
+                if (modalImg) { modalImg.onerror = () => { modalImg.replaceWith(createDefaultLogo(job.Company)); }; }
+            }
+            
+            function showDeepLinkModal(job) {
+                const postedDate = formatDateAgo(job['Date Posted']);
+                const content = `<div class="relative"><button id="close-deeplink-btn" class="absolute -top-2 -right-2 text-gray-500 hover:text-white"><svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button><div class="flex items-center gap-4 mb-4"><div class="w-20 h-20 rounded-full overflow-hidden flex-shrink-0 bg-gray-800 flex items-center justify-center"><img src="${job['Company Logo URL']}" alt="${job.Company} Logo" class="w-full h-full object-cover"></div><div><p class="text-gray-400">${job.Company}</p><h3 class="text-2xl font-bold text-white">${job['Job Title']}</h3><p class="text-sm text-gray-500">📍 ${job.Location} &nbsp;&bull;&nbsp; ${postedDate}</p></div></div><p class="text-gray-400 mb-6 max-h-48 overflow-y-auto">${job.Description}</p><button id="deeplink-apply-btn" class="w-full bg-gradient-to-br from-orange-500 to-orange-600 text-white font-semibold py-3 px-5 rounded-lg hover:from-orange-600 hover:to-orange-700 transition-all">Apply on Company Site</button></div>`;
+                openModal(content);
+                document.getElementById('close-deeplink-btn').addEventListener('click', closeModal);
+                document.getElementById('deeplink-apply-btn').addEventListener('click', () => window.open(job.Link, '_blank'));
+                const modalImg = modalContent.querySelector('img');
+                if (modalImg) { modalImg.onerror = () => { modalImg.replaceWith(createDefaultLogo(job.Company)); }; }
+            }
+
+            modalOverlay.addEventListener('click', (e) => { if (e.target === modalOverlay) closeModal(); });
+
+            // --- DATA FETCHING ---
+            async function fetchJobs() {
+                try {
+                    const response = await fetch(JOBS_JSON_URL);
+                    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                    const data = await response.json();
+                    
+                    allJobs = (data && Array.isArray(data.jobs)) ? data.jobs : (Array.isArray(data) ? data : []);
+                    
+                    if (allJobs.length > 0) {
+                        filteredJobs = [...allJobs];
+                        populateDesktopFilters(allJobs);
+                        populateMobileRoleFilters(allJobs);
+                        displayJobs();
+                        handleDeepLink();
+                    } else {
+                        noResultsMessage.classList.remove('hidden');
+                    }
+                } catch (error) {
+                    console.error("Failed to fetch jobs:", error);
+                    jobGrid.innerHTML = `<p class="text-center text-red-400 col-span-full">Could not load job listings.</p>`;
+                } finally {
+                    loadingSpinner.classList.add('hidden');
+                }
+            }
+
+            // --- RENDERING ---
+            function displayJobs() {
+                // On mobile, we show all jobs for horizontal scroll. On desktop, we paginate.
+                const jobsToDisplay = window.innerWidth < 768 ? filteredJobs : filteredJobs.slice(0, currentPage * JOBS_PER_PAGE);
+                jobGrid.innerHTML = '';
+                noResultsMessage.classList.toggle('hidden', filteredJobs.length > 0);
+
+                jobsToDisplay.forEach((job) => {
+                    const item = document.createElement('div');
+                    item.className = 'job-item group flex flex-col items-center text-center p-4 transition-transform duration-300 hover:-translate-y-1';
+                    item.dataset.jobId = job.ID;
+                    
+                    const postedDate = formatDateAgo(job['Date Posted']);
+                    const deepLinkUrl = `${window.location.pathname}?id=${job.ID}`;
+                    
+                    item.innerHTML = `
+                        <div class="flex-grow w-full flex flex-col items-center">
+                            <div class="relative w-32 h-32 mb-4">
+                                <div class="w-full h-full rounded-full bg-gray-800 flex items-center justify-center overflow-hidden shadow-lg transition-transform duration-300 group-hover:scale-110">
+                                    <img data-company-name="${job.Company}" src="${job['Company Logo URL']}" alt="${job.Company} Logo" class="job-logo w-full h-full object-cover">
+                                </div>
+                            </div>
+                            <h3 class="text-lg font-semibold text-white leading-tight">${job['Job Title']}</h3>
+                            <p class="text-gray-400 text-sm">${job.Company}</p>
+                            <p class="text-gray-500 text-xs mt-1">📍 ${job.Location}</p>
+                        </div>
+                        
+                        <div class="job-actions mt-4 w-full flex flex-col items-center gap-2">
+                            <button class="apply-btn w-full bg-gradient-to-br from-orange-500 to-orange-600 text-white font-semibold py-2 px-4 rounded-lg text-sm">Apply</button>
+                            <div class="flex items-center justify-center gap-4 w-full mt-2">
+                                <span class="text-xs text-gray-600">${postedDate}</span>
+                                <a href="${deepLinkUrl}" class="share-btn text-gray-600 hover:text-orange-400" title="Share Job">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12s-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6.002l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.368a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z"></path></svg>
+                                </a>
+                            </div>
+                        </div>
+                    `;
+                    jobGrid.appendChild(item);
+                });
+                
+                document.querySelectorAll('.job-logo').forEach(img => {
+                    img.onerror = () => { img.replaceWith(createDefaultLogo(img.dataset.companyName)); };
+                });
+
+                document.querySelectorAll('.job-item:not(.visible)').forEach((card, index) => {
+                    setTimeout(() => { card.classList.add('visible'); }, index * 100);
+                });
+
+                loadMoreBtn.classList.toggle('hidden', filteredJobs.length <= jobsToDisplay.length || window.innerWidth < 768);
+            }
+            
+            // --- DEEP LINKING ---
+            function handleDeepLink() {
+                const urlParams = new URLSearchParams(window.location.search);
+                const jobId = urlParams.get('id');
+                if (jobId) {
+                    const job = allJobs.find(j => String(j.ID) === String(jobId));
+                    if (job) showDeepLinkModal(job);
+                }
+            }
+
+            // --- FILTERING LOGIC ---
+            function populateDesktopFilters(jobs) {
+                const locations = [...new Set(jobs.map(job => job.Location).filter(Boolean))].sort();
+                desktopLocationFilter.innerHTML = '<option value="">All Locations</option>';
+                locations.forEach(location => {
+                    const option = document.createElement('option');
+                    option.value = location;
+                    option.textContent = location;
+                    desktopLocationFilter.appendChild(option);
+                });
+            }
+            
+            function populateMobileRoleFilters(jobs) {
+                const roles = [...new Set(jobs.map(job => job['Job Title']).filter(Boolean))].sort();
+                mobileRoleFiltersContainer.innerHTML = '';
+                // Add an "All Roles" button first
+                const allRolesPill = document.createElement('button');
+                allRolesPill.className = 'mobile-role-pill active px-3 py-1 bg-orange-500 text-white rounded-full text-sm';
+                allRolesPill.textContent = 'All Roles';
+                allRolesPill.dataset.role = ''; // Empty value for all roles
+                mobileRoleFiltersContainer.appendChild(allRolesPill);
+
+                roles.forEach(role => {
+                    const pill = document.createElement('button');
+                    pill.className = 'mobile-role-pill px-3 py-1 bg-gray-800 text-gray-300 rounded-full text-sm';
+                    pill.textContent = role;
+                    pill.dataset.role = role;
+                    mobileRoleFiltersContainer.appendChild(pill);
+                });
+            }
+
+            function applyFiltersAndRender() {
+                currentPage = 1;
+                const isMobile = window.innerWidth < 768;
+                
+                // Use different inputs based on screen size
+                const searchTerm = isMobile ? mobileSearchInput.value.toLowerCase() : desktopSearchInput.value.toLowerCase();
+                const selectedLocation = isMobile ? '' : desktopLocationFilter.value; // Location filter is desktop only for now
+                const selectedRole = isMobile ? (document.querySelector('.mobile-role-pill.active')?.dataset.role || '') : '';
+
+                filteredJobs = allJobs.filter(job => {
+                    const matchesSearch = searchTerm === '' || job['Job Title'].toLowerCase().includes(searchTerm) || job.Company.toLowerCase().includes(searchTerm);
+                    const matchesLocation = selectedLocation === '' || job.Location === selectedLocation;
+                    const matchesRole = selectedRole === '' || job['Job Title'] === selectedRole;
+                    return matchesSearch && matchesLocation && matchesRole;
+                });
+                displayJobs();
+            }
+            
+            // --- EVENT LISTENERS ---
+            jobGrid.addEventListener('click', (e) => {
+                const item = e.target.closest('.job-item');
+                if (!item) return;
+                const jobId = item.dataset.jobId;
+                const job = allJobs.find(j => String(j.ID) === String(jobId));
+                if (!job) return;
+
+                if (e.target.closest('.apply-btn')) {
+                    showApplyModal(job);
+                } else if (e.target.closest('.share-btn')) {
+                    e.preventDefault();
+                    const shareButton = e.target.closest('.share-btn');
+                    const url = shareButton.href;
+                    
+                    try {
+                        const dummy = document.createElement('input');
+                        document.body.appendChild(dummy);
+                        dummy.value = url;
+                        dummy.select();
+                        document.execCommand('copy');
+                        document.body.removeChild(dummy);
+
+                        const originalContent = shareButton.innerHTML;
+                        shareButton.innerHTML = `<svg class="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>`;
+                        setTimeout(() => { shareButton.innerHTML = originalContent; }, 2000);
+                    } catch (err) {
+                        console.error('Failed to copy link', err);
+                        alert('Failed to copy link.');
+                    }
+                }
+            });
+            
+            // Desktop filter listeners
+            desktopSearchInput.addEventListener('input', applyFiltersAndRender);
+            desktopLocationFilter.addEventListener('change', applyFiltersAndRender);
+            desktopResetBtn.addEventListener('click', () => { desktopSearchInput.value = ''; desktopLocationFilter.value = ''; applyFiltersAndRender(); });
+            
+            // Mobile filter listeners
+            mobileSearchInput.addEventListener('input', applyFiltersAndRender);
+            mobileFilterToggle.addEventListener('click', () => {
+                const isHidden = mobileRoleFiltersContainer.classList.contains('hidden');
+                
+                // Smart UX: Hide jobs when filters are opened
+                jobGrid.classList.toggle('filtering', isHidden);
+                
+                if (isHidden) {
+                    mobileRoleFiltersContainer.classList.remove('hidden');
+                } else {
+                    mobileRoleFiltersContainer.classList.add('hidden');
+                }
+            });
+            
+            mobileRoleFiltersContainer.addEventListener('click', (e) => {
+                if (e.target.classList.contains('mobile-role-pill')) {
+                    // Update active state
+                    mobileRoleFiltersContainer.querySelectorAll('.mobile-role-pill').forEach(pill => {
+                        pill.classList.remove('active', 'bg-orange-500', 'text-white');
+                        pill.classList.add('bg-gray-800', 'text-gray-300');
+                    });
+                    e.target.classList.add('active', 'bg-orange-500', 'text-white');
+                    e.target.classList.remove('bg-gray-800', 'text-gray-300');
+                    
+                    // Apply filter and hide the filter UI
+                    applyFiltersAndRender();
+                    setTimeout(() => {
+                        mobileRoleFiltersContainer.classList.add('hidden');
+                        jobGrid.classList.remove('filtering');
+                    }, 300); // Give a moment for the user to see their selection
+                }
+            });
+
+            loadMoreBtn.addEventListener('click', () => { currentPage++; displayJobs(); });
+
+            // --- INITIALIZATION ---
+            fetchJobs();
         });
-
-    // This part for referrals stays the same
-    if (typeof setupReferrals === 'function' && typeof preloadedReferrals !== 'undefined') {
-        setupReferrals(preloadedReferrals);
-    }
-
-    // ... Assuming all your other event listeners are here, they remain untouched ...
-});
-  </script>
-
+    </script>
 </body>
 </html>
