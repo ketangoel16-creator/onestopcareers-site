@@ -26,12 +26,12 @@
         ::-webkit-scrollbar-thumb:hover { background: #4b5563; }
 
         /* Animation for job item load-in */
-        .job-item {
+        .job-item, .toolkit-card {
             opacity: 0;
             transform: translateY(20px);
             transition: opacity 0.5s ease-out, transform 0.5s ease-out;
         }
-        .job-item.visible {
+        .job-item.visible, .toolkit-card.visible {
             opacity: 1;
             transform: translateY(0);
         }
@@ -50,26 +50,30 @@
         
         /* Mobile Horizontal Carousel Styles */
         @media (max-width: 767px) {
-            #job-listings-grid {
+            .horizontal-carousel {
                 display: flex;
                 overflow-x: auto;
                 scroll-snap-type: x mandatory;
                 padding-bottom: 1rem; /* Space for scrollbar */
                 -ms-overflow-style: none;  /* IE and Edge */
                 scrollbar-width: none;  /* Firefox */
-                transition: opacity 0.3s ease-in-out, max-height 0.5s ease-in-out;
+            }
+            .horizontal-carousel::-webkit-scrollbar {
+                display: none; /* Chrome, Safari, Opera */
             }
             #job-listings-grid.filtering {
                 opacity: 0;
                 max-height: 0;
                 padding-bottom: 0;
                 overflow: hidden;
-            }
-            #job-listings-grid::-webkit-scrollbar {
-                display: none; /* Chrome, Safari, Opera */
+                transition: opacity 0.3s ease-in-out, max-height 0.5s ease-in-out;
             }
             .job-item {
                 flex: 0 0 75%; /* Each item takes up 75% of the viewport width */
+                scroll-snap-align: start;
+            }
+            .toolkit-card {
+                flex: 0 0 80%;
                 scroll-snap-align: start;
             }
             #desktop-filters {
@@ -81,6 +85,15 @@
             #mobile-filters {
                 display: none;
             }
+        }
+
+        /* Scroll Nudge Animation */
+        @keyframes scroll-nudge {
+            0%, 100% { transform: translateX(0); }
+            50% { transform: translateX(-20px); }
+        }
+        .scroll-nudge-animation {
+            animation: scroll-nudge 1.5s ease-in-out 1s 1; /* Animate once after 1s delay */
         }
     </style>
 </head>
@@ -126,21 +139,28 @@
 
         <!-- Jobs Section -->
         <section id="jobs-section" class="mb-16">
-            <h2 class="text-2xl font-bold text-white mb-6">Featured Jobs</h2>
+            <div class="flex justify-between items-center mb-6">
+                 <h2 class="text-2xl font-bold text-white">Featured Jobs</h2>
+                 <div id="scroll-nudge-indicator" class="md:hidden flex items-center gap-1 text-xs text-gray-500">
+                     <span>Scroll for more</span>
+                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+                 </div>
+            </div>
             <div id="loading-spinner" class="text-center py-12">
                 <svg class="animate-spin h-10 w-10 text-orange-500 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
             </div>
             <div id="no-results" class="hidden text-center py-12"><h3 class="text-2xl font-semibold text-white">No Matching Jobs Found</h3><p class="text-gray-400 mt-2">Try adjusting your filters.</p></div>
-            <div id="job-listings-grid" class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-y-12 gap-x-6"></div>
+            <div id="job-listings-grid" class="horizontal-carousel grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-y-12 gap-x-6"></div>
             <div id="load-more-container" class="text-center mt-12 hidden md:block"><button id="load-more-btn" class="hidden bg-gradient-to-br from-orange-500 to-orange-600 text-white font-semibold py-3 px-8 rounded-lg hover:from-orange-600 hover:to-orange-700 transition-all duration-300 shadow-lg shadow-orange-500/20">Load More</button></div>
         </section>
 
-        <!-- Career Toolkit Section (Placeholder) -->
+        <!-- Career Toolkit Section -->
         <section id="toolkit-section" class="mb-16">
-            <h2 class="text-2xl font-bold text-white mb-6">Career Toolkit</h2>
-            <div class="text-center py-16 bg-gray-900 rounded-xl border border-gray-800">
-                <h3 class="text-3xl font-bold text-white">Coming Soon</h3>
-                <p class="text-gray-400 mt-4">Resources, resume builders, and interview prep.</p>
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold text-white">Career Toolkit</h2>
+            </div>
+            <div id="toolkit-carousel" class="horizontal-carousel grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Toolkit cards will be injected here -->
             </div>
         </section>
 
@@ -182,6 +202,8 @@
             const loadMoreBtn = document.getElementById('load-more-btn');
             const modalOverlay = document.getElementById('job-modal-overlay');
             const modalContent = document.getElementById('job-modal-content');
+            const toolkitCarousel = document.getElementById('toolkit-carousel');
+            const scrollNudgeIndicator = document.getElementById('scroll-nudge-indicator');
             
             // Desktop Filters
             const desktopSearchInput = document.getElementById('search-input');
@@ -196,6 +218,7 @@
             let allJobs = [];
             let filteredJobs = [];
             let currentPage = 1;
+            const isMobile = window.matchMedia("(max-width: 767px)").matches;
 
             // --- HELPER FUNCTIONS ---
             const formatDateAgo = (dateString) => {
@@ -258,7 +281,7 @@
 
             modalOverlay.addEventListener('click', (e) => { if (e.target === modalOverlay) closeModal(); });
 
-            // --- DATA FETCHING ---
+            // --- DATA FETCHING & RENDERING ---
             async function fetchJobs() {
                 try {
                     const response = await fetch(JOBS_JSON_URL);
@@ -273,6 +296,10 @@
                         populateMobileRoleFilters(allJobs);
                         displayJobs();
                         handleDeepLink();
+                        // Add scroll nudge animation
+                        setTimeout(() => {
+                           scrollNudgeIndicator.classList.add('scroll-nudge-animation');
+                        }, 1500);
                     } else {
                         noResultsMessage.classList.remove('hidden');
                     }
@@ -284,10 +311,8 @@
                 }
             }
 
-            // --- RENDERING ---
             function displayJobs() {
-                // On mobile, we show all jobs for horizontal scroll. On desktop, we paginate.
-                const jobsToDisplay = window.innerWidth < 768 ? filteredJobs : filteredJobs.slice(0, currentPage * JOBS_PER_PAGE);
+                const jobsToDisplay = isMobile ? filteredJobs : filteredJobs.slice(0, currentPage * JOBS_PER_PAGE);
                 jobGrid.innerHTML = '';
                 noResultsMessage.classList.toggle('hidden', filteredJobs.length > 0);
 
@@ -332,9 +357,52 @@
                     setTimeout(() => { card.classList.add('visible'); }, index * 100);
                 });
 
-                loadMoreBtn.classList.toggle('hidden', filteredJobs.length <= jobsToDisplay.length || window.innerWidth < 768);
+                loadMoreBtn.classList.toggle('hidden', isMobile || filteredJobs.length <= (currentPage * JOBS_PER_PAGE));
             }
             
+            function renderToolkit() {
+                const toolkitData = [
+                    { title: 'Resume Builder', icon: '<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>', description: 'Craft the perfect resume with our AI-powered builder.' },
+                    { title: 'Interview Prep', icon: '<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a2 2 0 01-2-2V7a2 2 0 012-2h2.586a1 1 0 01.707.293l2.414 2.414a1 1 0 01.293.707V8z" /></svg>', description: 'Practice common questions and get instant feedback.' },
+                    { title: 'Salary Insights', icon: '<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v.01" /></svg>', description: 'Know your worth with our real-time salary data.' }
+                ];
+
+                toolkitCarousel.innerHTML = '';
+                toolkitData.forEach((item, index) => {
+                    const card = document.createElement('div');
+                    card.className = 'toolkit-card bg-gray-900 border border-gray-800 rounded-xl p-6 flex flex-col items-start gap-4 transition-all duration-300 hover:border-orange-500/50 hover:-translate-y-1';
+                    card.innerHTML = `
+                        <div class="p-3 bg-gray-800 rounded-lg text-orange-500">
+                            ${item.icon}
+                        </div>
+                        <h3 class="text-lg font-bold text-white">${item.title}</h3>
+                        <p class="text-sm text-gray-400 flex-grow">${item.description}</p>
+                        <a href="#" class="text-sm font-medium text-orange-500 hover:text-orange-400 flex items-center gap-1">
+                            Learn More <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
+                        </a>
+                    `;
+                    toolkitCarousel.appendChild(card);
+                    // Staggered animation for toolkit cards
+                    setTimeout(() => {
+                        card.classList.add('visible');
+                    }, index * 100);
+                });
+                
+                // Add the "View All" card
+                const viewAllCard = document.createElement('a');
+                viewAllCard.href = "#"; // Link to your dedicated resources page
+                viewAllCard.className = 'toolkit-card bg-transparent border-2 border-dashed border-gray-700 rounded-xl p-6 flex flex-col items-center justify-center gap-4 transition-all duration-300 hover:border-orange-500 hover:bg-gray-900';
+                viewAllCard.innerHTML = `
+                    <div class="text-orange-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+                    </div>
+                    <h3 class="text-lg font-bold text-white">Explore All Tools</h3>
+                    <p class="text-sm text-gray-400">View our full suite of career resources.</p>
+                `;
+                toolkitCarousel.appendChild(viewAllCard);
+                setTimeout(() => { viewAllCard.classList.add('visible'); }, toolkitData.length * 100);
+            }
+
             // --- DEEP LINKING ---
             function handleDeepLink() {
                 const urlParams = new URLSearchParams(window.location.search);
@@ -360,11 +428,10 @@
             function populateMobileRoleFilters(jobs) {
                 const roles = [...new Set(jobs.map(job => job['Job Title']).filter(Boolean))].sort();
                 mobileRoleFiltersContainer.innerHTML = '';
-                // Add an "All Roles" button first
                 const allRolesPill = document.createElement('button');
                 allRolesPill.className = 'mobile-role-pill active px-3 py-1 bg-orange-500 text-white rounded-full text-sm';
                 allRolesPill.textContent = 'All Roles';
-                allRolesPill.dataset.role = ''; // Empty value for all roles
+                allRolesPill.dataset.role = '';
                 mobileRoleFiltersContainer.appendChild(allRolesPill);
 
                 roles.forEach(role => {
@@ -378,11 +445,9 @@
 
             function applyFiltersAndRender() {
                 currentPage = 1;
-                const isMobile = window.innerWidth < 768;
                 
-                // Use different inputs based on screen size
                 const searchTerm = isMobile ? mobileSearchInput.value.toLowerCase() : desktopSearchInput.value.toLowerCase();
-                const selectedLocation = isMobile ? '' : desktopLocationFilter.value; // Location filter is desktop only for now
+                const selectedLocation = isMobile ? '' : desktopLocationFilter.value;
                 const selectedRole = isMobile ? (document.querySelector('.mobile-role-pill.active')?.dataset.role || '') : '';
 
                 filteredJobs = allJobs.filter(job => {
@@ -427,19 +492,14 @@
                 }
             });
             
-            // Desktop filter listeners
             desktopSearchInput.addEventListener('input', applyFiltersAndRender);
             desktopLocationFilter.addEventListener('change', applyFiltersAndRender);
             desktopResetBtn.addEventListener('click', () => { desktopSearchInput.value = ''; desktopLocationFilter.value = ''; applyFiltersAndRender(); });
             
-            // Mobile filter listeners
             mobileSearchInput.addEventListener('input', applyFiltersAndRender);
             mobileFilterToggle.addEventListener('click', () => {
                 const isHidden = mobileRoleFiltersContainer.classList.contains('hidden');
-                
-                // Smart UX: Hide jobs when filters are opened
                 jobGrid.classList.toggle('filtering', isHidden);
-                
                 if (isHidden) {
                     mobileRoleFiltersContainer.classList.remove('hidden');
                 } else {
@@ -449,7 +509,6 @@
             
             mobileRoleFiltersContainer.addEventListener('click', (e) => {
                 if (e.target.classList.contains('mobile-role-pill')) {
-                    // Update active state
                     mobileRoleFiltersContainer.querySelectorAll('.mobile-role-pill').forEach(pill => {
                         pill.classList.remove('active', 'bg-orange-500', 'text-white');
                         pill.classList.add('bg-gray-800', 'text-gray-300');
@@ -457,12 +516,11 @@
                     e.target.classList.add('active', 'bg-orange-500', 'text-white');
                     e.target.classList.remove('bg-gray-800', 'text-gray-300');
                     
-                    // Apply filter and hide the filter UI
                     applyFiltersAndRender();
                     setTimeout(() => {
                         mobileRoleFiltersContainer.classList.add('hidden');
                         jobGrid.classList.remove('filtering');
-                    }, 300); // Give a moment for the user to see their selection
+                    }, 300);
                 }
             });
 
@@ -470,6 +528,7 @@
 
             // --- INITIALIZATION ---
             fetchJobs();
+            renderToolkit();
         });
     </script>
 </body>
