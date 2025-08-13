@@ -4,31 +4,42 @@ document.addEventListener('DOMContentLoaded', () => {
         allJobs: [],
         allReferrals: [],
         filteredJobs: [],
-        filteredReferrals: [],
         currentPage: 1,
         currentReferralPage: 1,
-        activePage: window.location.pathname.includes('jobs.html') ? 'jobs' : (window.location.pathname.includes('resources.html') ? 'resources' : (window.location.pathname.includes('mentors.html') ? 'mentors' : 'home')),
         isMobile: window.matchMedia("(max-width: 767px)").matches,
         filters: {
             searchTerm: '',
             location: '',
             role: ''
-        },
-        ui: {
-            isModalOpen: false,
-            isFilterScreenOpen: false
         }
     };
 
-    // --- CONFIGURATION & ELEMENTS ---
+    // --- CONFIGURATION ---
     const JOBS_JSON_URL = 'https://ketangoel16-creator.github.io/onestopcareers-data/jobs.json';
     const REFERRALS_JSON_URL = 'https://ketangoel16-creator.github.io/onestopcareers-data/referrals.json';
     const JOBS_PER_PAGE_DESKTOP = 10;
     const JOBS_PER_PAGE_MOBILE = 6;
     const REFERRALS_PER_PAGE_WEB = 9;
+    const PAGE_MAP = {
+        'index.html': 'home',
+        'jobs.html': 'jobs',
+        'resources.html': 'resources',
+        'mentors.html': 'mentors'
+    };
+    const activePage = PAGE_MAP[window.location.pathname.split('/').pop()] || 'home';
 
     // --- ELEMENT SELECTORS ---
     const getElement = (id) => document.getElementById(id);
+    const getElements = (selector) => document.querySelectorAll(selector);
+
+    // --- HELPER FUNCTIONS ---
+    const createDefaultLogo = (companyName) => {
+        const firstLetter = (companyName || '?').charAt(0).toUpperCase();
+        const logoDiv = document.createElement('div');
+        logoDiv.className = "w-full h-full flex items-center justify-center bg-gray-800 text-gray-400 text-5xl font-bold";
+        logoDiv.textContent = firstLetter;
+        return logoDiv;
+    };
 
     // --- RENDER FUNCTIONS ---
     function renderJobs() {
@@ -173,10 +184,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         function populateStep2View(stageKey) {
             const stage = stagesMap[stageKey];
-            if (document.getElementById('step-2-title')) document.getElementById('step-2-title').textContent = stage.title;
-            if (document.getElementById('step-2-description')) document.getElementById('step-2-description').textContent = "Here is your personalized path forward. Choose an area to focus on.";
-            if (document.getElementById('progress-indicator')) document.getElementById('progress-indicator').textContent = 'Step 2 of 2';
-            const subStageGrid = document.getElementById('sub-stage-grid');
+            if (getElement('step-2-title')) getElement('step-2-title').textContent = stage.title;
+            if (getElement('step-2-description')) getElement('step-2-description').textContent = "Here is your personalized path forward. Choose an area to focus on.";
+            if (getElement('progress-indicator')) getElement('progress-indicator').textContent = 'Step 2 of 2';
+            const subStageGrid = getElement('sub-stage-grid');
             if (subStageGrid) {
                 subStageGrid.innerHTML = '';
                 stage.substages.forEach(sub => {
@@ -311,9 +322,9 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
         function applyFilters() {
-            const searchTerm = state.isMobile ? (document.getElementById('mobile-search-input')?.value || '').toLowerCase() : (document.getElementById('desktop-search-input')?.value || '').toLowerCase();
-            const selectedLocation = state.isMobile ? (document.getElementById('filter-location')?.value || '') : (document.getElementById('desktop-location-filter')?.value || '');
-            const selectedRole = state.isMobile ? document.querySelector('.mobile-role-pill.active')?.dataset.role || '' : (document.getElementById('desktop-role-filter')?.value || '');
+            const searchTerm = state.isMobile ? (getElement('mobile-search-input')?.value || '').toLowerCase() : (getElement('desktop-search-input')?.value || '').toLowerCase();
+            const selectedLocation = state.isMobile ? (getElement('filter-location')?.value || '') : (getElement('desktop-location-filter')?.value || '');
+            const selectedRole = state.isMobile ? document.querySelector('.mobile-role-pill.active')?.dataset.role || '' : (getElement('desktop-role-filter')?.value || '');
 
             state.filteredJobs = state.allJobs.filter(job =>
                 (searchTerm === '' || job['Job Title'].toLowerCase().includes(searchTerm) || job.Company.toLowerCase().includes(searchTerm)) &&
@@ -321,145 +332,30 @@ document.addEventListener('DOMContentLoaded', () => {
                 (selectedRole === '' || job['Job Title'] === selectedRole)
             );
             state.currentPage = 1;
-            renderJobsPage();
+            if (activePage === 'jobs') {
+                renderJobs();
+                renderReferrals();
+            }
         }
-
         function clearFilters() {
             if (state.isMobile) {
-                if (document.getElementById('mobile-search-input')) document.getElementById('mobile-search-input').value = '';
-                if (document.getElementById('filter-location')) document.getElementById('filter-location').value = '';
-                if (document.getElementById('mobile-role-filters')) document.getElementById('mobile-role-filters').querySelectorAll('.mobile-role-pill').forEach(p => p.classList.remove('active', 'bg-orange-500'));
+                if (getElement('mobile-search-input')) getElement('mobile-search-input').value = '';
+                if (getElement('filter-location')) getElement('filter-location').value = '';
+                if (getElement('mobile-role-filters')) getElement('mobile-role-filters').querySelectorAll('.mobile-role-pill').forEach(p => p.classList.remove('active', 'bg-orange-500'));
             } else {
-                if (document.getElementById('desktop-search-input')) document.getElementById('desktop-search-input').value = '';
-                if (document.getElementById('desktop-location-filter')) document.getElementById('desktop-location-filter').value = '';
-                if (document.getElementById('desktop-role-filter')) document.getElementById('desktop-role-filter').value = '';
+                if (getElement('desktop-search-input')) getElement('desktop-search-input').value = '';
+                if (getElement('desktop-location-filter')) getElement('desktop-location-filter').value = '';
+                if (getElement('desktop-role-filter')) getElement('desktop-role-filter').value = '';
             }
             applyFilters();
         }
 
-        function showApplyModal(job) {
-            const modalOverlay = getElement('job-modal-overlay');
-            if (!modalOverlay) return;
-            const content = `<div class="text-center"><div class="h-20 w-20 rounded-full bg-gray-800 mx-auto mb-4 overflow-hidden flex items-center justify-center"><img src="${job['Company Logo URL']}" alt="${job.Company} Logo" class="w-full h-full object-cover"></div><h3 class="text-2xl font-bold text-white">${job['Job Title']}</h3><p class="text-gray-400 mb-6">at ${job.Company}</p><p class="bg-gray-800 border border-gray-700 text-orange-400 text-sm rounded-lg p-3 mb-6">✨ **Pro Tip:** Tailor your resume to include keywords from the job description. Good luck!</p><div class="flex flex-col sm:flex-row gap-3"><button id="proceed-btn" class="w-full bg-gradient-to-br from-orange-500 to-orange-600 text-white font-semibold py-3 px-5 rounded-lg hover:from-orange-600 hover:to-orange-700 transition-all">Proceed to Application</button><button id="cancel-btn" class="w-full bg-gray-700 text-white font-semibold py-3 px-5 rounded-lg hover:bg-gray-600 transition-colors">Cancel</button></div></div>`;
-            modalOverlay.innerHTML = `<div class="modal-content bg-gray-900 border border-gray-800 rounded-2xl shadow-xl w-full max-w-lg mx-auto p-6 md:p-8">${content}</div>`;
-            modalOverlay.classList.remove('hidden');
-            setTimeout(() => { modalOverlay.classList.add('open', 'opacity-100'); }, 10);
-            if (document.getElementById('proceed-btn')) document.getElementById('proceed-btn').addEventListener('click', () => { window.open(job.Link, '_blank'); closeModal(); });
-            if (document.getElementById('cancel-btn')) document.getElementById('cancel-btn').addEventListener('click', closeModal);
-            const modalImg = modalOverlay.querySelector('img');
-            if (modalImg) { modalImg.onerror = () => { modalImg.replaceWith(createDefaultLogo(job.Company)); }; }
-        }
-
-        function closeModal() {
-            const modalOverlay = getElement('job-modal-overlay');
-            if (modalOverlay) modalOverlay.classList.remove('open', 'opacity-100');
-            setTimeout(() => { if (modalOverlay) modalOverlay.classList.add('hidden'); }, 300);
-        }
-
-        function openFilterScreen() {
-            const mobileFilterScreen = getElement('mobile-filter-screen');
-            if (mobileFilterScreen) mobileFilterScreen.style.transform = 'translateX(0)';
-        }
-
-        function closeFilterScreen() {
-            const mobileFilterScreen = getElement('mobile-filter-screen');
-            if (mobileFilterScreen) mobileFilterScreen.style.transform = 'translateX(100%)';
-        }
-
-        function populateFilters() {
-            if (state.allJobs.length === 0) return;
-            
-            const locations = [...new Set(state.allJobs.map(job => job.Location).filter(Boolean))].sort();
-            const desktopLocationFilter = getElement('desktop-location-filter');
-            const filterLocationSelect = getElement('filter-location');
-            if (desktopLocationFilter) {
-                desktopLocationFilter.innerHTML = '<option value="">All Locations</option>';
-                locations.forEach(location => desktopLocationFilter.add(new Option(location, location)));
-            }
-            if (filterLocationSelect) {
-                filterLocationSelect.innerHTML = '<option value="">All Locations</option>';
-                locations.forEach(location => filterLocationSelect.add(new Option(location, location)));
-            }
-
-            const roles = [...new Set(state.allJobs.map(job => job['Job Title']).filter(Boolean))].sort();
-            const desktopRoleFilter = getElement('desktop-role-filter');
-            const mobileRoleFiltersContainer = getElement('mobile-role-filters');
-            if (desktopRoleFilter) {
-                desktopRoleFilter.innerHTML = '<option value="">All Roles</option>';
-                roles.forEach(role => desktopRoleFilter.add(new Option(role, role)));
-            }
-            if (mobileRoleFiltersContainer) {
-                mobileRoleFiltersContainer.innerHTML = '';
-                roles.forEach(role => {
-                    const pill = document.createElement('button');
-                    pill.className = 'mobile-role-pill w-full text-left p-3 bg-gray-800 text-gray-300 rounded-lg text-sm';
-                    pill.textContent = role;
-                    pill.dataset.role = role;
-                    mobileRoleFiltersContainer.appendChild(pill);
-                });
-            }
-        }
-    
-        function initJobsPage() {
-            if (getElement('jobs-page')) {
-                const loadMoreBtn = getElement('load-more-btn');
-                const referralLoadMoreBtn = getElement('referral-load-more-btn');
-                const desktopSearchInput = getElement('desktop-search-input');
-                const desktopLocationFilter = getElement('desktop-location-filter');
-                const desktopRoleFilter = getElement('desktop-role-filter');
-                const desktopResetFilters = getElement('desktop-reset-filters');
-                const mobileFilterToggle = getElement('mobile-filter-toggle');
-                const closeFilterBtn = getElement('close-filter-btn');
-                const applyFiltersBtn = getElement('apply-filters-btn');
-                const clearFiltersBtn = getElement('clear-filters-btn');
-                const filterLocationSelect = getElement('filter-location');
-                const mobileRoleFiltersContainer = getElement('mobile-role-filters');
-
-                if (loadMoreBtn) loadMoreBtn.addEventListener('click', () => {
-                    state.currentPage++;
-                    renderJobs();
-                });
-                if (referralLoadMoreBtn) referralLoadMoreBtn.addEventListener('click', () => {
-                    state.currentReferralPage++;
-                    renderReferrals();
-                });
-                if (desktopSearchInput) desktopSearchInput.addEventListener('input', applyFilters);
-                if (desktopLocationFilter) desktopLocationFilter.addEventListener('change', applyFilters);
-                if (desktopRoleFilter) desktopRoleFilter.addEventListener('change', applyFilters);
-                if (desktopResetFilters) desktopResetFilters.addEventListener('click', clearFilters);
-                if (mobileFilterToggle) mobileFilterToggle.addEventListener('click', openFilterScreen);
-                if (closeFilterBtn) closeFilterBtn.addEventListener('click', closeFilterScreen);
-                if (applyFiltersBtn) applyFiltersBtn.addEventListener('click', () => {
-                    closeFilterScreen();
-                    applyFilters();
-                });
-                if (clearFiltersBtn) clearFiltersBtn.addEventListener('click', clearFilters);
-                if (filterLocationSelect) filterLocationSelect.addEventListener('change', applyFilters);
-                if (mobileRoleFiltersContainer) {
-                    mobileRoleFiltersContainer.addEventListener('click', (e) => {
-                        const pill = e.target.closest('.mobile-role-pill');
-                        if (pill) {
-                            const isActive = pill.classList.contains('active');
-                            mobileRoleFiltersContainer.querySelectorAll('.mobile-role-pill').forEach(p => p.classList.remove('active', 'bg-orange-500'));
-                            if (!isActive) {
-                                pill.classList.add('active', 'bg-orange-500');
-                                state.filters.role = pill.dataset.role;
-                            } else {
-                                state.filters.role = '';
-                            }
-                            applyFilters();
-                        }
-                    });
-                }
-            }
-        }
-    
         function initHomePage() {
-            if (getElement('home-page')) {
-                const journeyContainer = getElement('journey-container');
-                const backButton = getElement('back-button');
-                const findCareerStageBtn = getElement('find-career-stage-btn');
-        
+            const journeyContainer = getElement('journey-container');
+            const findCareerStageBtn = getElement('find-career-stage-btn');
+            const backButton = getElement('back-button');
+    
+            if (journeyContainer) {
                 const stagesMap = {
                     'starting-out': { title: "Just Starting Out", description: "You're at the very beginning, trying to find your footing and choose a direction that excites you. Let's build your foundation.", icon: `<svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" /></svg>`, substages: [ { name: "Explore Roles", subDescription: "Discover different career paths that match your interests and skills." }, { name: "Finalize a Role", subDescription: "Commit to a specific path and understand what it takes to succeed." }, { name: "Prepare a Roadmap", subDescription: "Create a step-by-step plan for the skills and experience you'll need." } ] },
                     'skill-up': { title: "Skill Up & Search", description: "You know your target role, but need the skills and a powerful resume to get noticed by recruiters.", icon: `<svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 10.5L12 3m0 0l7.5 7.5M12 3v18" /></svg>`, substages: [ { name: "Find Learning Resources", subDescription: "Identify the best courses, books, and projects to build your expertise." }, { name: "Gain Practical Exposure", subDescription: "Apply your knowledge through internships, projects, or freelance work." }, { name: "Build a Killer Resume", subDescription: "Craft a resume that highlights your new skills and gets past ATS filters." } ] },
@@ -522,13 +418,13 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // --- EVENT LISTENERS & INITIALIZATION ---
     function initApp() {
-        if (state.activePage === 'home') {
+        if (activePage === 'home') {
             initHomePage();
         }
-        if (state.activePage === 'jobs') {
+        if (activePage === 'jobs') {
             initJobsPage();
         }
-        if (state.activePage === 'resources') {
+        if (activePage === 'resources') {
             renderCareerToolkit();
         }
         
@@ -543,6 +439,14 @@ document.addEventListener('DOMContentLoaded', () => {
     
         fetchData();
     }
-
+    
     initApp();
+
 });
+```
+
+### Next Steps
+1.  **Replace your existing `main.js`** file with the code from the Canvas above.
+2.  **Commit and push** this change to your repository.
+
+This should permanently resolve the `TypeError` and ensure your site is fully functional on all pag
