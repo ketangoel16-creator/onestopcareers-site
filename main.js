@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
         filteredReferrals: [],
         currentPage: 1,
         currentReferralPage: 1,
-        activePage: window.location.pathname.includes('jobs.html') ? 'jobs' : 'home',
+        activePage: window.location.pathname.includes('jobs.html') ? 'jobs' : (window.location.pathname.includes('resources.html') ? 'resources' : (window.location.pathname.includes('mentors.html') ? 'mentors' : 'home')),
         isMobile: window.matchMedia("(max-width: 767px)").matches,
         filters: {
             searchTerm: '',
@@ -29,66 +29,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- ELEMENT SELECTORS ---
     const getElement = (id) => document.getElementById(id);
-    const jobGrid = getElement('job-listings-grid');
-    const loadingSpinner = getElement('loading-spinner');
-    const noResultsMessage = getElement('no-results');
-    const loadMoreBtn = getElement('load-more-btn');
-    const modalOverlay = getElement('job-modal-overlay');
-    const toolkitCarousel = getElement('toolkit-carousel');
-    const referralsCarouselMobile = getElement('referrals-carousel-mobile');
-    const referralsGridDesktop = getElement('referrals-grid-desktop');
-    const referralLoadMoreBtn = getElement('referral-load-more-btn');
-
-    const desktopSearchInput = getElement('desktop-search-input');
-    const desktopLocationFilter = getElement('desktop-location-filter');
-    const desktopRoleFilter = getElement('desktop-role-filter');
-    const desktopResetFilters = getElement('desktop-reset-filters');
-    
-    const mobileFilterToggle = getElement('mobile-filter-toggle');
-    const mobileFilterScreen = getElement('mobile-filter-screen');
-    const closeFilterBtn = getElement('close-filter-btn');
-    const applyFiltersBtn = getElement('apply-filters-btn');
-    const clearFiltersBtn = getElement('clear-filters-btn');
-
-    const filterLocationSelect = getElement('filter-location');
-    const mobileRoleFiltersContainer = getElement('mobile-role-filters');
-    
-    const desktopNavTabs = document.querySelectorAll('.desktop-tab-btn');
-    const mobileMenuBtn = getElement('mobile-menu-btn');
-    const mobileMenu = getElement('mobile-menu');
-    const findCareerStageBtn = getElement('find-career-stage-btn');
-    const backButton = getElement('back-button');
-
-    // --- HELPER FUNCTIONS ---
-    const formatDateAgo = (dateString) => {
-        if (!dateString) return '';
-        const date = new Date(dateString);
-        const now = new Date();
-        const seconds = Math.floor((now - date) / 1000);
-        if (seconds < 60) return 'Just now';
-        const minutes = Math.floor(seconds / 60);
-        if (minutes < 60) return `${minutes}m ago`;
-        const hours = Math.floor(seconds / 60);
-        if (hours < 24) return `${hours}h ago`;
-        const days = Math.floor(hours / 24);
-        return `${days}d ago`;
-    };
-
-    const createDefaultLogo = (companyName) => {
-        const firstLetter = (companyName || '?').charAt(0).toUpperCase();
-        const logoDiv = document.createElement('div');
-        logoDiv.className = "w-full h-full flex items-center justify-center bg-gray-800 text-gray-400 text-5xl font-bold";
-        logoDiv.textContent = firstLetter;
-        return logoDiv;
-    };
 
     // --- RENDER FUNCTIONS ---
     function renderJobs() {
+        const jobGrid = getElement('job-listings-grid');
         if (!jobGrid) return;
         
         const jobsPerPage = state.isMobile ? JOBS_PER_PAGE_MOBILE : JOBS_PER_PAGE_DESKTOP;
         const jobsToDisplay = state.filteredJobs.slice(0, state.currentPage * jobsPerPage);
         jobGrid.innerHTML = '';
+        const noResultsMessage = getElement('no-results');
         if (noResultsMessage) noResultsMessage.style.display = jobsToDisplay.length > 0 ? 'none' : 'block';
 
         jobsToDisplay.forEach((job) => {
@@ -118,16 +68,19 @@ document.addEventListener('DOMContentLoaded', () => {
             img.onerror = () => { img.replaceWith(createDefaultLogo(img.dataset.companyName)); };
         });
 
+        const loadMoreBtn = getElement('load-more-btn');
         if (loadMoreBtn) loadMoreBtn.parentElement.style.display = state.filteredJobs.length > (state.currentPage * jobsPerPage) ? 'block' : 'none';
     }
 
     function renderReferrals() {
+        const referralsCarouselMobile = getElement('referrals-carousel-mobile');
+        const referralsGridDesktop = getElement('referrals-grid-desktop');
         if (!referralsCarouselMobile && !referralsGridDesktop) return;
 
         const referralsToDisplay = state.isMobile ? state.allReferrals : state.allReferrals.slice(0, state.currentReferralPage * REFERRALS_PER_PAGE_WEB);
         const container = state.isMobile ? referralsCarouselMobile : referralsGridDesktop;
 
-        container.innerHTML = '';
+        if (container) container.innerHTML = '';
 
         if (state.isMobile) {
             if(referralsCarouselMobile) referralsCarouselMobile.classList.remove('hidden');
@@ -162,6 +115,7 @@ document.addEventListener('DOMContentLoaded', () => {
             container.appendChild(card);
         });
 
+        const referralLoadMoreBtn = getElement('referral-load-more-btn');
         if (!state.isMobile && referralLoadMoreBtn) {
             referralLoadMoreBtn.parentElement.style.display = state.allReferrals.length > (state.currentReferralPage * REFERRALS_PER_PAGE_WEB) ? 'block' : 'none';
         } else {
@@ -170,6 +124,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function renderCareerToolkit() {
+        const toolkitCarousel = getElement('toolkit-carousel');
         if (!toolkitCarousel) return;
 
         const toolkitData = [
@@ -188,7 +143,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function renderJourney() {
-        const journeyContainer = document.getElementById('journey-container');
+        const journeyContainer = getElement('journey-container');
         if (!journeyContainer) return;
 
         const stagesMap = {
@@ -198,9 +153,9 @@ document.addEventListener('DOMContentLoaded', () => {
             'stuck': { title: "Stuck or Unmotivated", description: "Your career has stalled, or your motivation has faded. Let's find a new perspective and get you moving again.", icon: `<svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m0-10.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.75c0 5.592 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.57-.598-3.75h-.152c-3.196 0-6.1-1.249-8.25-3.286zm0 13.036h.008v.008H12v-.008z" /></svg>`, substages: [ { name: "Rediscover Motivation", subDescription: "Use proven techniques to reignite your professional passion and set new goals." }, { name: "Create a Feedback Loop", subDescription: "Build a system for getting constructive feedback to break through plateaus." }, ] }
         };
 
-        const stageSelectionGrid = document.getElementById('stage-selection-grid');
-        const backButton = document.getElementById('back-button');
-        const findCareerStageBtn = document.getElementById('find-career-stage-btn');
+        const stageSelectionGrid = getElement('stage-selection-grid');
+        const backButton = getElement('back-button');
+        const findCareerStageBtn = getElement('find-career-stage-btn');
 
         function populateStep1View() {
             if (!stageSelectionGrid) return;
@@ -236,42 +191,358 @@ document.addEventListener('DOMContentLoaded', () => {
 
         function navigateToStep2(stageKey) {
             populateStep2View(stageKey);
-            const journeyContainer = document.getElementById('journey-container');
+            const journeyContainer = getElement('journey-container');
             if (journeyContainer) journeyContainer.classList.add('step-2-active');
         }
 
         function navigateToStep1() {
-            const journeyContainer = document.getElementById('journey-container');
+            const journeyContainer = getElement('journey-container');
             if (journeyContainer) journeyContainer.classList.remove('step-2-active');
         }
-
+        
+        // Event listeners
         if (backButton) backButton.addEventListener('click', navigateToStep1);
         if (findCareerStageBtn) findCareerStageBtn.addEventListener('click', (e) => {
             e.preventDefault();
-            const journeySection = document.getElementById('journey-section');
+            const journeySection = getElement('journey-section');
             if (journeySection) journeySection.scrollIntoView({ behavior: 'smooth' });
         });
 
         populateStep1View();
     }
 
-    if (state.activePage === 'jobs') {
-        // This is where your jobs page logic would go
-        // All of this code is currently in the jobs.html file
-        // Once all files are created you will move it here.
+    function initJobsPage() {
+        // --- CONFIGURATION & ELEMENTS ---
+        const getElement = (id) => document.getElementById(id);
+        const jobGrid = getElement('job-listings-grid');
+        const loadingSpinner = getElement('loading-spinner');
+        const noResultsMessage = getElement('no-results');
+        const loadMoreBtn = getElement('load-more-btn');
+        const modalOverlay = getElement('job-modal-overlay');
+        const referralsCarouselMobile = getElement('referrals-carousel-mobile');
+        const referralsGridDesktop = getElement('referrals-grid-desktop');
+        const referralLoadMoreBtn = getElement('referral-load-more-btn');
+        const desktopSearchInput = getElement('desktop-search-input');
+        const desktopLocationFilter = getElement('desktop-location-filter');
+        const desktopRoleFilter = getElement('desktop-role-filter');
+        const desktopResetFilters = getElement('desktop-reset-filters');
+        const mobileFilterToggle = getElement('mobile-filter-toggle');
+        const mobileFilterScreen = getElement('mobile-filter-screen');
+        const closeFilterBtn = getElement('close-filter-btn');
+        const applyFiltersBtn = getElement('apply-filters-btn');
+        const clearFiltersBtn = getElement('clear-filters-btn');
+        const filterLocationSelect = getElement('filter-location');
+        const mobileRoleFiltersContainer = getElement('mobile-role-filters');
+
+        // --- RENDER FUNCTIONS ---
+        function renderJobs() {
+            if (!jobGrid) return;
+            const jobsPerPage = state.isMobile ? JOBS_PER_PAGE_MOBILE : JOBS_PER_PAGE_DESKTOP;
+            const jobsToDisplay = state.filteredJobs.slice(0, state.currentPage * jobsPerPage);
+            jobGrid.innerHTML = '';
+            if (noResultsMessage) noResultsMessage.style.display = jobsToDisplay.length > 0 ? 'none' : 'block';
+            jobsToDisplay.forEach((job) => {
+                const item = document.createElement('div');
+                item.className = 'job-item group flex flex-col items-center text-center p-4 transition-transform duration-300 hover:-translate-y-1 border border-transparent hover:border-gray-800 rounded-2xl';
+                item.dataset.jobId = job.ID;
+                item.innerHTML = `
+                    <div class="flex-grow w-full flex flex-col items-center">
+                        <div class="relative w-32 h-32 mb-4">
+                            <div class="w-full h-full rounded-full bg-gray-800 flex items-center justify-center overflow-hidden shadow-lg transition-transform duration-300 group-hover:scale-110">
+                                <img data-company-name="${job.Company}" src="${job['Company Logo URL']}" alt="${job.Company} Logo" class="job-logo w-full h-full object-cover">
+                            </div>
+                        </div>
+                        <h3 class="text-lg font-semibold text-white leading-tight">${job['Job Title']}</h3>
+                        <p class="text-gray-400 text-sm">${job.Company}</p>
+                        <p class="text-gray-500 text-xs mt-1">📍 ${job.Location}</p>
+                    </div>
+                    <div class="job-actions mt-4 w-full flex flex-col items-center gap-2">
+                        <button class="apply-btn w-full bg-gradient-to-br from-orange-500 to-orange-600 text-white font-semibold py-2 px-4 rounded-lg text-sm">Apply</button>
+                    </div>
+                `;
+                jobGrid.appendChild(item);
+            });
+            document.querySelectorAll('.job-logo').forEach(img => {
+                img.onerror = () => { img.replaceWith(createDefaultLogo(img.dataset.companyName)); };
+            });
+            if (loadMoreBtn) loadMoreBtn.parentElement.style.display = state.filteredJobs.length > (state.currentPage * jobsPerPage) ? 'block' : 'none';
+        }
+
+        function renderReferrals() {
+            if (!referralsCarouselMobile && !referralsGridDesktop) return;
+            const referralsToDisplay = state.isMobile ? state.allReferrals : state.allReferrals.slice(0, state.currentReferralPage * REFERRALS_PER_PAGE_WEB);
+            const container = state.isMobile ? referralsCarouselMobile : referralsGridDesktop;
+            if (container) container.innerHTML = '';
+            if (state.isMobile) {
+                if(referralsCarouselMobile) referralsCarouselMobile.classList.remove('hidden');
+                if(referralsGridDesktop) referralsGridDesktop.classList.add('hidden');
+            } else {
+                if(referralsGridDesktop) referralsGridDesktop.classList.remove('hidden');
+                if(referralsCarouselMobile) referralsCarouselMobile.classList.add('hidden');
+            }
+            referralsToDisplay.forEach((referral) => {
+                const card = document.createElement('div');
+                card.className = `referral-card p-6 rounded-2xl border border-gray-800 bg-gray-900/50 backdrop-blur-md transition-all duration-300 hover:border-orange-500/50 hover:scale-[1.02] ${state.isMobile ? 'flex-shrink-0 w-4/5' : ''}`;
+                card.innerHTML = `
+                    <div class="flex items-center gap-4 mb-4">
+                        <a href="${referral['Link']}" target="_blank" class="flex-shrink-0">
+                            <div class="w-16 h-16 rounded-full overflow-hidden flex items-center justify-center bg-gray-800 text-gray-400 text-2xl font-bold">
+                                <span class="text-white">${referral.Name.charAt(0).toUpperCase()}</span>
+                            </div>
+                        </a>
+                        <div>
+                            <h3 class="text-xl font-bold text-white">${referral.Name}</h3>
+                            <p class="text-sm text-gray-400">${referral.Designation}</p>
+                            <p class="text-xs text-gray-500">${referral['Company name']}</p>
+                        </div>
+                    </div>
+                    <a href="${referral['Link']}" target="_blank" class="w-full mt-4 inline-flex items-center justify-center gap-2 px-4 py-2 text-sm font-semibold rounded-lg bg-orange-500 text-white hover:bg-orange-600 transition-colors">
+                        Connect on LinkedIn
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
+                    </a>
+                `;
+                container.appendChild(card);
+            });
+            const referralLoadMoreBtn = getElement('referral-load-more-btn');
+            if (!state.isMobile && referralLoadMoreBtn) {
+                referralLoadMoreBtn.parentElement.style.display = state.allReferrals.length > (state.currentReferralPage * REFERRALS_PER_PAGE_WEB) ? 'block' : 'none';
+            } else {
+                if (referralLoadMoreBtn) referralLoadMoreBtn.parentElement.style.display = 'none';
+            }
+        }
+        function applyFilters() {
+            const searchTerm = state.isMobile ? (document.getElementById('mobile-search-input')?.value || '').toLowerCase() : (document.getElementById('desktop-search-input')?.value || '').toLowerCase();
+            const selectedLocation = state.isMobile ? (document.getElementById('filter-location')?.value || '') : (document.getElementById('desktop-location-filter')?.value || '');
+            const selectedRole = state.isMobile ? document.querySelector('.mobile-role-pill.active')?.dataset.role || '' : (document.getElementById('desktop-role-filter')?.value || '');
+
+            state.filteredJobs = state.allJobs.filter(job =>
+                (searchTerm === '' || job['Job Title'].toLowerCase().includes(searchTerm) || job.Company.toLowerCase().includes(searchTerm)) &&
+                (selectedLocation === '' || job.Location === selectedLocation) &&
+                (selectedRole === '' || job['Job Title'] === selectedRole)
+            );
+            state.currentPage = 1;
+            renderJobsPage();
+        }
+
+        function clearFilters() {
+            if (state.isMobile) {
+                if (document.getElementById('mobile-search-input')) document.getElementById('mobile-search-input').value = '';
+                if (document.getElementById('filter-location')) document.getElementById('filter-location').value = '';
+                if (document.getElementById('mobile-role-filters')) document.getElementById('mobile-role-filters').querySelectorAll('.mobile-role-pill').forEach(p => p.classList.remove('active', 'bg-orange-500'));
+            } else {
+                if (document.getElementById('desktop-search-input')) document.getElementById('desktop-search-input').value = '';
+                if (document.getElementById('desktop-location-filter')) document.getElementById('desktop-location-filter').value = '';
+                if (document.getElementById('desktop-role-filter')) document.getElementById('desktop-role-filter').value = '';
+            }
+            applyFilters();
+        }
+
+        function showApplyModal(job) {
+            const modalOverlay = getElement('job-modal-overlay');
+            if (!modalOverlay) return;
+            const content = `<div class="text-center"><div class="h-20 w-20 rounded-full bg-gray-800 mx-auto mb-4 overflow-hidden flex items-center justify-center"><img src="${job['Company Logo URL']}" alt="${job.Company} Logo" class="w-full h-full object-cover"></div><h3 class="text-2xl font-bold text-white">${job['Job Title']}</h3><p class="text-gray-400 mb-6">at ${job.Company}</p><p class="bg-gray-800 border border-gray-700 text-orange-400 text-sm rounded-lg p-3 mb-6">✨ **Pro Tip:** Tailor your resume to include keywords from the job description. Good luck!</p><div class="flex flex-col sm:flex-row gap-3"><button id="proceed-btn" class="w-full bg-gradient-to-br from-orange-500 to-orange-600 text-white font-semibold py-3 px-5 rounded-lg hover:from-orange-600 hover:to-orange-700 transition-all">Proceed to Application</button><button id="cancel-btn" class="w-full bg-gray-700 text-white font-semibold py-3 px-5 rounded-lg hover:bg-gray-600 transition-colors">Cancel</button></div></div>`;
+            modalOverlay.innerHTML = `<div class="modal-content bg-gray-900 border border-gray-800 rounded-2xl shadow-xl w-full max-w-lg mx-auto p-6 md:p-8">${content}</div>`;
+            modalOverlay.classList.remove('hidden');
+            setTimeout(() => { modalOverlay.classList.add('open', 'opacity-100'); }, 10);
+            if (document.getElementById('proceed-btn')) document.getElementById('proceed-btn').addEventListener('click', () => { window.open(job.Link, '_blank'); closeModal(); });
+            if (document.getElementById('cancel-btn')) document.getElementById('cancel-btn').addEventListener('click', closeModal);
+            const modalImg = modalOverlay.querySelector('img');
+            if (modalImg) { modalImg.onerror = () => { modalImg.replaceWith(createDefaultLogo(job.Company)); }; }
+        }
+
+        function closeModal() {
+            const modalOverlay = getElement('job-modal-overlay');
+            if (modalOverlay) modalOverlay.classList.remove('open', 'opacity-100');
+            setTimeout(() => { if (modalOverlay) modalOverlay.classList.add('hidden'); }, 300);
+        }
+
+        function openFilterScreen() {
+            const mobileFilterScreen = getElement('mobile-filter-screen');
+            if (mobileFilterScreen) mobileFilterScreen.style.transform = 'translateX(0)';
+        }
+
+        function closeFilterScreen() {
+            const mobileFilterScreen = getElement('mobile-filter-screen');
+            if (mobileFilterScreen) mobileFilterScreen.style.transform = 'translateX(100%)';
+        }
+
+        function populateFilters() {
+            if (state.allJobs.length === 0) return;
+            
+            const locations = [...new Set(state.allJobs.map(job => job.Location).filter(Boolean))].sort();
+            const desktopLocationFilter = getElement('desktop-location-filter');
+            const filterLocationSelect = getElement('filter-location');
+            if (desktopLocationFilter) {
+                desktopLocationFilter.innerHTML = '<option value="">All Locations</option>';
+                locations.forEach(location => desktopLocationFilter.add(new Option(location, location)));
+            }
+            if (filterLocationSelect) {
+                filterLocationSelect.innerHTML = '<option value="">All Locations</option>';
+                locations.forEach(location => filterLocationSelect.add(new Option(location, location)));
+            }
+
+            const roles = [...new Set(state.allJobs.map(job => job['Job Title']).filter(Boolean))].sort();
+            const desktopRoleFilter = getElement('desktop-role-filter');
+            const mobileRoleFiltersContainer = getElement('mobile-role-filters');
+            if (desktopRoleFilter) {
+                desktopRoleFilter.innerHTML = '<option value="">All Roles</option>';
+                roles.forEach(role => desktopRoleFilter.add(new Option(role, role)));
+            }
+            if (mobileRoleFiltersContainer) {
+                mobileRoleFiltersContainer.innerHTML = '';
+                roles.forEach(role => {
+                    const pill = document.createElement('button');
+                    pill.className = 'mobile-role-pill w-full text-left p-3 bg-gray-800 text-gray-300 rounded-lg text-sm';
+                    pill.textContent = role;
+                    pill.dataset.role = role;
+                    mobileRoleFiltersContainer.appendChild(pill);
+                });
+            }
+        }
+    
+        function initJobsPage() {
+            if (getElement('jobs-page')) {
+                const loadMoreBtn = getElement('load-more-btn');
+                const referralLoadMoreBtn = getElement('referral-load-more-btn');
+                const desktopSearchInput = getElement('desktop-search-input');
+                const desktopLocationFilter = getElement('desktop-location-filter');
+                const desktopRoleFilter = getElement('desktop-role-filter');
+                const desktopResetFilters = getElement('desktop-reset-filters');
+                const mobileFilterToggle = getElement('mobile-filter-toggle');
+                const closeFilterBtn = getElement('close-filter-btn');
+                const applyFiltersBtn = getElement('apply-filters-btn');
+                const clearFiltersBtn = getElement('clear-filters-btn');
+                const filterLocationSelect = getElement('filter-location');
+                const mobileRoleFiltersContainer = getElement('mobile-role-filters');
+
+                if (loadMoreBtn) loadMoreBtn.addEventListener('click', () => {
+                    state.currentPage++;
+                    renderJobs();
+                });
+                if (referralLoadMoreBtn) referralLoadMoreBtn.addEventListener('click', () => {
+                    state.currentReferralPage++;
+                    renderReferrals();
+                });
+                if (desktopSearchInput) desktopSearchInput.addEventListener('input', applyFilters);
+                if (desktopLocationFilter) desktopLocationFilter.addEventListener('change', applyFilters);
+                if (desktopRoleFilter) desktopRoleFilter.addEventListener('change', applyFilters);
+                if (desktopResetFilters) desktopResetFilters.addEventListener('click', clearFilters);
+                if (mobileFilterToggle) mobileFilterToggle.addEventListener('click', openFilterScreen);
+                if (closeFilterBtn) closeFilterBtn.addEventListener('click', closeFilterScreen);
+                if (applyFiltersBtn) applyFiltersBtn.addEventListener('click', () => {
+                    closeFilterScreen();
+                    applyFilters();
+                });
+                if (clearFiltersBtn) clearFiltersBtn.addEventListener('click', clearFilters);
+                if (filterLocationSelect) filterLocationSelect.addEventListener('change', applyFilters);
+                if (mobileRoleFiltersContainer) {
+                    mobileRoleFiltersContainer.addEventListener('click', (e) => {
+                        const pill = e.target.closest('.mobile-role-pill');
+                        if (pill) {
+                            const isActive = pill.classList.contains('active');
+                            mobileRoleFiltersContainer.querySelectorAll('.mobile-role-pill').forEach(p => p.classList.remove('active', 'bg-orange-500'));
+                            if (!isActive) {
+                                pill.classList.add('active', 'bg-orange-500');
+                                state.filters.role = pill.dataset.role;
+                            } else {
+                                state.filters.role = '';
+                            }
+                            applyFilters();
+                        }
+                    });
+                }
+            }
+        }
+    
+        function initHomePage() {
+            if (getElement('home-page')) {
+                const journeyContainer = getElement('journey-container');
+                const backButton = getElement('back-button');
+                const findCareerStageBtn = getElement('find-career-stage-btn');
+        
+                const stagesMap = {
+                    'starting-out': { title: "Just Starting Out", description: "You're at the very beginning, trying to find your footing and choose a direction that excites you. Let's build your foundation.", icon: `<svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" /></svg>`, substages: [ { name: "Explore Roles", subDescription: "Discover different career paths that match your interests and skills." }, { name: "Finalize a Role", subDescription: "Commit to a specific path and understand what it takes to succeed." }, { name: "Prepare a Roadmap", subDescription: "Create a step-by-step plan for the skills and experience you'll need." } ] },
+                    'skill-up': { title: "Skill Up & Search", description: "You know your target role, but need the skills and a powerful resume to get noticed by recruiters.", icon: `<svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 10.5L12 3m0 0l7.5 7.5M12 3v18" /></svg>`, substages: [ { name: "Find Learning Resources", subDescription: "Identify the best courses, books, and projects to build your expertise." }, { name: "Gain Practical Exposure", subDescription: "Apply your knowledge through internships, projects, or freelance work." }, { name: "Build a Killer Resume", subDescription: "Craft a resume that highlights your new skills and gets past ATS filters." } ] },
+                    'interview-loop': { title: "In the Interview Loop", description: "You're landing interviews but not the offers. It's time to master the art of the interview process.", icon: `<svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m-7.28-2.72a3 3 0 01-4.682-2.72a9.094 9.094 0 013.741-.479m-4.26 9.574a9.094 9.094 0 003.741.479a3 3 0 004.682 2.72m-7.28 2.72a3 3 0 014.682 2.72a9.094 9.094 0 01-3.741.479m-4.26-9.574a9.094 9.094 0 01-3.741-.479a3 3 0 014.682-2.72m7.28-2.72a3 3 0 00-4.682-2.72a9.094 9.094 0 00-3.741-.479M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>`, substages: [ { name: "Application Strategy", subDescription: "Optimize how and where you apply to maximize your interview chances." }, { name: "Master Interview Rounds", subDescription: "Prepare for technical, behavioral, and situational interview questions." }, { name: "Handle Rejections", subDescription: "Learn from feedback and stay motivated after a 'no'." } ] },
+                    'stuck': { title: "Stuck or Unmotivated", description: "Your career has stalled, or your motivation has faded. Let's find a new perspective and get you moving again.", icon: `<svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m0-10.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.75c0 5.592 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.57-.598-3.75h-.152c-3.196 0-6.1-1.249-8.25-3.286zm0 13.036h.008v.008H12v-.008z" /></svg>`, substages: [ { name: "Rediscover Motivation", subDescription: "Use proven techniques to reignite your professional passion and set new goals." }, { name: "Create a Feedback Loop", subDescription: "Build a system for getting constructive feedback to break through plateaus." }, ] }
+                };
+        
+                function populateStep1View() {
+                    const stageSelectionGrid = getElement('stage-selection-grid');
+                    if (!stageSelectionGrid) return;
+                    stageSelectionGrid.innerHTML = '';
+                    for (const key in stagesMap) {
+                        const stage = stagesMap[key];
+                        const card = document.createElement('button');
+                        card.className = 'stage-card';
+                        card.dataset.stage = key;
+                        card.innerHTML = `${stage.icon}<h3>${stage.title}</h3><p>${stage.description}</p>`;
+                        card.addEventListener('click', () => navigateToStep2(key));
+                        stageSelectionGrid.appendChild(card);
+                    }
+                }
+        
+                function populateStep2View(stageKey) {
+                    const stage = stagesMap[stageKey];
+                    if (getElement('step-2-title')) getElement('step-2-title').textContent = stage.title;
+                    if (getElement('step-2-description')) getElement('step-2-description').textContent = "Here is your personalized path forward. Choose an area to focus on.";
+                    if (getElement('progress-indicator')) getElement('progress-indicator').textContent = 'Step 2 of 2';
+                    const subStageGrid = getElement('sub-stage-grid');
+                    if (subStageGrid) {
+                        subStageGrid.innerHTML = '';
+                        stage.substages.forEach(sub => {
+                            const card = document.createElement('button');
+                            card.className = 'stage-card';
+                            card.innerHTML = `${stage.icon}<h3>${sub.name}</h3><p>${sub.subDescription}</p>`;
+                            card.addEventListener('click', () => { /* Add action for sub-stages here */ });
+                            subStageGrid.appendChild(card);
+                        });
+                    }
+                }
+        
+                function navigateToStep2(stageKey) {
+                    populateStep2View(stageKey);
+                    if (journeyContainer) journeyContainer.classList.add('step-2-active');
+                }
+        
+                function navigateToStep1() {
+                    if (journeyContainer) journeyContainer.classList.remove('step-2-active');
+                }
+        
+                if (backButton) backButton.addEventListener('click', navigateToStep1);
+                if (findCareerStageBtn) findCareerStageBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const journeySection = getElement('journey-section');
+                    if (journeySection) journeySection.scrollIntoView({ behavior: 'smooth' });
+                });
+        
+                populateStep1View();
+            }
+        }
+    
+    // --- EVENT LISTENERS & INITIALIZATION ---
+    function initApp() {
+        if (state.activePage === 'home') {
+            initHomePage();
+        }
+        if (state.activePage === 'jobs') {
+            initJobsPage();
+        }
+        if (state.activePage === 'resources') {
+            renderCareerToolkit();
+        }
+        
+        // Global event listeners
+        const mobileMenuBtn = getElement('mobile-menu-btn');
+        const mobileMenu = getElement('mobile-menu');
+        if (mobileMenuBtn && mobileMenu) {
+            mobileMenuBtn.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+        }
+    
+        fetchData();
     }
+
+    initApp();
 });
-```
-
-### Explanation of the Fix
-
-The `TypeError` was happening because the JavaScript for the "Jobs" page was running on the "Home" page. It was trying to find elements like `jobGrid` and `desktopSearchInput`, which only exist on `jobs.html`. Since they didn't exist on `index.html`, the code crashed.
-
-My fix adds a simple conditional check to ensure that the logic for a specific page only runs on that page. It does this by checking the `state.activePage` variable, which is derived from the URL of the current page.
-
-### The Next Steps
-
-1.  **Update `main.js`**: Replace the code in your `main.js` file with the corrected version I've provided.
-2.  **Move the Jobs Logic**: After you've done that, you'll need to move the JavaScript from your `jobs.html` file into the `jobsPageLogic` function in `main.js`. This keeps all your JavaScript in one central location.
-
-This approach will prevent the `TypeError` and make your project more modular and maintainab
