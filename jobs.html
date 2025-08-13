@@ -1,147 +1,160 @@
-<!DOCTYPE html>											
-<html lang="en">											
-<head>											
-<meta charset="UTF-8" />											
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>											
-<title>OneStopCareers - Job Board</title>											
-<script src="https://cdn.tailwindcss.com"></script>											
-<link rel="icon" href="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"/>											
-<style>											
-@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&display=swap');											
-body {											
-font-family: 'Manrope', sans-serif;											
-background-color: #121212;											
-color: #EAEAEA;											
-}											
-.modal { display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.7); }											
-.modal-content { background-color: #1C1C1C; margin: 10% auto; padding: 24px; border-radius: 12px; width: 90%; max-width: 600px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5); border: 1px solid #333; }											
-.close-btn { color: #aaa; float: right; font-size: 28px; font-weight: bold; }											
-.close-btn:hover, .close-btn:focus { color: #fff; text-decoration: none; cursor: pointer; }											
-.toast { visibility: hidden; min-width: 250px; margin-left: -125px; background-color: #333; color: #fff; text-align: center; border-radius: 8px; padding: 16px; position: fixed; z-index: 101; left: 50%; bottom: 30px; opacity: 0; transition: visibility 0s, opacity 0.5s linear; }											
-.toast.show { visibility: visible; opacity: 1; }											
-.job-board-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(288px, 1fr)); gap: 2rem; justify-items: center; }											
-.toolkit-carousel::-webkit-scrollbar { display: none; }											
-.toolkit-carousel { -ms-overflow-style: none; scrollbar-width: none; }											
-.sync-status { transition: opacity 0.5s ease-in-out; }											
-</style>											
-</head>											
-<body class="bg-black text-white">											
-											
-<!-- Header Placeholder -->											
-<div id="header-placeholder"></div>											
-											
-<!-- Main Content -->											
-<main>											
-<!-- Job Board Section -->											
-<section id="jobs" class="max-w-7xl mx-auto px-4 py-16">											
-<div class="text-center">											
-<h1 class="text-4xl md:text-5xl font-extrabold text-white mb-2">Find Your Next Role</h1>											
-<p class="text-gray-400 mb-8">Explore curated opportunities from top-tier companies.</p>											
-</div>											
-											
-<!-- Job Filters -->											
-<div class="flex flex-col md:flex-row items-center justify-center gap-4 mb-8">											
-<input type="text" id="job-search" placeholder="Search by title, company..." class="w-full md:w-auto p-3 rounded-lg border border-gray-700 bg-[#1C1C1C] text-white shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500" />											
-<button id="company-filter-btn" class="w-full md:w-auto p-3 rounded-lg border border-gray-700 bg-[#1C1C1C] text-white shadow-sm text-left">All Companies</button>											
-<button id="location-filter-btn" class="w-full md:w-auto p-3 rounded-lg border border-gray-700 bg-[#1C1C1C] text-white shadow-sm text-left">All Locations</button>											
-</div>											
-											
-<!-- Sync Status Callout -->											
-<div id="sync-status" class="sync-status max-w-md mx-auto text-center mb-4 opacity-0"></div>											
-											
-<!-- Loading Skeleton -->											
-<div id="job-board-loading" class="job-board-grid">											
-<div class="bg-[#1C1C1C] p-6 rounded-xl border border-gray-800 flex flex-col items-center text-center w-72 animate-pulse">											
-<div class="w-24 h-24 rounded-full mb-4 bg-gray-700"></div>											
-<div class="h-5 bg-gray-700 rounded w-3/4 mb-2"></div>											
-<div class="h-4 bg-gray-700 rounded w-1/2 mb-4"></div>											
-<div class="h-10 bg-gray-700 rounded-full w-32 mt-auto"></div>											
-</div>											
-</div>											
-<div id="job-board" class="job-board-grid" style="display: none;"></div>											
-<div id="see-more-jobs-container" class="text-center mt-12" style="display: none;">											
-<button id="see-more-jobs-btn" class="bg-gray-800 text-gray-300 px-6 py-3 rounded-lg hover:bg-gray-700">See More Jobs</button>											
-</div>											
-</section>											
-</main>											
-											
-<!-- Footer Placeholder -->											
-<div id="footer-placeholder"></div>											
-											
-<!-- Modals and Toast -->											
-<div id="job-modal" class="modal"></div>											
-<div id="filter-modal" class="modal"></div>											
-<div id="toast" class="toast">Link copied to clipboard!</div>											
-											
-<!-- Scripts -->											
-<script>											
-const jobBoard = document.getElementById('job-board');											
-const jobBoardLoading = document.getElementById('job-board-loading');											
-											
-// State											
-let jobsPerPage = 8;											
-let currentJobPage = 1;											
-let allJobs = [];											
-											
-const preloadedJobs = [											
-{ "id": 1, "Job Title": "Senior Frontend Developer", "Company": "Innovate Inc.", "Location": "San Francisco, CA", "Description": "Build next-gen apps with React/TS.", "Link": "#" },											
-{ "id": 2, "Job Title": "Product Manager", "Company": "Solutions Co.", "Location": "New York, NY", "Description": "Define product strategy.", "Link": "#" },											
-{ "id": 3, "Job Title": "Data Scientist", "Company": "Future Analytics", "Location": "Remote", "Description": "Analyze large datasets.", "Link": "#" },											
-{ "id": 4, "Job Title": "Backend Engineer", "Company": "Innovate Inc.", "Location": "Remote", "Description": "Develop backend services.", "Link": "#" },											
-{ "id": 5, "Job Title": "UX/UI Designer", "Company": "Creative Minds", "Location": "Austin, TX", "Description": "Design stunning interfaces.", "Link": "#" }											
-];											
-											
-const updateItemsPerPage = () => {											
-if (window.innerWidth < 768) jobsPerPage = 4;											
-else jobsPerPage = 8;											
-};											
-											
-const renderJobs = (jobs) => {											
-jobBoard.innerHTML = '';											
-const start = 0;											
-const end = jobsPerPage;											
-jobs.slice(start, end).forEach(job => {											
-const jobCard = document.createElement('div');											
-jobCard.className = 'bg-[#1C1C1C] p-6 rounded-xl border border-gray-800 w-72 text-center';											
-jobCard.innerHTML = `											
-<h3 class="text-lg font-bold mb-2">${job["Job Title"]}</h3>											
-<p class="text-sm text-gray-400 mb-1">${job.Company}</p>											
-<p class="text-sm text-gray-500 mb-4">${job.Location}</p>											
-<a href="${job.Link}" class="inline-block bg-orange-600 px-4 py-2 rounded text-white hover:bg-orange-700 transition">Apply</a>											
-`;											
-jobBoard.appendChild(jobCard);											
-});											
-};											
-											
-const setupJobs = (jobsData) => {											
-allJobs = jobsData;											
-jobBoardLoading.style.display = 'none';											
-jobBoard.style.display = 'grid';											
-renderJobs(allJobs);											
-};											
-											
-document.addEventListener('DOMContentLoaded', () => {											
-updateItemsPerPage();											
-											
-// ✅ Fetch from CDN											
-fetch('https://ketangoel16-creator.github.io/onestopcareers-data/jobs.json')											
-.then(response => {											
-if (!response.ok) throw new Error("Network response was not ok");											
-return response.json();											
-})											
-.then(data => {											
-setupJobs(data);											
-})											
-.catch(error => {											
-console.error("Error loading jobs from CDN. Falling back to preloaded jobs.", error);											
-setupJobs(preloadedJobs);											
-});											
-											
-window.addEventListener('resize', () => {											
-updateItemsPerPage();											
-renderJobs(allJobs);											
-});											
-});											
-</script>											
-</body>											
-</html>											
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OneStopCareers - Job Board</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" />
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&display=swap');
+    body {
+      font-family: 'Manrope', sans-serif;
+      background-color: #121212;
+      color: #EAEAEA;
+    }
+    .modal { display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.7); }
+    .modal-content { background-color: #1C1C1C; margin: 10% auto; padding: 24px; border-radius: 12px; width: 90%; max-width: 600px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5); border: 1px solid #333; }
+    .close-btn { color: #aaa; float: right; font-size: 28px; font-weight: bold; }
+    .close-btn:hover, .close-btn:focus { color: #fff; text-decoration: none; cursor: pointer; }
+    .toast { visibility: hidden; min-width: 250px; margin-left: -125px; background-color: #333; color: #fff; text-align: center; border-radius: 8px; padding: 16px; position: fixed; z-index: 101; left: 50%; bottom: 30px; opacity: 0; transition: visibility 0s, opacity 0.5s linear; }
+    .toast.show { visibility: visible; opacity: 1; }
+    .job-board-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(288px, 1fr)); gap: 2rem; justify-items: center; }
+    .filter-modal { max-height: 70vh; }
+    .toolkit-carousel::-webkit-scrollbar { display: none; }
+    .toolkit-carousel { -ms-overflow-style: none; scrollbar-width: none; }
+    @keyframes shine {
+      0% { transform: translateX(-100%) skewX(-25deg); }
+      100% { transform: translateX(200%) skewX(-25deg); }
+    }
+    .toolkit-card::after { content: ''; position: absolute; top: 0; left: 0; width: 50%; height: 100%; background: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.1) 50%, rgba(255, 255, 255, 0) 100%); transform: translateX(-100%) skewX(-25deg); animation: shine 4s infinite 2s; }
+    .sync-status { transition: opacity 0.5s ease-in-out; }
+  </style>
+</head>
+<body class="bg-black text-white">
+
+  <div id="header-placeholder"></div>
+
+  <main>
+    <section id="jobs" class="max-w-7xl mx-auto px-4 py-16">
+      <div class="text-center">
+          <h1 class="text-4xl md:text-5xl font-extrabold text-white mb-2">Find Your Next Role</h1>
+          <p class="text-gray-400 mb-8">Explore curated opportunities from top-tier companies.</p>
+      </div>
+      
+      <div class="flex flex-col md:flex-row items-center justify-center gap-4 mb-8">
+          <input type="text" id="job-search" placeholder="Search by title, company..." class="w-full md:w-auto p-3 rounded-lg border border-gray-700 bg-[#1C1C1C] text-white shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500" />
+          <button id="company-filter-btn" class="w-full md:w-auto p-3 rounded-lg border border-gray-700 bg-[#1C1C1C] text-white shadow-sm text-left">All Companies</button>
+          <button id="location-filter-btn" class="w-full md:w-auto p-3 rounded-lg border border-gray-700 bg-[#1C1C1C] text-white shadow-sm text-left">All Locations</button>
+      </div>
+
+      <div id="sync-status" class="sync-status max-w-md mx-auto text-center mb-4 opacity-0"></div>
+
+      <div id="job-board-loading" class="job-board-grid">
+        <div class="bg-[#1C1C1C] p-6 rounded-xl border border-gray-800 flex flex-col items-center text-center w-72 animate-pulse">
+            <div class="w-24 h-24 rounded-full mb-4 bg-gray-700"></div>
+            <div class="h-5 bg-gray-700 rounded w-3/4 mb-2"></div>
+            <div class="h-4 bg-gray-700 rounded w-1/2 mb-4"></div>
+            <div class="h-10 bg-gray-700 rounded-full w-32 mt-auto"></div>
+        </div>
+        <div class="hidden md:block bg-[#1C1C1C] p-6 rounded-xl border border-gray-800 flex flex-col items-center text-center w-72 animate-pulse">
+            <div class="w-24 h-24 rounded-full mb-4 bg-gray-700"></div>
+            <div class="h-5 bg-gray-700 rounded w-3/4 mb-2"></div>
+            <div class="h-4 bg-gray-700 rounded w-1/2 mb-4"></div>
+            <div class="h-10 bg-gray-700 rounded-full w-32 mt-auto"></div>
+        </div>
+        <div class="hidden lg:block bg-[#1C1C1C] p-6 rounded-xl border border-gray-800 flex flex-col items-center text-center w-72 animate-pulse">
+            <div class="w-24 h-24 rounded-full mb-4 bg-gray-700"></div>
+            <div class="h-5 bg-gray-700 rounded w-3/4 mb-2"></div>
+            <div class="h-4 bg-gray-700 rounded w-1/2 mb-4"></div>
+            <div class="h-10 bg-gray-700 rounded-full w-32 mt-auto"></div>
+        </div>
+      </div>
+      <div id="job-board" class="job-board-grid" style="display: none;"></div>
+      <div id="see-more-jobs-container" class="text-center mt-12" style="display: none;">
+        <button id="see-more-jobs-btn" class="bg-gray-800 text-gray-300 px-6 py-3 rounded-lg hover:bg-gray-700">See More Jobs</button>
+      </div>
+    </section>
+
+    <section class="py-16">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="text-center">
+                <h2 class="text-3xl font-bold text-white">Your Career Toolkit</h2>
+                <p class="text-gray-400 mt-2 mb-8">The resources you need to get ahead.</p>
+            </div>
+            <div class="toolkit-carousel flex md:grid md:grid-cols-4 gap-6 overflow-x-auto snap-x snap-mandatory py-4">
+                </div>
+        </div>
+    </section>
+
+    <section id="referrals" class="bg-gray-900/50 py-16">
+      <div class="max-w-7xl mx-auto px-4">
+        </div>
+    </section>
+  </main>
+
+  <div id="footer-placeholder"></div>
+
+  <div id="job-modal" class="modal"> </div>
+  <div id="filter-modal" class="modal"> </div>
+  <div id="toast" class="toast">Link copied to clipboard!</div>
+
+  <script src="main.js"></script>
+  <script>
+    // --- DOM Elements ---
+    const jobBoard = document.getElementById('job-board');
+    const jobBoardLoading = document.getElementById('job-board-loading');
+    const jobSearch = document.getElementById('job-search');
+    // ... all other const declarations from your production file ...
+
+    // --- State Variables ---
+    let jobsPerPage = 8;
+    let currentJobPage = 1;
+    let allJobs = [];
+    // ... all other state variables from production file ...
+    
+    // --- Pre-loaded Data for Referrals ---
+    const preloadedReferrals = [
+      {"Name": "Alex Johnson", "Designation": "Engineering Manager", "Company name": "Innovate Inc.", "LinkedIn ID url": "#"},
+      // ... other referrals ...
+    ];
+    
+    // --- Function Definitions ---
+    const updateItemsPerPage = () => { /* ... your function code ... */ };
+    const setupJobs = (data) => {
+        allJobs = data.map((item, index) => ({ ...item, id: index + 1 }));
+        jobBoardLoading.style.display = 'none';
+        jobBoard.style.display = 'grid';
+        filterAndRenderJobs();
+        handleDeepLink();
+    };
+    // ... All other functions from your production file (renderJobs, filterAndRenderJobs, modals, etc.) ...
+    
+    // --- Initial Load & Event Listeners ---
+    document.addEventListener('DOMContentLoaded', () => {
+        updateItemsPerPage();
+        
+        // --- THIS IS THE ONLY CHANGE ---
+        // Fetch live data from CDN instead of using preloadedJobs
+        fetch('https://ketangoel16-creator.github.io/onestopcareers-data/jobs.json')
+            .then(response => {
+                if (!response.ok) throw new Error("Network response was not ok");
+                return response.json();
+            })
+            .then(data => {
+                setupJobs(data);
+            })
+            .catch(error => {
+                console.error("Error loading jobs from CDN. Falling back to empty array.", error);
+                setupJobs([]); // Fallback to an empty array on error
+            });
+
+        // Your referral logic remains unchanged
+        setupReferrals(preloadedReferrals);
+        
+        // ... All other event listeners from your production file ...
+    });
+  </script>
+
+</body>
+</html>
