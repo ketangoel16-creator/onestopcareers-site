@@ -1,648 +1,147 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>OneStopCareers — Jobs</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>OneStopCareers - Job Board</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" />
+  <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"/>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;800&display=swap');
-    :root {
-      --bg: #0b0b0b;
-      --card: #111111;
-      --muted: #9ca3af;
-      --accent: #fb923c; /* orange */
-      --whatsapp: #25D366;
+    @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&display=swap');
+    body {
+      font-family: 'Manrope', sans-serif;
+      background-color: #121212;
+      color: #EAEAEA;
     }
-    body { font-family: 'Manrope', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; background: var(--bg); color: #eaeaea; -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; }
-    /* Sticky search */
-    .sticky-search { position: sticky; top: 0; z-index: 50; backdrop-filter: blur(6px); background: linear-gradient(180deg, rgba(11,11,11,0.96), rgba(11,11,11,0.90)); }
-    /* Bottom sheet modal */
-    .bottom-sheet { position: fixed; left: 0; right: 0; bottom: -110%; transition: bottom .28s cubic-bezier(.22,1,.36,1); z-index: 90; }
-    .bottom-sheet.open { bottom: 0; }
-    .bottom-sheet .sheet-inner { max-height: 70vh; overflow:auto; border-top-left-radius: 12px; border-top-right-radius: 12px; padding: 1rem; background: linear-gradient(180deg,#0f0f10,#0b0b0b); border: 1px solid rgba(255,255,255,0.03); }
-    /* Toolkit peek effect: make last-child partially visible */
-    .toolkit-viewport { padding-left: 1rem; padding-right: 3rem; } /* extra right padding to allow peek */
-    .toolkit-carousel { gap: 1rem; transform: translateZ(0); }
-    .toolkit-card { min-width: 72%; max-width: 420px; flex: 0 0 auto; }
-    @media(min-width:768px) {
-      .toolkit-card { min-width: 220px; }
-      .toolkit-viewport { padding-right: 1rem; }
-    }
-    /* Hide native scrollbar */
-    .no-scrollbar::-webkit-scrollbar { display:none; } .no-scrollbar { -ms-overflow-style:none; scrollbar-width:none; }
-    /* Job card image size & aspect ratio */
-    .logo-square { width: 96px; height: 96px; aspect-ratio: 1/1; object-fit: cover; border-radius: 9999px; }
-    /* Smart bottom banner */
-    .smart-banner { position: fixed; left: 16px; right: 16px; bottom: 18px; z-index: 100; background: linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); border: 1px solid rgba(255,255,255,0.04); padding: 10px; border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.6); display:flex; align-items:center; gap:12px; }
-    .smart-banner.hide { display: none; }
-    /* Accessibility focus */
-    .focus-ring:focus { outline: 3px solid rgba(251,146,60,0.18); outline-offset: 2px; }
-    /* Modal generic */
-    .modal-backdrop { position: fixed; inset:0; background: rgba(0,0,0,0.6); z-index: 95; display:none; }
-    .modal-backdrop.open { display:block; }
-    /* bottom sheet handle */
-    .sheet-handle { width: 48px; height: 6px; background: rgba(255,255,255,0.08); border-radius: 4px; margin: 6px auto; }
-    /* small header CTA */
-    .header-join { background: linear-gradient(90deg,var(--whatsapp), #14a54a); color: #062b1f; padding: 6px 10px; border-radius:999px; display:inline-flex; gap:8px; align-items:center; font-weight:600; }
+    .modal { display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.7); }
+    .modal-content { background-color: #1C1C1C; margin: 10% auto; padding: 24px; border-radius: 12px; width: 90%; max-width: 600px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5); border: 1px solid #333; }
+    .close-btn { color: #aaa; float: right; font-size: 28px; font-weight: bold; }
+    .close-btn:hover, .close-btn:focus { color: #fff; text-decoration: none; cursor: pointer; }
+    .toast { visibility: hidden; min-width: 250px; margin-left: -125px; background-color: #333; color: #fff; text-align: center; border-radius: 8px; padding: 16px; position: fixed; z-index: 101; left: 50%; bottom: 30px; opacity: 0; transition: visibility 0s, opacity 0.5s linear; }
+    .toast.show { visibility: visible; opacity: 1; }
+    .job-board-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(288px, 1fr)); gap: 2rem; justify-items: center; }
+    .toolkit-carousel::-webkit-scrollbar { display: none; }
+    .toolkit-carousel { -ms-overflow-style: none; scrollbar-width: none; }
+    .sync-status { transition: opacity 0.5s ease-in-out; }
   </style>
 </head>
-<body class="bg-[color:var(--bg)] text-white min-h-screen">
+<body class="bg-black text-white">
 
-  <!-- Header injection point (if you have a common header, script will inject link into it) -->
-  <header id="header-placeholder" class="w-full">
-    <!-- If your site replaces header dynamically, the script below will add the CTA. If not, we'll render a compact header fallback. -->
-    <div id="header-fallback" class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
-      <div class="flex items-center gap-4">
-        <a href="index.html" class="text-xl font-extrabold">OneStopCareers</a>
-      </div>
-      <nav class="flex items-center gap-3">
-        <a href="jobs.html" class="text-sm text-gray-300">Jobs</a>
-        <a href="resources.html" class="text-sm text-gray-300">Resources</a>
-        <a href="mentors.html" class="text-sm text-gray-300">Mentors</a>
-        <!-- Header CTA inserted by JS for consistent tracking -->
-        <span id="header-cta-container"></span>
-      </nav>
+<!-- Header Placeholder -->
+<div id="header-placeholder"></div>
+
+<!-- Main Content -->
+<main>
+  <!-- Job Board Section -->
+  <section id="jobs" class="max-w-7xl mx-auto px-4 py-16">
+    <div class="text-center">
+      <h1 class="text-4xl md:text-5xl font-extrabold text-white mb-2">Find Your Next Role</h1>
+      <p class="text-gray-400 mb-8">Explore curated opportunities from top-tier companies.</p>
     </div>
-  </header>
 
-  <!-- Main -->
-  <main class="max-w-7xl mx-auto px-4 pb-24">
-    <!-- Hero + Sticky Search -->
-    <section class="pt-8">
-      <div class="text-center mb-6">
-        <h1 class="text-3xl md:text-4xl font-extrabold">Find Your Next Role</h1>
-        <p class="text-sm text-gray-400 mt-2">Curated opportunities & strong referrals — tailored for you.</p>
-      </div>
+    <!-- Job Filters -->
+    <div class="flex flex-col md:flex-row items-center justify-center gap-4 mb-8">
+      <input type="text" id="job-search" placeholder="Search by title, company..." class="w-full md:w-auto p-3 rounded-lg border border-gray-700 bg-[#1C1C1C] text-white shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500" />
+      <button id="company-filter-btn" class="w-full md:w-auto p-3 rounded-lg border border-gray-700 bg-[#1C1C1C] text-white shadow-sm text-left">All Companies</button>
+      <button id="location-filter-btn" class="w-full md:w-auto p-3 rounded-lg border border-gray-700 bg-[#1C1C1C] text-white shadow-sm text-left">All Locations</button>
+    </div>
 
-      <!-- Sticky search bar (mobile-first) -->
-      <div class="sticky-search shadow-sm py-3">
-        <div class="max-w-3xl mx-auto flex items-center gap-3 px-3">
-          <div class="flex-1">
-            <label for="job-search" class="sr-only">Search jobs</label>
-            <input id="job-search" type="search" aria-label="Search jobs by title or company" placeholder="Search title, company or skill..." class="w-full p-3 rounded-lg border border-zinc-700 bg-[#111] focus:border-orange-500 focus:ring-2 focus:ring-orange-500 focus:outline-none focus:ring-offset-0 text-sm"/>
-          </div>
-          <button id="filters-btn" aria-label="Open filters" class="p-3 rounded-lg border border-zinc-700 bg-[#111] focus:ring-2 focus:ring-orange-500 focus:outline-none focus:ring-offset-0">
-            <!-- filter icon -->
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-300" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2a1 1 0 01-.293.707L15 12.414V18a1 1 0 01-.553.894l-3 1.5A1 1 0 0110 19.5V12.414L3.293 6.707A1 1 0 013 6V4z"></path></svg>
-          </button>
-          <!-- quick join CTA in search row (non-intrusive) -->
-          <a id="header-join-btn-mobile" href="#" target="_blank" class="hidden md:inline-flex header-join ml-2 text-xs" aria-label="Join WhatsApp group">🔥 Join 50K+</a>
-        </div>
-      </div>
-    </section>
+    <!-- Sync Status Callout -->
+    <div id="sync-status" class="sync-status max-w-md mx-auto text-center mb-4 opacity-0"></div>
 
-    <!-- Jobs grid -->
-    <section id="jobs-section" class="mt-6">
-      <div id="job-board" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"></div>
-      <div id="skeletons" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-4"></div>
-      <div class="text-center mt-8">
-        <button id="load-more-jobs" class="px-5 py-3 rounded-lg bg-zinc-800 text-sm text-gray-200 hidden">See more jobs</button>
-      </div>
-    </section>
-
-    <!-- Toolkit -->
-    <section id="toolkit-section" class="mt-12">
-      <div class="flex items-center justify-between mb-4">
-        <div>
-          <h2 class="text-2xl font-bold">Your Career Toolkit</h2>
-          <p class="text-sm text-gray-400">Resources to help you get hired.</p>
-        </div>
-        <a href="resources.html" class="text-sm text-gray-300 hidden sm:inline">See all</a>
-      </div>
-
-      <div class="toolkit-viewport overflow-x-auto no-scrollbar toolkit-carousel snap-x snap-mandatory flex items-stretch pb-2">
-        <!-- Cards inserted by JS. layout ensures last card will peek -->
-      </div>
-    </section>
-
-    <!-- Referrals -->
-    <section id="referrals-section" class="mt-12">
-      <div class="flex items-center justify-between mb-4">
-        <div>
-          <h2 class="text-2xl font-bold">Referral Network</h2>
-          <p class="text-sm text-gray-400">Professionals ready to help with referrals.</p>
-        </div>
-      </div>
-      <div id="referral-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
-    </section>
-  </main>
-
-  <!-- Footer placeholder -->
-  <footer id="footer-placeholder" class="max-w-7xl mx-auto px-4 py-8 text-sm text-gray-400">
-    © OneStopCareers
-  </footer>
-
-  <!-- Bottom sheet filters -->
-  <div id="filter-sheet" class="bottom-sheet" aria-hidden="true" role="dialog" aria-modal="true">
-    <div class="sheet-inner">
-      <div class="sheet-handle"></div>
-      <div class="flex items-center justify-between mb-2">
-        <h3 class="text-lg font-semibold">Filters</h3>
-        <button id="close-filter-sheet" class="text-sm text-gray-300">Close</button>
-      </div>
-      <label class="block text-sm text-gray-300 mb-1">Company</label>
-      <div id="company-list" class="mb-4 space-y-2"></div>
-      <label class="block text-sm text-gray-300 mb-1">Location</label>
-      <div id="location-list" class="mb-4 space-y-2"></div>
-      <div class="flex gap-2">
-        <button id="apply-filters" class="flex-1 py-2 rounded-lg bg-orange-500 text-black font-semibold">Apply</button>
-        <button id="clear-filters" class="flex-1 py-2 rounded-lg border border-zinc-700 text-gray-300">Clear</button>
+    <!-- Loading Skeleton -->
+    <div id="job-board-loading" class="job-board-grid">
+      <div class="bg-[#1C1C1C] p-6 rounded-xl border border-gray-800 flex flex-col items-center text-center w-72 animate-pulse">
+        <div class="w-24 h-24 rounded-full mb-4 bg-gray-700"></div>
+        <div class="h-5 bg-gray-700 rounded w-3/4 mb-2"></div>
+        <div class="h-4 bg-gray-700 rounded w-1/2 mb-4"></div>
+        <div class="h-10 bg-gray-700 rounded-full w-32 mt-auto"></div>
       </div>
     </div>
-  </div>
-
-  <!-- Modal backdrop (generic) -->
-  <div id="modal-backdrop" class="modal-backdrop" aria-hidden="true"></div>
-
-  <!-- Smart banner (hidden initially) -->
-  <div id="smart-banner" class="smart-banner hide" role="dialog" aria-live="polite" aria-label="Join WhatsApp community">
-    <div class="flex-1">
-      <div class="flex items-center gap-2">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 11.5a8.5 8.5 0 11-17 0 8.5 8.5 0 0117 0z" /></svg>
-        <div>
-          <div class="font-semibold">Join our 50K+ WhatsApp community</div>
-          <div class="text-xs text-gray-400">Daily curated jobs & hiring tips</div>
-        </div>
-      </div>
+    <div id="job-board" class="job-board-grid" style="display: none;"></div>
+    <div id="see-more-jobs-container" class="text-center mt-12" style="display: none;">
+      <button id="see-more-jobs-btn" class="bg-gray-800 text-gray-300 px-6 py-3 rounded-lg hover:bg-gray-700">See More Jobs</button>
     </div>
-    <div class="flex items-center gap-2">
-      <a id="smart-banner-join" href="#" target="_blank" class="px-4 py-2 rounded-lg text-sm font-semibold" style="background:var(--whatsapp); color:#062b1f;">Join Free</a>
-      <button id="smart-banner-close" aria-label="Close" class="text-gray-400 px-2">✕</button>
-    </div>
-  </div>
+  </section>
+</main>
 
-  <!-- Preloaded test data -->
-  <script id="preloaded-jobs" type="application/json">
-    [
-      { "id": 1, "Job Title": "Senior Frontend Developer", "Company": "Innovate Inc.", "Location": "San Francisco, CA", "Description": "React, TypeScript, 5+ years", "Link": "#" },
-      { "id": 2, "Job Title": "Product Manager", "Company": "Solutions Co.", "Location": "New York, NY", "Description": "PM, 3+ years", "Link": "#" },
-      { "id": 3, "Job Title": "Data Analyst", "Company": "DataWorks", "Location": "Bengaluru, India", "Description": "SQL, Python", "Link": "#" },
-      { "id": 4, "Job Title": "Backend Engineer", "Company": "Innovate Inc.", "Location": "Remote", "Description": "Go, Distributed Systems", "Link": "#" },
-      { "id": 5, "Job Title": "UX Researcher", "Company": "DesignCo", "Location": "Mumbai, India", "Description": "User research", "Link": "#" },
-      { "id": 6, "Job Title": "ML Engineer", "Company": "AI Labs", "Location": "Bengaluru, India", "Description": "ML infra", "Link": "#" }
-    ]
-  </script>
+<!-- Footer Placeholder -->
+<div id="footer-placeholder"></div>
 
-  <script id="preloaded-referrals" type="application/json">
-    [
-      {"Name":"Alex Johnson","Designation":"Engineering Manager","Company name":"Innovate Inc.","LinkedIn ID url":"#"},
-      {"Name":"Brenda Smith","Designation":"Senior Recruiter","Company name":"Solutions Co.","LinkedIn ID url":"#"},
-      {"Name":"Chandan Patel","Designation":"Staff Engineer","Company name":"DataWorks","LinkedIn ID url":"#"}
-    ]
-  </script>
+<!-- Modals and Toast -->
+<div id="job-modal" class="modal"></div>
+<div id="filter-modal" class="modal"></div>
+<div id="toast" class="toast">Link copied to clipboard!</div>
 
-  <!-- Main JS: modular, accessible, optimized -->
-  <script>
-  (function () {
-    /* ------------------------
-       Configuration & State
-       ------------------------ */
-    const WHATSAPP_LINK_BASE = "https://chat.whatsapp.com/your-invite-code"; // <-- Replace with your group's invite link
-    const UTM_SOURCE_HEADER = "header_cta";
-    const UTM_SOURCE_TOOLKIT = "toolkit_cta";
-    const UTM_SOURCE_SMART = "smartbanner_cta";
+<!-- Scripts -->
+<script>
+  const jobBoard = document.getElementById('job-board');
+  const jobBoardLoading = document.getElementById('job-board-loading');
 
-    // State
-    let allJobs = [];
-    let displayedJobs = [];
-    let jobViewCount = 0; // how many unique job cards user interacted with (strictly viewed/clicked)
-    let jobsRenderedCount = 0;
-    let allReferrals = [];
-    let currentCompanyFilter = "All";
-    let currentLocationFilter = "All";
+  // State
+  let jobsPerPage = 8;
+  let currentJobPage = 1;
+  let allJobs = [];
 
-    // DOM
-    const jobBoard = document.getElementById('job-board');
-    const skeletons = document.getElementById('skeletons');
-    const jobSearchInput = document.getElementById('job-search');
-    const filtersBtn = document.getElementById('filters-btn');
-    const filterSheet = document.getElementById('filter-sheet');
-    const companyListEl = document.getElementById('company-list');
-    const locationListEl = document.getElementById('location-list');
-    const applyFiltersBtn = document.getElementById('apply-filters');
-    const clearFiltersBtn = document.getElementById('clear-filters');
-    const closeFilterSheetBtn = document.getElementById('close-filter-sheet');
-    const toolkitCarousel = document.querySelector('.toolkit-carousel');
-    const toolkitViewport = document.querySelector('.toolkit-viewport');
-    const referralGrid = document.getElementById('referral-grid');
-    const smartBanner = document.getElementById('smart-banner');
-    const smartBannerJoin = document.getElementById('smart-banner-join');
-    const smartBannerClose = document.getElementById('smart-banner-close');
-    const headerCtaContainer = document.getElementById('header-cta-container');
-    const headerJoinBtnMobile = document.getElementById('header-join-btn-mobile');
+  const preloadedJobs = [
+    { "id": 1, "Job Title": "Senior Frontend Developer", "Company": "Innovate Inc.", "Location": "San Francisco, CA", "Description": "Build next-gen apps with React/TS.", "Link": "#" },
+    { "id": 2, "Job Title": "Product Manager", "Company": "Solutions Co.", "Location": "New York, NY", "Description": "Define product strategy.", "Link": "#" },
+    { "id": 3, "Job Title": "Data Scientist", "Company": "Future Analytics", "Location": "Remote", "Description": "Analyze large datasets.", "Link": "#" },
+    { "id": 4, "Job Title": "Backend Engineer", "Company": "Innovate Inc.", "Location": "Remote", "Description": "Develop backend services.", "Link": "#" },
+    { "id": 5, "Job Title": "UX/UI Designer", "Company": "Creative Minds", "Location": "Austin, TX", "Description": "Design stunning interfaces.", "Link": "#" }
+  ];
 
-    /* -------------
-       Utilities
-       ------------- */
-    const uq = (s) => (s || '').replace(/[^\w\s-]/g,'').trim();
-    const urlWithUtm = (baseUrl, source) => {
-      try {
-        const u = new URL(baseUrl);
-        u.searchParams.set('utm_source', source);
-        u.searchParams.set('utm_medium', 'wa_join');
-        return u.toString();
-      } catch (e) {
-        // if it's not a fully qualified url, append params naive
-        return baseUrl + (baseUrl.includes('?') ? '&' : '?') + `utm_source=${source}&utm_medium=wa_join`;
-      }
-    };
-    const throttle = (fn, wait=200) => { let last=0; return (...args) => { const now=Date.now(); if(now-last>wait){ last=now; fn(...args); } } };
+  const updateItemsPerPage = () => {
+    if (window.innerWidth < 768) jobsPerPage = 4;
+    else jobsPerPage = 8;
+  };
 
-    /* -------------------
-       Rendering functions
-       ------------------- */
-    function renderSkeletons(count = 6) {
-      skeletons.innerHTML = '';
-      for(let i=0;i<count;i++){
-        const s = document.createElement('div');
-        s.className = 'bg-[#0f0f10] p-6 rounded-xl border border-zinc-800 animate-pulse';
-        s.innerHTML = '<div class="h-12 w-12 mb-4 rounded-full bg-zinc-800"></div><div class="h-4 bg-zinc-800 rounded mb-2"></div><div class="h-3 bg-zinc-800 rounded w-3/4"></div>';
-        skeletons.appendChild(s);
-      }
-    }
-
-    function renderJobs(jobs) {
-      jobBoard.innerHTML = '';
-      if(!jobs || jobs.length===0) {
-        jobBoard.innerHTML = '<div class="col-span-full text-center text-gray-400 py-8">No jobs found</div>';
-        return;
-      }
-      skeletons.innerHTML = '';
-      jobsRenderedCount = 0;
-      jobs.forEach(job => {
-        const card = document.createElement('article');
-        card.className = 'bg-[#111] p-5 rounded-xl border border-zinc-800 hover:border-orange-500 transition-colors focus:ring-2 focus:ring-orange-500 focus:outline-none';
-        card.tabIndex = 0;
-        card.setAttribute('role','article');
-        card.setAttribute('aria-labelledby', `job-title-${job.id}`);
-
-        const companyInitial = ((job.Company||'C').charAt(0)).toUpperCase();
-        const placeholder = `https://placehold.co/128x128/111/fff?text=${companyInitial}`;
-
-        card.innerHTML = `
-          <div class="flex flex-col items-center text-center">
-            <img loading="lazy" src="${job['Company Logo URL'] || placeholder}" alt="${job.Company || 'company'} logo" class="logo-square mb-4 border-4 border-zinc-800 object-cover" onerror="this.onerror=null;this.src='${placeholder}';">
-            <h3 id="job-title-${job.id}" class="text-lg font-semibold text-white">${job['Job Title'] || 'N/A'}</h3>
-            <p class="text-sm text-gray-400 mt-1">${job.Company || 'N/A'} — ${job.Location || 'N/A'}</p>
-            <p class="text-sm text-zinc-400 mt-3 line-clamp-3">${job.Description || ''}</p>
-            <div class="mt-4 w-full flex items-center gap-3">
-              <a class="apply-btn flex-1 inline-flex items-center justify-center gap-2 py-2 px-3 rounded-full bg-orange-500 text-black font-semibold text-sm focus-ring" href="${job.Link || '#'}" target="_blank" rel="noopener noreferrer">Apply Now</a>
-              <button class="view-btn px-3 py-2 rounded-lg border border-zinc-700 text-sm text-gray-300 focus-ring" aria-label="Open job details">View</button>
-            </div>
-          </div>
-        `;
-
-        // click handlers
-        const applyBtn = card.querySelector('.apply-btn');
-        const viewBtn = card.querySelector('.view-btn');
-        viewBtn.addEventListener('click', (e) => { e.stopPropagation(); openJobModal(job); });
-        applyBtn.addEventListener('click', (e) => { /* track click if you want */ });
-
-        // keyboard: Enter opens view
-        card.addEventListener('keydown', (e) => { if(e.key === 'Enter') openJobModal(job); });
-
-        jobBoard.appendChild(card);
-        jobsRenderedCount++;
-      });
-    }
-
-    function renderToolkit() {
-      toolkitCarousel.innerHTML = '';
-
-      const tools = [
-        { title: 'Resume Templates', desc: 'ATS-friendly designs', href: 'resources.html' },
-        { title: 'Interview Prep', desc: 'STAR method & frameworks', href: 'resources.html' },
-        { title: 'Salary Guides', desc: 'Negotiate your worth', href: 'resources.html' }
-      ];
-
-      tools.forEach(t => {
-        const a = document.createElement('a');
-        a.className = 'toolkit-card bg-[#111] p-4 rounded-xl border border-zinc-800 flex-shrink-0 snap-center focus-ring';
-        a.href = t.href;
-        a.innerHTML = `<div class="font-semibold">${t.title}</div><div class="text-xs text-gray-400 mt-1">${t.desc}</div>`;
-        toolkitCarousel.appendChild(a);
-      });
-
-      // WhatsApp toolkit CTA (contextual anchor)
-      const waCard = document.createElement('div');
-      waCard.className = 'toolkit-card bg-gradient-to-r from-[#073e2a] to-[#0fb96a] p-4 rounded-xl flex-shrink-0 snap-center';
-      waCard.innerHTML = `
-        <div class="text-white font-semibold">Join our 50K+ WhatsApp Community</div>
-        <div class="text-xs mt-1">Daily job alerts, mentorship & community support</div>
-        <div class="mt-3 flex gap-2">
-          <a id="toolkit-wa-join" class="px-3 py-2 rounded-md font-semibold text-sm" href="${urlWithUtm(WHATSAPP_LINK_BASE, UTM_SOURCE_TOOLKIT)}" target="_blank" style="background: white; color: #062b1f;">Join Now</a>
-        </div>
+  const renderJobs = (jobs) => {
+    jobBoard.innerHTML = '';
+    const start = 0;
+    const end = jobsPerPage;
+    jobs.slice(start, end).forEach(job => {
+      const jobCard = document.createElement('div');
+      jobCard.className = 'bg-[#1C1C1C] p-6 rounded-xl border border-gray-800 w-72 text-center';
+      jobCard.innerHTML = `
+        <h3 class="text-lg font-bold mb-2">${job["Job Title"]}</h3>
+        <p class="text-sm text-gray-400 mb-1">${job.Company}</p>
+        <p class="text-sm text-gray-500 mb-4">${job.Location}</p>
+        <a href="${job.Link}" class="inline-block bg-orange-600 px-4 py-2 rounded text-white hover:bg-orange-700 transition">Apply</a>
       `;
-      toolkitCarousel.appendChild(waCard);
-
-      // Add a small invisible spacer element to create the peek effect on the right
-      const spacer = document.createElement('div');
-      spacer.style.minWidth = '12px';
-      toolkitCarousel.appendChild(spacer);
-    }
-
-    function renderReferrals(refs) {
-      referralGrid.innerHTML = '';
-      if(!refs || refs.length===0) {
-        referralGrid.innerHTML = '<div class="text-gray-400">No referrals found</div>';
-        return;
-      }
-      refs.forEach((r, idx) => {
-        const card = document.createElement('div');
-        card.className = 'bg-[#111] p-5 rounded-xl border border-zinc-800';
-        const initials = (r.Name || 'A').split(' ').map(n=>n.charAt(0)).slice(0,2).join('').toUpperCase();
-        card.innerHTML = `
-          <div class="flex items-start gap-4">
-            <div class="h-12 w-12 rounded-full bg-zinc-800 flex items-center justify-center text-white font-semibold">${initials}</div>
-            <div class="flex-1">
-              <div class="font-semibold">${r.Name || 'N/A'}</div>
-              <div class="text-xs text-gray-400">${r.Designation || ''} — ${r['Company name'] || ''}</div>
-            </div>
-          </div>
-          <div class="mt-4 flex gap-2">
-            <a class="request-referral flex-1 py-2 rounded-md text-sm font-semibold bg-[#0b1220] border border-zinc-700 text-gray-200" href="${r['LinkedIn ID url'] || '#'}" target="_blank" rel="noopener noreferrer">Connect on LinkedIn</a>
-            <button class="flex-1 py-2 rounded-md border border-zinc-700 text-sm text-gray-300 request-message">Request Referral</button>
-          </div>
-        `;
-
-        // request referral button opens modal / external link -> here just open linkedIn in new tab but could be enhanced
-        const requestMsgBtn = card.querySelector('.request-message');
-        requestMsgBtn.addEventListener('click', () => {
-          // open LinkedIn in new tab (if available) else show toast (could be enhanced)
-          const ln = r['LinkedIn ID url'] || '#';
-          window.open(ln, '_blank', 'noopener');
-        });
-
-        referralGrid.appendChild(card);
-      });
-    }
-
-    /* -----------------------
-       Modal: job details
-       ----------------------- */
-    const modalBackdrop = document.getElementById('modal-backdrop');
-    function openJobModal(job) {
-      // Basic accessible modal using modal-backdrop; for brevity show alert-like dialog
-      const dialog = document.createElement('div');
-      dialog.className = 'fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-[120] bg-[#0f0f10] p-6 rounded-xl max-w-xl w-[92%] border border-zinc-800';
-      dialog.setAttribute('role','dialog');
-      dialog.setAttribute('aria-modal','true');
-      dialog.innerHTML = `
-        <div class="flex justify-between items-start gap-4">
-          <div>
-            <h3 class="text-lg font-semibold">${job['Job Title']}</h3>
-            <p class="text-sm text-gray-400 mt-1">${job.Company} — ${job.Location}</p>
-          </div>
-          <button id="dialog-close" aria-label="Close dialog" class="text-gray-300">✕</button>
-        </div>
-        <p class="text-sm text-zinc-300 mt-3">${job.Description || ''}</p>
-        <div class="mt-4 flex gap-2">
-          <a href="${job.Link || '#'}" target="_blank" class="flex-1 py-2 rounded-md bg-orange-500 text-black font-semibold text-center">Apply Now</a>
-          <button id="dialog-share" class="py-2 px-3 rounded-md border border-zinc-700 text-sm text-gray-300">Copy Link</button>
-        </div>
-      `;
-      modalBackdrop.classList.add('open');
-      modalBackdrop.style.display = 'block';
-      document.body.appendChild(dialog);
-
-      document.getElementById('dialog-close').addEventListener('click', closeModalDialog);
-      document.getElementById('dialog-share').addEventListener('click', () => {
-        const tmp = document.createElement('textarea'); tmp.value = job.Link || window.location.href; document.body.appendChild(tmp); tmp.select(); document.execCommand('copy'); tmp.remove();
-        showTempToast('Link copied');
-      });
-
-      function closeModalDialog() {
-        modalBackdrop.classList.remove('open');
-        modalBackdrop.style.display = 'none';
-        dialog.remove();
-      }
-
-      modalBackdrop.addEventListener('click', closeModalDialog, { once: true });
-    }
-
-    /* -----------------------
-       Filters (bottom-sheet)
-       ----------------------- */
-    function openFilterSheet() {
-      populateFilterLists();
-      filterSheet.classList.add('open');
-      filterSheet.setAttribute('aria-hidden','false');
-    }
-    function closeFilterSheet() {
-      filterSheet.classList.remove('open');
-      filterSheet.setAttribute('aria-hidden','true');
-    }
-    function populateFilterLists() {
-      const companies = Array.from(new Set(allJobs.map(j=>j.Company).filter(Boolean))).sort();
-      const locations = Array.from(new Set(allJobs.map(j=>j.Location).filter(Boolean))).sort();
-
-      companyListEl.innerHTML = `<label class="block"><input type="radio" name="company-filter" value="All" ${currentCompanyFilter==='All'?'checked':''} class="mr-2">${'All'}</label>`;
-      companies.forEach(c => {
-        const id = 'cmp-' + uq(c).replace(/\s+/g,'-');
-        const div = document.createElement('div');
-        div.innerHTML = `<label class="block"><input type="radio" name="company-filter" value="${c}" class="mr-2" ${currentCompanyFilter===c?'checked':''}>${c}</label>`;
-        companyListEl.appendChild(div);
-      });
-
-      locationListEl.innerHTML = `<label class="block"><input type="radio" name="location-filter" value="All" ${currentLocationFilter==='All'?'checked':''} class="mr-2">All</label>`;
-      locations.forEach(l => {
-        const div = document.createElement('div');
-        div.innerHTML = `<label class="block"><input type="radio" name="location-filter" value="${l}" class="mr-2" ${currentLocationFilter===l?'checked':''}>${l}</label>`;
-        locationListEl.appendChild(div);
-      });
-    }
-
-    function applySheetFilters() {
-      const selCompany = document.querySelector('input[name="company-filter"]:checked');
-      const selLocation = document.querySelector('input[name="location-filter"]:checked');
-      currentCompanyFilter = selCompany ? selCompany.value : 'All';
-      currentLocationFilter = selLocation ? selLocation.value : 'All';
-      closeFilterSheet();
-      applyFiltersToJobs();
-    }
-
-    function clearSheetFilters() {
-      currentCompanyFilter = 'All'; currentLocationFilter = 'All';
-      applyFiltersToJobs();
-      closeFilterSheet();
-    }
-
-    /* -----------------------
-       Filtering + Search
-       ----------------------- */
-    function applyFiltersToJobs() {
-      const q = (jobSearchInput.value || '').toLowerCase();
-      displayedJobs = allJobs.filter(j => {
-        const matchesQuery = !q || ((j['Job Title']||'').toLowerCase().includes(q) || (j.Company||'').toLowerCase().includes(q));
-        const matchesCompany = (currentCompanyFilter === 'All') || j.Company === currentCompanyFilter;
-        const matchesLocation = (currentLocationFilter === 'All') || j.Location === currentLocationFilter;
-        return matchesQuery && matchesCompany && matchesLocation;
-      });
-      renderJobs(displayedJobs);
-    }
-
-    /* -----------------------
-       Smart Banner logic
-       ----------------------- */
-    function showSmartBannerIfEligible() {
-      if (localStorage.getItem('wa_banner_dismissed')) return;
-      // If user viewed >= 5 job cards or spent > 30s (either condition)
-      if (jobViewCount >= 5 || localStorage.getItem('wa_time_eligible')) {
-        smartBanner.classList.remove('hide');
-        smartBannerJoin.href = urlWithUtm(WHATSAPP_LINK_BASE, UTM_SOURCE_SMART);
-      }
-    }
-
-    // track job "views" by incrementing when a job card scrolls into viewport
-    function initJobViewTracking() {
-      const observer = new IntersectionObserver(entries => {
-        entries.forEach(en => {
-          if (en.isIntersecting) {
-            jobViewCount++;
-            // Fire eligibility check
-            showSmartBannerIfEligible();
-            // disconnect small optimization
-            if (jobViewCount >= 5) observer.disconnect();
-          }
-        });
-      }, { threshold: 0.6 });
-
-      // attach to new items
-      const attachObservers = () => {
-        document.querySelectorAll('#job-board article').forEach(el => observer.observe(el));
-      };
-      // rerun attach when jobs are re-rendered
-      const mo = new MutationObserver(attachObservers);
-      mo.observe(jobBoard, { childList: true });
-      attachObservers();
-    }
-
-    // time-based eligibility (30s)
-    setTimeout(() => {
-      localStorage.setItem('wa_time_eligible', 'true');
-      showSmartBannerIfEligible();
-    }, 30000); // 30s
-
-    /* -----------------------
-       Toast (small inline)
-       ----------------------- */
-    function showTempToast(msg) {
-      const t = document.createElement('div');
-      t.className = 'fixed left-1/2 -translate-x-1/2 bottom-32 bg-zinc-900 text-white px-4 py-2 rounded-md z-60';
-      t.textContent = msg;
-      document.body.appendChild(t);
-      setTimeout(()=> t.remove(), 2000);
-    }
-
-    /* -----------------------
-       Header CTA injection
-       ----------------------- */
-    function injectHeaderCta() {
-      // If there's an existing header nav that the site loads later, this safe-inserts into header-cta-container
-      const a = document.createElement('a');
-      a.href = urlWithUtm(WHATSAPP_LINK_BASE, UTM_SOURCE_HEADER);
-      a.className = 'header-join text-xs hidden sm:inline-flex focus-ring';
-      a.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="none"><path d="M21 11.5a8.5 8.5 0 11-17 0 8.5 8.5 0 0117 0z" stroke="none" fill="#fff"/></svg><span style="margin-left:6px;">Join 50K+</span>';
-      headerCtaContainer.appendChild(a);
-      headerJoinBtnMobile.href = urlWithUtm(WHATSAPP_LINK_BASE, UTM_SOURCE_HEADER);
-      headerJoinBtnMobile.classList.remove('hidden');
-      // show on larger screens (if no header replacement)
-      const fallback = document.getElementById('header-fallback');
-      if (fallback) {
-        const el = a.cloneNode(true);
-        el.classList.remove('hidden'); el.classList.add('ml-2');
-        fallback.querySelector('nav').appendChild(el);
-      }
-    }
-
-    /* -----------------------
-       Data bootstrap
-       ----------------------- */
-    function loadInitialData() {
-      try {
-        allJobs = JSON.parse(document.getElementById('preloaded-jobs').textContent || '[]').map((x,i)=>({ ...x, id: x.id || i+1 }));
-      } catch (e) { allJobs = []; }
-      try {
-        allReferrals = JSON.parse(document.getElementById('preloaded-referrals').textContent || '[]');
-      } catch (e) { allReferrals = []; }
-
-      // show skeletons, then render
-      renderSkeletons(6);
-      setTimeout(() => {
-        displayedJobs = allJobs.slice();
-        renderJobs(displayedJobs);
-        renderToolkit();
-        renderReferrals(allReferrals);
-        injectHeaderCta();
-        initJobViewTracking();
-      }, 350);
-    }
-
-    /* -----------------------
-       Event wiring
-       ----------------------- */
-    document.addEventListener('DOMContentLoaded', () => {
-      loadInitialData();
-
-      // Search
-      jobSearchInput.addEventListener('input', throttle(applyFiltersToJobs, 200));
-
-      // Filters sheet
-      filtersBtn.addEventListener('click', openFilterSheet);
-      closeFilterSheetBtn.addEventListener('click', closeFilterSheet);
-      applyFiltersBtn.addEventListener('click', applySheetFilters);
-      clearFiltersBtn.addEventListener('click', clearSheetFilters);
-
-      // Smart banner close
-      smartBannerClose.addEventListener('click', () => {
-        smartBanner.classList.add('hide');
-        localStorage.setItem('wa_banner_dismissed', Date.now());
-      });
-
-      // toolkit: swipeable handled by native scroll; add small keyboard accessibility
-      toolkitCarousel.addEventListener('keydown', (e)=>{ if(e.key==='ArrowRight') toolkitCarousel.scrollBy({left:200,behavior:'smooth'}); if(e.key==='ArrowLeft') toolkitCarousel.scrollBy({left:-200,behavior:'smooth'}); });
-
-      // Smart banner join uses UTM (already set above)
-      smartBannerJoin.addEventListener('click', ()=> {
-        // optionally store event locally for metric
-      });
-
-      // Close sheet on ESC
-      document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') {
-          closeFilterSheet();
-        }
-      });
-
-      // Click outside filter sheet to close
-      document.addEventListener('click', (e) => {
-        const inside = filterSheet.contains(e.target) || filtersBtn.contains(e.target);
-        if (!inside) {
-          // don't auto-close aggressively to avoid disrupting user
-        }
-      });
-
-      // On scroll, show sticky behaviour & check smart banner threshold
-      window.addEventListener('scroll', throttle(() => {
-        showSmartBannerIfEligible();
-      }, 500));
+      jobBoard.appendChild(jobCard);
     });
+  };
 
-    // Expose small API for analytics or testing
-    window.OneStopJobs = {
-      openFilterSheet,
-      closeFilterSheet,
-      applyFiltersToJobs,
-      getJobs: () => allJobs
-    };
+  const setupJobs = (jobsData) => {
+    allJobs = jobsData;
+    jobBoardLoading.style.display = 'none';
+    jobBoard.style.display = 'grid';
+    renderJobs(allJobs);
+  };
 
-    /* -----------------------
-       End of IIFE
-       ----------------------- */
-  })();
-  </script>
+  document.addEventListener('DOMContentLoaded', () => {
+    updateItemsPerPage();
 
+    // ✅ Fetch from CDN
+    fetch('https://cdn.jsdelivr.net/gh/your-username/your-repo@main/path/to/jobs.json')
+      .then(response => {
+        if (!response.ok) throw new Error("Network response was not ok");
+        return response.json();
+      })
+      .then(data => {
+        setupJobs(data);
+      })
+      .catch(error => {
+        console.error("Error loading jobs from CDN. Falling back to preloaded jobs.", error);
+        setupJobs(preloadedJobs);
+      });
+
+    window.addEventListener('resize', () => {
+      updateItemsPerPage();
+      renderJobs(allJobs);
+    });
+  });
+</script>
 </body>
 </html>
