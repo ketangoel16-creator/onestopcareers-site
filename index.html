@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -175,6 +176,7 @@
                 const card = document.createElement('button');
                 card.className = 'stage-card';
                 card.innerHTML = `${stage.icon}<h3>${sub.name}</h3><p>${sub.subDescription}</p>`;
+                card.addEventListener('click', () => { /* Add action for sub-stages here */ });
                 subStageGrid.appendChild(card);
             });
         }
