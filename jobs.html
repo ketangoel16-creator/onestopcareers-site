@@ -245,8 +245,25 @@
     const seeMoreJobsBtn = document.getElementById('see-more-jobs-btn');
     const seeMoreJobsContainer = document.getElementById('see-more-jobs-container');
     const jobModal = document.getElementById('job-modal');
-    // ... (other DOM elements remain the same)
-
+    const modalCloseBtn = jobModal.querySelector('.close-btn');
+    const modalTitle = document.getElementById('modal-title');
+    const modalCompanyLocation = document.getElementById('modal-company-location');
+    const modalDescription = document.getElementById('modal-description');
+    const modalApplyBtn = document.getElementById('modal-apply-btn');
+    const modalShareBtn = document.getElementById('modal-share-btn');
+    const toast = document.getElementById('toast');
+    const referralGrid = document.getElementById('referral-grid');
+    const referralLoading = document.getElementById('referral-loading');
+    const referralSearch = document.getElementById('referral-search');
+    const referralCompanyFilterBtn = document.getElementById('referral-company-filter-btn');
+    const seeMoreReferralsBtn = document.getElementById('see-more-referrals-btn');
+    const seeMoreReferralsContainer = document.getElementById('see-more-referrals-container');
+    const filterModal = document.getElementById('filter-modal');
+    const filterModalTitle = document.getElementById('filter-modal-title');
+    const filterModalSearch = document.getElementById('filter-modal-search');
+    const filterModalList = document.getElementById('filter-modal-list');
+    const filterModalClose = document.getElementById('filter-modal-close');
+    
     let autoRefreshToggle, autoRefreshToggleMobile;
     let autoRefreshIntervalId = null;
     let autoScrollInterval = null;
@@ -266,8 +283,8 @@
     let currentReferralCompanyFilter = 'All';
 
     // --- Config ---
-    const JOBS_API_URL = 'https://ketangoel16-creator.github.io/onestopcareers-data/jobs.json'; // <-- IMPORTANT: REPLACE THIS
-    const REFERRALS_API_URL = 'YOUR_CDN_URL_FOR_REFERRALS.json'; // <-- IMPORTANT: REPLACE THIS
+    const JOBS_API_URL = 'https://ketangoel16-creator.github.io/onestopcareers-data/jobs.json';
+    const REFERRALS_API_URL = 'https://script.google.com/macros/s/AKfycbxkrDnF3ABiwsf2M8dD7hKtCGwQ4XSRdQebmJOqL8jsSpdQtCwrb6xH7KeHxKUoK0IB/exec';
     
     // --- Data Fetching ---
     const fetchData = async (url, setupFunction) => {
@@ -278,7 +295,6 @@
             setupFunction(data);
         } catch (error) {
             console.error(`Failed to fetch from ${url}:`, error);
-            // Optionally, hide loading skeletons and show an error message
             if (url === JOBS_API_URL) {
                 jobBoardLoading.style.display = 'none';
                 jobBoard.innerHTML = '<p class="text-red-500 text-center col-span-full">Could not load jobs. Please try again later.</p>';
@@ -300,7 +316,7 @@
 
     const setupReferrals = (data) => {
         allReferrals = data.map((item, index) => ({ ...item, id: index + 1 }));
-        referralLoading.style.display = 'grid';
+        referralLoading.style.display = 'none';
         referralGrid.style.display = 'grid';
         filterAndRenderReferrals();
     };
